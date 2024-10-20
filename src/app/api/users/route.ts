@@ -1,6 +1,6 @@
 import type { NextRequest } from 'next/server'
 
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 
 import { add, query } from '@/lib/database'
 import handle from '@/lib/handle'
