@@ -10,7 +10,7 @@ import { dbDocument, query } from '@/lib/database'
 import { html, text } from '@/lib/email'
 import type { User } from '@/types/user'
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
   providers: [
     Credentials({
       credentials: {

@@ -13,9 +13,7 @@ import { addUser } from '@/lib/user'
 const Page = () => {
   const callbackUrl = useSearchParams().get('callbackUrl') || '/'
 
-  const { update } = useSession()
-
-  const add = addUser.bind(undefined, callbackUrl, update)
+  const add = addUser.bind(undefined, callbackUrl)
 
   const [error, dispatch] = useFormState(add, undefined)
 

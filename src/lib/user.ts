@@ -1,14 +1,13 @@
 'use server'
 
 import { CredentialsSignin } from 'next-auth'
-import type { UpdateSession } from 'next-auth/react'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 import bcrypt from 'bcryptjs'
 import { z } from 'zod'
 
-import { auth, signIn } from '@/auth'
+import { auth, signIn, unstable_update as update } from '@/auth'
 import { add, query } from '@/lib/database'
 import { verifyTurnstile } from '@/lib/turnstile'
 import { User } from '@/types/user'
@@ -143,7 +142,6 @@ const userSetupSchema = z
 
 export const addUser = async (
   callbackUrl: string | undefined = '/',
-  update: UpdateSession,
   _: unknown,
   formData: FormData
 ) => {
@@ -184,10 +182,11 @@ export const addUser = async (
 
   await add(newUser)
 
+  newUser.password = undefined
+
   update({
     user: {
-      ...newUser,
-      password: undefined
+      ...newUser
     }
   })
 
