@@ -1,60 +1,50 @@
-import type { NextRequest } from 'next/server'
-
 import bcrypt from 'bcryptjs'
 
-import { add, query } from '@/lib/database'
+import {add, query} from '@/lib/database'
 import handle from '@/lib/handle'
-import { BadRequest, Conflict, Created, InternalServerError, NotFound, Ok } from '@/lib/response'
-import { User } from '@/types/user'
+import {BadRequest, Conflict, Created, Forbidden, NotFound, Ok} from '@/lib/response'
+import {User} from '@/types/user'
+import {getUserByEmail} from "@/lib/user";
 
-export const POST = handle(async (req: NextRequest) => {
+export const POST = handle(async req => {
   const { success, data, error } = User.safeParse(await req.json())
 
   if (!success) {
     return BadRequest(error)
   }
 
-  const res = await query<User>({
-    IndexName: 'email-index',
-    KeyConditionExpression: 'email = :email',
-    ExpressionAttributeValues: {
-      ':email': data.email
-    }
-  })
-
-  if (res.length > 0) {
-    return Conflict('User already exists')
+  if (data.role !== 'user') {
+    return Forbidden('Only users can be created')
   }
 
-  const saltRounds = 10
-  const hashedPassword = await bcrypt.hash(data.password, saltRounds)
+  if (data.email !== req.auth?.user.email && req.auth?.user.role !== 'super-admin') {
+    return Forbidden('Can only create user with your own email')
+  }
 
-  data.password = hashedPassword
+  if (await getUserByEmail(data.email)) {
+    return Conflict('Email already exists')
+  }
+
+  if (data.password) {
+    const saltRounds = 10
+    data.password = await bcrypt.hash(data.password, saltRounds)
+  }
 
   await add(data)
   return Created()
 })
 
-export const GET = handle(async (req: NextRequest) => {
+export const GET = handle(async req => {
   if (req.nextUrl.searchParams.has('email')) {
     const email = req.nextUrl.searchParams.get('email')
-    const res = await query<User>({
-      IndexName: 'email-index',
-      KeyConditionExpression: 'email = :email',
-      ExpressionAttributeValues: {
-        ':email': email
-      }
-    })
 
-    if (res.length === 0) {
+    const res = await getUserByEmail(email!)
+
+    if (!res) {
       return NotFound('No such user')
     }
 
-    if (res.length > 1) {
-      return InternalServerError('Multiple users found')
-    }
-
-    return Ok({ ...res[0], password: undefined })
+    return Ok({ ...res, password: undefined })
   }
 
   const users = await query<User>({
@@ -68,4 +58,4 @@ export const GET = handle(async (req: NextRequest) => {
     }
   })
   return Ok(users.map(u => ({ ...u, password: undefined })))
-})
+}, 'admin')

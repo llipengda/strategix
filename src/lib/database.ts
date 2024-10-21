@@ -1,10 +1,13 @@
 import {
+  DynamoDB,
   DynamoDBClient,
+  type DynamoDBClientConfig,
   QueryCommand,
   ScanCommand
 } from '@aws-sdk/client-dynamodb'
 import {
   DeleteCommand,
+  DynamoDBDocument,
   DynamoDBDocumentClient,
   GetCommand,
   PutCommand,
@@ -15,17 +18,27 @@ import {
 } from '@aws-sdk/lib-dynamodb'
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb'
 
-const client = new DynamoDBClient({
+const config = {
   region: process.env.AMAZON_REGION!,
   credentials: {
     accessKeyId: process.env.AMAZON_KEY!,
     secretAccessKey: process.env.AMAZON_SECRET!
   }
-})
+} satisfies DynamoDBClientConfig
+
+const client = new DynamoDBClient(config)
 
 const TABLE_NAME = process.env.AMAZON_TABLE_NAME!
 
-const docClient = DynamoDBDocumentClient.from(client)
+export const docClient = DynamoDBDocumentClient.from(client)
+
+export const dbDocument = DynamoDBDocument.from(new DynamoDB(config), {
+  marshallOptions: {
+    convertEmptyValues: true,
+    removeUndefinedValues: true,
+    convertClassInstanceToMap: true
+  }
+})
 
 export async function add<T extends Record<string, unknown>>(
   item: T,

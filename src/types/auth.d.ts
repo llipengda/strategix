@@ -1,6 +1,8 @@
-import { type DefaultSession } from 'next-auth'
-import { type User } from '@/types/user'
+import type { DefaultSession, Session } from 'next-auth'
 import 'next-auth/jwt'
+import type { NextRequest } from 'next/server'
+
+import { type User as TUser } from '@/types/user'
 
 declare module 'next-auth' {
   /**
@@ -9,7 +11,7 @@ declare module 'next-auth' {
   interface Session {
     user: {
       id: string
-      role: User['role']
+      role: TUser['role']
       /**
        * By default, TypeScript merges new interface properties and overwrites existing ones.
        * In this case, the default session user properties will be overwritten,
@@ -20,7 +22,7 @@ declare module 'next-auth' {
   }
 
   interface User {
-    role: User['role']
+    role: TUser['role']
   }
 }
 
@@ -29,6 +31,26 @@ declare module 'next-auth/jwt' {
   interface JWT {
     /** OpenID ID Token */
     id: string
-    role: User['role']
+    role: TUser['role']
   }
 }
+
+interface NextAuthRequest extends NextRequest {
+  auth: Session | null
+}
+
+export type AppRouteHandlerFnContext = {
+  params?: Record<string, string | string[]>
+}
+
+export type AppRouteHandlerFn = (
+  /**
+   * Incoming request object.
+   */
+  req: NextRequest,
+  /**
+   * Context properties on the request (including the parameters if this was a
+   * dynamic route).
+   */
+  ctx: AppRouteHandlerFnContext
+) => void | Response | Promise<void | Response>

@@ -9,8 +9,8 @@ export const User = z.object({
   name: z.string(),
   email: z.string().email(),
   department: z.string().optional(),
-  password: z.string().min(8),
-  role: z.enum(['super-admin', 'admin', 'user']).default('user'),
+  password: z.string().optional(),
+  role: z.enum(['super-admin', 'admin', 'user', 'temp-user']).default('user'),
   type: z.literal('user').default('user'),
   sk: z.string().default('null')
 })

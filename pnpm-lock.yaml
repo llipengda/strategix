@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@auth/dynamodb-adapter':
+        specifier: ^2.7.2
+        version: 2.7.2(@aws-sdk/client-dynamodb@3.670.0)(@aws-sdk/lib-dynamodb@3.670.0(@aws-sdk/client-dynamodb@3.670.0))
       '@aws-sdk/client-dynamodb':
         specifier: ^3.670.0
         version: 3.670.0
@@ -32,6 +35,9 @@ importers:
       react-dom:
         specifier: ^18
         version: 18.3.1(react@18.3.1)
+      react-icons:
+        specifier: ^5.3.0
+        version: 5.3.0(react@18.3.1)
       strategix:
         specifier: 'file:'
         version: 'file:'
@@ -101,6 +107,26 @@ packages:
         optional: true
       nodemailer:
         optional: true
+
+  '@auth/core@0.37.2':
+    resolution: {integrity: sha512-kUvzyvkcd6h1vpeMAojK2y7+PAV5H+0Cc9+ZlKYDFhDY31AlvsB+GW5vNO4qE3Y07KeQgvNO9U0QUx/fN62kBw==}
+    peerDependencies:
+      '@simplewebauthn/browser': ^9.0.1
+      '@simplewebauthn/server': ^9.0.2
+      nodemailer: ^6.8.0
+    peerDependenciesMeta:
+      '@simplewebauthn/browser':
+        optional: true
+      '@simplewebauthn/server':
+        optional: true
+      nodemailer:
+        optional: true
+
+  '@auth/dynamodb-adapter@2.7.2':
+    resolution: {integrity: sha512-CFpTFn0mk3N6/VSUYy72hevhPgYAD3j+yQ3BuTa/No/FUVzvkNwIUjj2eFIXgX2gPAfaUQmRf3pGqSG3q1LP+A==}
+    peerDependencies:
+      '@aws-sdk/client-dynamodb': ^3.36.1
+      '@aws-sdk/lib-dynamodb': ^3.36.1
 
   '@aws-crypto/sha256-browser@5.2.0':
     resolution: {integrity: sha512-AXfN/lGotSQwu6HNcEsIASo7kWXZ5HYWvfOmSNKDsEqC4OashTp8alTmaz+F7TC2L083SFv5RdB+qU3Vs1kZqw==}
@@ -1820,6 +1846,11 @@ packages:
     peerDependencies:
       react: ^18.3.1
 
+  react-icons@5.3.0:
+    resolution: {integrity: sha512-DnUk8aFbTyQPSkCfF8dbX6kQjXA9DktMeJqfjrg6cK9vwQVMxmcA3BfP4QoiztVmEHtwlTgLFsPuH2NskKT6eg==}
+    peerDependencies:
+      react: '*'
+
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
@@ -2176,6 +2207,26 @@ snapshots:
       oauth4webapi: 3.1.1
       preact: 10.11.3
       preact-render-to-string: 5.2.3(preact@10.11.3)
+
+  '@auth/core@0.37.2':
+    dependencies:
+      '@panva/hkdf': 1.2.1
+      '@types/cookie': 0.6.0
+      cookie: 0.7.1
+      jose: 5.9.4
+      oauth4webapi: 3.1.1
+      preact: 10.11.3
+      preact-render-to-string: 5.2.3(preact@10.11.3)
+
+  '@auth/dynamodb-adapter@2.7.2(@aws-sdk/client-dynamodb@3.670.0)(@aws-sdk/lib-dynamodb@3.670.0(@aws-sdk/client-dynamodb@3.670.0))':
+    dependencies:
+      '@auth/core': 0.37.2
+      '@aws-sdk/client-dynamodb': 3.670.0
+      '@aws-sdk/lib-dynamodb': 3.670.0(@aws-sdk/client-dynamodb@3.670.0)
+    transitivePeerDependencies:
+      - '@simplewebauthn/browser'
+      - '@simplewebauthn/server'
+      - nodemailer
 
   '@aws-crypto/sha256-browser@5.2.0':
     dependencies:
@@ -4457,6 +4508,10 @@ snapshots:
       react: 18.3.1
       scheduler: 0.23.2
 
+  react-icons@5.3.0(react@18.3.1):
+    dependencies:
+      react: 18.3.1
+
   react-is@16.13.1: {}
 
   react@18.3.1:
@@ -4591,6 +4646,7 @@ snapshots:
 
   'strategix@file:':
     dependencies:
+      '@auth/dynamodb-adapter': 2.7.2(@aws-sdk/client-dynamodb@3.670.0)(@aws-sdk/lib-dynamodb@3.670.0(@aws-sdk/client-dynamodb@3.670.0))
       '@aws-sdk/client-dynamodb': 3.670.0
       '@aws-sdk/lib-dynamodb': 3.670.0(@aws-sdk/client-dynamodb@3.670.0)
       '@aws-sdk/util-dynamodb': 3.670.0(@aws-sdk/client-dynamodb@3.670.0)
