@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { SessionProvider } from 'next-auth/react'
 
 import './globals.css'
 

@@ -9,7 +9,7 @@ import bcrypt from 'bcryptjs'
 import { z } from 'zod'
 
 import { auth, signIn } from '@/auth'
-import { add, query, update } from '@/lib/database'
+import { add, query } from '@/lib/database'
 import { verifyTurnstile } from '@/lib/turnstile'
 import { User } from '@/types/user'
 
