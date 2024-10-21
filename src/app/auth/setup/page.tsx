@@ -23,6 +23,12 @@ const Page = () => {
 
   const { data: session } = useSession()
 
+  const email = session?.user?.email
+
+  if (!email) {
+    throw new Error("Missing 'email' in session")
+  }
+
   return (
     <>
       <h2 className='text-2xl font-bold text-center text-gray-800'>
@@ -43,7 +49,7 @@ const Page = () => {
             autoComplete='email'
             required
             disabled
-            value={session?.user?.email!}
+            value={email}
             className='w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500'
           />
         </div>
