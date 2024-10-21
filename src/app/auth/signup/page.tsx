@@ -2,7 +2,7 @@
 
 import { useFormState } from 'react-dom'
 
-import Script from 'next/script'
+import { Turnstile } from '@marsidev/react-turnstile'
 
 import ErrorMessage from '@/components/error-message'
 import SubmitButton from '@/components/submit-button'
@@ -35,18 +35,10 @@ const Page = ({ searchParams }: { searchParams: SearchParams }) => {
           required
           className='w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500'
         />
-        <Script
-          src='https://challenges.cloudflare.com/turnstile/v0/api.js'
-          async
-        ></Script>
-        <div className='block flex-row h-[65px]'>
-          <div
-            className='cf-turnstile'
-            data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
-            data-callback='javascriptCallback'
-            data-size='flexible'
-          ></div>
-        </div>
+        <Turnstile
+          siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+          options={{ size: 'flexible' }}
+        />
         <ErrorMessage errorMessage={error} />
         <SubmitButton text='确定' />
       </form>
