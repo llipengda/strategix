@@ -1,5 +1,16 @@
-export const html = ({ url, host }: { url: string; host: string }) => {
+export const html = ({
+  url,
+  host,
+  emailType
+}: {
+  url: string
+  host: string
+  emailType: string
+}) => {
   const escapedHost = host.replace(/\./g, '&#8203;.')
+
+  const titlePre = emailType === 'signup' ? '注册' : '登录到'
+  const type = emailType === 'signup' ? '注册' : '登录'
 
   return `
   <!DOCTYPE html>
@@ -7,7 +18,7 @@ export const html = ({ url, host }: { url: string; host: string }) => {
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>注册 / 登录 ${escapedHost}</title>
+      <title>${titlePre} ${escapedHost}</title>
       <style>
         body {
           font-family: Arial, sans-serif;
@@ -61,9 +72,9 @@ export const html = ({ url, host }: { url: string; host: string }) => {
     </head>
     <body>
       <div class="container">
-        <h1>欢迎注册 / 登录 ${escapedHost}</h1>
-        <p>点击下方按钮来完成您的注册或登录：</p>
-        <a href="${url}" class="button" color="#ffffff">注册 / 登录</a>
+        <h1>${titlePre} ${escapedHost}</h1>
+        <p>点击下方按钮来完成您的${type}：</p>
+        <a href="${url}" class="button" color="#ffffff">${type}</a>
         <div class="footer">
           <p>如果您没有请求此邮件，您可以安全地忽略它。</p>
         </div>
@@ -72,6 +83,14 @@ export const html = ({ url, host }: { url: string; host: string }) => {
   </html>`
 }
 
-export function text({ url, host }: { url: string; host: string }) {
-  return `注册 / 登录 ${host}\n${url}\n\n`
+export function text({
+  url,
+  host,
+  emailType
+}: {
+  url: string
+  host: string
+  emailType: string
+}) {
+  return `${emailType === 'signup' ? '注册' : '登录到'} ${host}\n${url}\n\n`
 }
