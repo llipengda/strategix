@@ -7,6 +7,7 @@ import bcrypt from 'bcryptjs'
 import { v4 } from 'uuid'
 
 import { dbDocument, query } from '@/lib/database'
+import { html, text } from '@/lib/email'
 import type { User } from '@/types/user'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -48,7 +49,27 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
     }),
     Resend({
-      from: 'no-reply@pdli.site'
+      from: process.env.EMAIL_FROM,
+      async sendVerificationRequest({ identifier: to, url, provider }) {
+        const { host } = new URL(url)
+        const res = await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${provider.apiKey}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            from: provider.from,
+            to,
+            subject: `注册 / 登录 ${host}`,
+            html: html({ url, host }),
+            text: text({ url, host })
+          })
+        })
+        if (!res.ok) {
+          throw new Error('Resend error: ' + JSON.stringify(await res.json()))
+        }
+      }
     })
   ],
   // @ts-expect-error i don't know why ts is complaining
@@ -79,6 +100,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
   pages: {
     signIn: '/auth/signin',
-    signOut: '/auth/signout'
+    signOut: '/auth/signout',
+    verifyRequest: '/auth/verify-request'
   }
 })

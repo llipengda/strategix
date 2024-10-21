@@ -1,9 +1,11 @@
 'use client'
 
 import React from 'react'
-import { useFormState, useFormStatus } from 'react-dom'
-import { MdError } from 'react-icons/md'
+import { useFormState } from 'react-dom'
 
+import Link from 'next/link'
+
+import ErrorMessage from '@/components/error-message'
 import SubmitButton from '@/components/submit-button'
 import { authenticateByCredentials } from '@/lib/user'
 import type SearchParams from '@/types/search-params'
@@ -14,8 +16,6 @@ const Page = ({ searchParams }: { searchParams: SearchParams }) => {
   const authenticate = authenticateByCredentials.bind(undefined, callbackUrl)
 
   const [errorMessage, dispatch] = useFormState(authenticate, undefined)
-
-  const { pending } = useFormStatus()
 
   return (
     <>
@@ -61,18 +61,16 @@ const Page = ({ searchParams }: { searchParams: SearchParams }) => {
           </a>
           <p className='text-sm text-gray-600'>
             没有账号？
-            <a href='#' className='font-semibold text-blue-600 hover:underline'>
+            <Link
+              href='/auth/signup'
+              className='font-semibold text-blue-600 hover:underline'
+            >
               注册
-            </a>
+            </Link>
           </p>
         </div>
 
-        {errorMessage && (
-          <div className='text-sm text-white bg-red-600 p-2 rounded-md flex items-center font-bold'>
-            <MdError />
-            &nbsp;{errorMessage}
-          </div>
-        )}
+        <ErrorMessage errorMessage={errorMessage} />
 
         <SubmitButton text='登录' />
       </form>

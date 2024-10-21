@@ -15,11 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='zh_cn'>
-      <body className={`antialiased`}>
-        {/* <SessionProvider> */}
-        {children}
-        {/* </SessionProvider> */}
-      </body>
+      <body className={`antialiased`}>{children}</body>
     </html>
   )
 }
