@@ -23,11 +23,9 @@ const Page = () => {
 
   const { data: session } = useSession()
 
-  const email = session?.user?.email
+  const email = session?.user?.email || ''
 
-  if (!email) {
-    throw new Error("Missing 'email' in session")
-  }
+  console.log('session', session)
 
   return (
     <>
