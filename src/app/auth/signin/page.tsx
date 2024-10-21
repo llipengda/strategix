@@ -34,6 +34,7 @@ const Page = ({ searchParams }: { searchParams: SearchParams }) => {
             id='email'
             name='email'
             type='email'
+            autoComplete='email'
             required
             className='w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500'
           />
@@ -50,6 +51,7 @@ const Page = ({ searchParams }: { searchParams: SearchParams }) => {
             id='password'
             name='password'
             type='password'
+            autoComplete='current-password'
             required
             className='w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500'
           />

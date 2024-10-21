@@ -1,6 +1,7 @@
 import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 import Resend from 'next-auth/providers/resend'
+import { cookies } from 'next/headers'
 
 import { DynamoDBAdapter } from '@auth/dynamodb-adapter'
 import bcrypt from 'bcryptjs'
@@ -51,6 +52,7 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
     Resend({
       from: process.env.EMAIL_FROM,
       async sendVerificationRequest({ identifier: to, url, provider }) {
+        const emailType = cookies().get('email-type')?.value || 'signup'
         const { host } = new URL(url)
         const res = await fetch('https://api.resend.com/emails', {
           method: 'POST',
@@ -61,9 +63,9 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
           body: JSON.stringify({
             from: provider.from,
             to,
-            subject: `注册 / 登录 ${host}`,
-            html: html({ url, host }),
-            text: text({ url, host })
+            subject: `${emailType === 'signin' ? '登录到' : '注册'} ${host}`,
+            html: html({ url, host, emailType }),
+            text: text({ url, host, emailType })
           })
         })
         if (!res.ok) {
@@ -94,7 +96,12 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
       session.user.role = token.role
       return session
     },
-    authorized({ auth }) {
+    authorized({ auth, request }) {
+      if (auth?.user.role === 'temp-user') {
+        const url = new URL(request.url)
+        console.log(url.pathname)
+      }
+
       return !!auth?.user
     }
   },

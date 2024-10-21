@@ -1,7 +1,8 @@
 'use server'
 
 import { CredentialsSignin } from 'next-auth'
-import { headers } from 'next/headers'
+import { revalidatePath } from 'next/cache'
+import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 import bcrypt from 'bcryptjs'
@@ -9,7 +10,7 @@ import { z } from 'zod'
 
 import { auth, signIn, unstable_update as update } from '@/auth'
 import { add, query } from '@/lib/database'
-import { verifyTurnstile } from '@/lib/turnstile'
+import validateCaptcha from '@/lib/recaptcha'
 import { User } from '@/types/user'
 
 export const getUserByEmail = async (email: string | null | undefined) => {
@@ -77,12 +78,16 @@ export const authenticateByResend = async (
     return '邮箱格式不正确'
   }
 
-  if (
-    !(await verifyTurnstile(
-      formData.get('cf-turnstile-response') as string,
-      headers().get('x-real-ip')!
-    ))
-  ) {
+  // if (
+  //   !(await verifyTurnstile(
+  //     formData.get('cf-turnstile-response') as string,
+  //     headers().get('x-real-ip')!
+  //   ))
+  // ) {
+  //   return '人机验证失败'
+  // }
+
+  if (!(await validateCaptcha(formData.get('captcha') as string))) {
     return '人机验证失败'
   }
 
@@ -92,6 +97,9 @@ export const authenticateByResend = async (
 
   if (!user) {
     url = `/auth/setup?callbackUrl=${callbackUrl}`
+    cookies().set('email-type', 'signup')
+  } else {
+    cookies().set('email-type', 'signin')
   }
 
   try {
@@ -190,5 +198,6 @@ export const addUser = async (
     }
   })
 
+  revalidatePath(callbackUrl!)
   redirect(callbackUrl)
 }

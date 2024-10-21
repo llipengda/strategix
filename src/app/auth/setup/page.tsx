@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useFormState } from 'react-dom'
 
+import { useSession } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'
 
 import ErrorMessage from '@/components/error-message'
@@ -20,12 +21,33 @@ const Page = () => {
 
   const handleChange = () => setChecked(!checked)
 
+  const { data: session } = useSession()
+
   return (
     <>
       <h2 className='text-2xl font-bold text-center text-gray-800'>
         完善您的信息
       </h2>
       <form className='space-y-4' action={dispatch}>
+        <div>
+          <label
+            htmlFor='email'
+            className='block text-sm font-medium text-gray-700'
+          >
+            电子邮箱
+          </label>
+          <input
+            id='email'
+            name='email'
+            type='email'
+            autoComplete='email'
+            required
+            disabled
+            value={session?.user?.email!}
+            className='w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500'
+          />
+        </div>
+
         <div>
           <label
             htmlFor='name'
@@ -37,6 +59,7 @@ const Page = () => {
             id='name'
             name='name'
             type='text'
+            autoComplete='name'
             required
             className='w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500'
           />
@@ -75,6 +98,7 @@ const Page = () => {
                 id='password'
                 name='password'
                 type='password'
+                autoComplete='new-password'
                 className='w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500'
               />
             </div>
@@ -90,6 +114,7 @@ const Page = () => {
                 id='confirmPassword'
                 name='confirmPassword'
                 type='password'
+                autoComplete='new-password'
                 className='w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500'
               />
             </div>
