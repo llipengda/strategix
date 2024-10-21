@@ -15,6 +15,10 @@ export const html = ({ url, host }: { url: string; host: string }) => {
           margin: 0;
           padding: 0;
         }
+        a, a:link, a:visited, a:hover, a:active{
+          text-decoration: none;
+          color: #ffffff !important;
+        }
         .container {
           background-color: #ffffff;
           margin: 0 auto;
@@ -59,7 +63,7 @@ export const html = ({ url, host }: { url: string; host: string }) => {
       <div class="container">
         <h1>欢迎注册 / 登录 ${escapedHost}</h1>
         <p>点击下方按钮来完成您的注册或登录：</p>
-        <a href="${url}" class="button">注册 / 登录</a>
+        <a href="${url}" class="button" color="#ffffff">注册 / 登录</a>
         <div class="footer">
           <p>如果您没有请求此邮件，您可以安全地忽略它。</p>
         </div>
