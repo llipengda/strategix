@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { useFormState } from 'react-dom'
 
-import { useSession } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'
 
 import ErrorMessage from '@/components/error-message'
