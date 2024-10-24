@@ -76,20 +76,7 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
       }
     }),
     GitHub({
-      async profile(profile) {
-        const email = profile.email
-        const user = await getUserByEmail(email)
-
-        if (user) {
-          return user
-        } else {
-          return {
-            email,
-            name: profile.name,
-            role: 'temp-user'
-          }
-        }
-      }
+      allowDangerousEmailAccountLinking: true
     })
   ],
   // @ts-expect-error i don't know why ts is complaining
