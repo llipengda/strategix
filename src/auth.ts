@@ -84,24 +84,22 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
       if (user) {
         token.id = user.id || `user-${v4()}`
         token.role = user.role || 'temp-user'
+        token.name = user.name || ''
       }
       if (trigger === 'update' && session) {
         token.id = session.user.id
         token.role = session.user.role
+        token.name = session.user.name
       }
       return token
     },
     session({ session, token }) {
       session.user.id = token.id
       session.user.role = token.role
+      session.user.name = token.name
       return session
     },
-    authorized({ auth, request }) {
-      if (auth?.user.role === 'temp-user') {
-        const url = new URL(request.url)
-        console.log(url.pathname)
-      }
-
+    authorized({ auth }) {
       return !!auth?.user
     }
   },

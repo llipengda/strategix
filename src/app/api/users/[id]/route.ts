@@ -13,7 +13,7 @@ import {
   Ok
 } from '@/lib/response'
 import type { User } from '@/types/user'
-import { getUserByEmail } from '@/lib/user'
+import { getUserByEmail } from '@/lib/actions/user'
 
 export const GET = handle(async (req, { params }) => {
   const { id } = params as { id: string }

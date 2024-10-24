@@ -1,5 +1,3 @@
-import { Suspense } from 'react'
-
 import { SessionProvider } from 'next-auth/react'
 
 const Layout = ({
@@ -7,11 +5,7 @@ const Layout = ({
 }: Readonly<{
   children: React.ReactNode
 }>) => {
-  return (
-    <SessionProvider>
-      <Suspense>{children}</Suspense>
-    </SessionProvider>
-  )
+  return <SessionProvider>{children}</SessionProvider>
 }
 
 export default Layout

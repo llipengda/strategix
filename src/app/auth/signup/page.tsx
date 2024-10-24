@@ -5,12 +5,12 @@ import { useFormState } from 'react-dom'
 import { useReCaptcha } from 'next-recaptcha-v3'
 
 import ErrorMessage from '@/components/error-message'
+import Input from '@/components/input'
 import SubmitButton from '@/components/submit-button'
-import { authenticateByResend } from '@/lib/user'
-import type SearchParams from '@/types/search-params'
+import { authenticateByResend } from '@/lib/actions/user'
 
-const Page = ({ searchParams }: { searchParams: SearchParams }) => {
-  const callbackUrl = (searchParams.callbackUrl as string | undefined) || '/'
+const Page = ({ searchParams }: Page) => {
+  const callbackUrl = searchParams?.callbackUrl || '/'
 
   const authenticate = authenticateByResend.bind(null, callbackUrl)
 
@@ -30,26 +30,20 @@ const Page = ({ searchParams }: { searchParams: SearchParams }) => {
 
   return (
     <>
-      <h2 className='text-2xl font-bold text-center text-gray-800'>
-        注册新用户
-      </h2>
-      <p className='text-center text-sm text-gray-500'>
+      <h2 className='text-2xl font-bold text-center text-title'>注册新用户</h2>
+      <p className='text-center text-sm text-disabled'>
         如果您已经注册，此操作将使您<strong>登录</strong>到已有账号
       </p>
       <form className='space-y-4' action={dispatch}>
-        <label
-          htmlFor='email'
-          className='block text-sm font-medium text-gray-700'
-        >
+        <label htmlFor='email' className='block text-sm font-medium text-label'>
           电子邮箱
         </label>
-        <input
+        <Input
           id='email'
           name='email'
           type='email'
           autoComplete='email'
           required
-          className='w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500'
         />
         <ErrorMessage errorMessage={error} />
         <SubmitButton text='确定' />

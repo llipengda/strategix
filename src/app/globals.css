@@ -5,12 +5,32 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --page-bg: #ffffff;
+  --card-bg: #f3f4f6;
+  --title: #1f2937;
+  --label: #374151;
+  --input-bg: #ffffff;
+  --input-txt: #000000;
+  --input-bd: #d1d5db;
+  --input-ring: #bfdbfe;
+  --main: #2563eb;
+  --disabled: #4b5563;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --page-bg: #111827;
+    --card-bg: #1f2937;
+    --title: #f3f4f6;
+    --label: #e5e7eb;
+    --input-bg: #1f2937;
+    --input-txt: #d1d5db;
+    --input-bd: #374151;
+    --input-ring: #1e3a8a;
+    --main: #1565c0;
+    --disabled: #d1d5db;
   }
 }
 

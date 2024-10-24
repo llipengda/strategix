@@ -4,7 +4,7 @@ import {add, query} from '@/lib/database'
 import handle from '@/lib/handle'
 import {BadRequest, Conflict, Created, Forbidden, NotFound, Ok} from '@/lib/response'
 import {User} from '@/types/user'
-import {getUserByEmail} from "@/lib/user";
+import {getUserByEmail} from "@/lib/actions/user";
 
 export const POST = handle(async req => {
   const { success, data, error } = User.safeParse(await req.json())

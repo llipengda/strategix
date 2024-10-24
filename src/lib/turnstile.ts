@@ -1,3 +1,8 @@
+/**
+ * @deprecated
+ * @param response
+ * @param ip
+ */
 export const verifyTurnstile = async (response: string, ip: string) => {
   const verifyFormData = new FormData()
   verifyFormData.append(

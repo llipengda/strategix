@@ -4,18 +4,17 @@ import { useState } from 'react'
 import { useFormState } from 'react-dom'
 
 import { useSession } from 'next-auth/react'
-import { useSearchParams } from 'next/navigation'
 
 import ErrorMessage from '@/components/error-message'
+import Input from '@/components/input'
 import SubmitButton from '@/components/submit-button'
-import { addUser } from '@/lib/user'
+import { addUser } from '@/lib/actions/user'
 
-const Page = () => {
-  const callbackUrl = useSearchParams().get('callbackUrl') || '/'
-
-  const add = addUser.bind(undefined, callbackUrl)
-
-  const [error, dispatch] = useFormState(add, undefined)
+const Page = ({ searchParams }: Page) => {
+  const [error, dispatch] = useFormState(
+    addUser.bind(undefined, searchParams?.callbackUrl),
+    undefined
+  )
 
   const [checked, setChecked] = useState(true)
 
@@ -25,22 +24,20 @@ const Page = () => {
 
   const email = session?.user?.email || ''
 
-  console.log('session', session)
-
   return (
     <>
-      <h2 className='text-2xl font-bold text-center text-gray-800'>
+      <h2 className='text-2xl font-bold text-center text-title'>
         完善您的信息
       </h2>
       <form className='space-y-4' action={dispatch}>
         <div>
           <label
             htmlFor='email'
-            className='block text-sm font-medium text-gray-700'
+            className='block text-sm font-medium text-label'
           >
             电子邮箱
           </label>
-          <input
+          <Input
             id='email'
             name='email'
             type='email'
@@ -48,24 +45,22 @@ const Page = () => {
             required
             disabled
             value={email}
-            className='w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500'
           />
         </div>
 
         <div>
           <label
             htmlFor='name'
-            className='block text-sm font-medium text-gray-700'
+            className='block text-sm font-medium text-label'
           >
             姓名
           </label>
-          <input
+          <Input
             id='name'
             name='name'
             type='text'
             autoComplete='name'
             required
-            className='w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500'
           />
         </div>
 
@@ -76,11 +71,11 @@ const Page = () => {
             type='checkbox'
             checked={checked}
             onChange={handleChange}
-            className='h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500'
+            className='h-4 w-4 text-main border-input-bd rounded'
           />
           <label
             htmlFor='usePassword'
-            className='ml-2 block text-sm text-gray-700'
+            className='ml-2 block text-sm text-title'
           >
             <strong>创建密码</strong>以便今后使用密码登录（可选）
           </label>
@@ -91,35 +86,33 @@ const Page = () => {
             <div>
               <label
                 htmlFor='password'
-                className='block text-sm font-medium text-gray-700'
+                className='block text-sm font-medium text-label'
               >
                 密码
-                <span className='text-sm text-gray-500 italic'>
+                <span className='text-sm text-disabled italic'>
                   &nbsp;* 至少 8 个字符
                 </span>
               </label>
-              <input
+              <Input
                 id='password'
                 name='password'
                 type='password'
                 autoComplete='new-password'
-                className='w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500'
               />
             </div>
 
             <div>
               <label
                 htmlFor='confirmPassword'
-                className='block text-sm font-medium text-gray-700'
+                className='block text-sm font-medium text-label'
               >
                 确认密码
               </label>
-              <input
+              <Input
                 id='confirmPassword'
                 name='confirmPassword'
                 type='password'
                 autoComplete='new-password'
-                className='w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500'
               />
             </div>
           </>

@@ -114,7 +114,7 @@ export const authenticateByResend = async (
 
 const userSetupSchema = z
   .object({
-    name: z.string().min(1, { message: '姓名不能为空' }),
+    name: z.string().trim().min(1, { message: '姓名不能为空' }),
     usePassword: z.literal('on').optional(),
     password: z.string().optional(),
     confirmPassword: z.string().optional()
