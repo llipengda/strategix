@@ -1,5 +1,6 @@
 import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
+import GitHub from 'next-auth/providers/github'
 import Resend from 'next-auth/providers/resend'
 import { cookies } from 'next/headers'
 
@@ -71,6 +72,22 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
         })
         if (!res.ok) {
           throw new Error('Resend error: ' + JSON.stringify(await res.json()))
+        }
+      }
+    }),
+    GitHub({
+      async profile(profile) {
+        const email = profile.email
+        const user = await getUserByEmail(email)
+
+        if (user) {
+          return user
+        } else {
+          return {
+            email,
+            name: profile.name,
+            role: 'temp-user'
+          }
         }
       }
     })

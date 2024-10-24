@@ -1,11 +1,12 @@
 import React from 'react'
+import { FaGithub } from 'react-icons/fa'
 import { MdEmail } from 'react-icons/md'
 
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
 import SigninForm from '@/app/auth/signin/signin-form'
-import { auth } from '@/auth'
+import { auth, signIn } from '@/auth'
 
 const Page = async ({ searchParams }: Page) => {
   const callbackUrl = searchParams?.callbackUrl || '/'
@@ -30,12 +31,28 @@ const Page = async ({ searchParams }: Page) => {
           <span className='bg-card-bg px-4 text-gray-500'>或</span>
         </div>
       </div>
-      <Link
-        className='text-center w-full px-4 py-2 font-bold text-gray-500 bg-gray-300 rounded-md flex items-center justify-center gap-2 dark:bg-gray-600 dark:text-gray-200'
-        href={`/auth/signin/email?callbackUrl=${callbackUrl}`}
-      >
-        <MdEmail className='text-xl' /> 通过电子邮件登录
-      </Link>
+      <div className='flex flex-col gap-2'>
+        <Link
+          className='text-center w-full px-4 py-2 font-bold text-gray-500 bg-gray-300 rounded-md flex items-center justify-center gap-2 dark:bg-gray-600 dark:text-gray-200'
+          href={`/auth/signin/email?callbackUrl=${callbackUrl}`}
+        >
+          <MdEmail className='text-xl' /> 通过电子邮件登录
+        </Link>
+        <form
+          className='w-full'
+          action={async () => {
+            'use server'
+            await signIn('github', { redirectTo: callbackUrl })
+          }}
+        >
+          <button
+            className='text-center w-full px-4 py-2 font-bold text-gray-500 bg-gray-300 rounded-md flex items-center justify-center gap-2 dark:bg-gray-600 dark:text-gray-200'
+            type='submit'
+          >
+            <FaGithub className='text-xl' /> 通过 GitHub 登录
+          </button>
+        </form>
+      </div>
     </>
   )
 }
