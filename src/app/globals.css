@@ -5,8 +5,8 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --page-bg: #ffffff;
-  --card-bg: #f3f4f6;
+  --card-bg: #ffffff;
+  --page-bg: #f3f4f6;
   --title: #1f2937;
   --label: #374151;
   --input-bg: #ffffff;
@@ -21,8 +21,8 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
-    --page-bg: #111827;
-    --card-bg: #1f2937;
+    --card-bg: #111827;
+    --page-bg: #1f2937;
     --title: #f3f4f6;
     --label: #e5e7eb;
     --input-bg: #1f2937;

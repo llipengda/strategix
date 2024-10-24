@@ -65,9 +65,8 @@ export const authenticateByCredentials = async (
 }
 
 export const authenticateByResend = async (
-  callbackUrl: string | undefined = '/',
-  _: unknown,
-  formData: FormData
+  formData: FormData,
+  callbackUrl: string | undefined = '/'
 ) => {
   const { success, data: email } = z
     .string()
@@ -92,6 +91,8 @@ export const authenticateByResend = async (
   }
 
   const user = await getUserByEmail(email)
+
+  console.log(user)
 
   let url = callbackUrl
 

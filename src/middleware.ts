@@ -1,6 +1,12 @@
 import { auth } from '@/auth'
 
-const allowed = ['/auth/signin', '/auth/signup', 'auth/verify-request']
+const allowed = [
+  '/',
+  '/auth/signin',
+  '/auth/signup',
+  '/auth/verify-request',
+  '/auth/signin/email'
+]
 
 const allowedTempUser = ['/auth/setup']
 

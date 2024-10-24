@@ -52,7 +52,8 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
     Resend({
       from: process.env.EMAIL_FROM,
       async sendVerificationRequest({ identifier: to, url, provider }) {
-        const emailType = cookies().get('email-type')?.value || 'signup'
+        const emailType = cookies().get('email-type')?.value ?? 'signup'
+        cookies().delete('email-type')
         const { host } = new URL(url)
         const res = await fetch('https://api.resend.com/emails', {
           method: 'POST',

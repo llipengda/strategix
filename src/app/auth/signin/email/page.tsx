@@ -5,9 +5,9 @@ const Page = ({ searchParams }: Page) => {
 
   return (
     <>
-      <h2 className='text-2xl font-bold text-center text-title'>注册新用户</h2>
+      <h2 className='text-2xl font-bold text-center text-title'>通过电子邮件登录</h2>
       <p className='text-center text-sm text-disabled'>
-        如果您已经注册，此操作将使您<strong>登录</strong>到已有账号
+        如果您没有账号，此操作将使您<strong>注册</strong>新账号
       </p>
       <EmailForm callbackUrl={callbackUrl} />
     </>
