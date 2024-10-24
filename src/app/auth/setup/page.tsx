@@ -1,7 +1,6 @@
 'use client'
 
-import { useState } from 'react'
-import { useFormState } from 'react-dom'
+import { use, useActionState, useState } from 'react'
 
 import { useSession } from 'next-auth/react'
 
@@ -10,8 +9,9 @@ import Input from '@/components/input'
 import SubmitButton from '@/components/submit-button'
 import { addUser } from '@/lib/actions/user'
 
-const Page = ({ searchParams }: Page) => {
-  const [error, dispatch] = useFormState(
+const Page = (props: Page) => {
+  const searchParams = use(props.searchParams!)
+  const [error, dispatch] = useActionState(
     addUser.bind(undefined, searchParams?.callbackUrl),
     undefined
   )

@@ -1,6 +1,6 @@
 'use client'
 
-import { useFormState } from 'react-dom'
+import { useActionState } from 'react'
 
 import Link from 'next/link'
 
@@ -10,7 +10,7 @@ import SubmitButton from '@/components/submit-button'
 import { authenticateByCredentials } from '@/lib/actions/user'
 
 export default function SigninForm({ callbackUrl }: { callbackUrl?: string }) {
-  const [errorMessage, dispatch] = useFormState(
+  const [errorMessage, dispatch] = useActionState(
     authenticateByCredentials.bind(undefined, callbackUrl),
     undefined
   )

@@ -1,6 +1,7 @@
 import EmailForm from '@/components/email-form'
 
-const Page = ({ searchParams }: Page) => {
+const Page = async (props: Page) => {
+  const searchParams = await props.searchParams
   const callbackUrl = searchParams?.callbackUrl || '/'
 
   return (

@@ -8,7 +8,8 @@ import { redirect } from 'next/navigation'
 import SigninForm from '@/app/auth/signin/signin-form'
 import { auth, signIn } from '@/auth'
 
-const Page = async ({ searchParams }: Page) => {
+const Page = async (props: Page) => {
+  const searchParams = await props.searchParams
   const callbackUrl = searchParams?.callbackUrl || '/'
 
   const session = await auth()

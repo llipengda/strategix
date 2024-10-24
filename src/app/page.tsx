@@ -1,6 +1,7 @@
+import Link from 'next/link'
+
 import { auth } from '@/auth'
 import '@/lib/database'
-import Link from 'next/link'
 
 export default async function Page() {
   const session = await auth()

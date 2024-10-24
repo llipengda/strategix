@@ -94,11 +94,13 @@ export const authenticateByResend = async (
 
   let url = callbackUrl
 
+  const cookieStore = await cookies()
+
   if (!user) {
     url = `/auth/setup?callbackUrl=${callbackUrl}`
-    cookies().set('email-type', 'signup')
+    cookieStore.set('email-type', 'signup')
   } else {
-    cookies().set('email-type', 'signin')
+    cookieStore.set('email-type', 'signin')
   }
 
   try {

@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers'
 
-const Page = () => {
-  const emailType = cookies().get('email-type')?.value || 'signup'
+const Page = async () => {
+  const emailType = (await cookies()).get('email-type')?.value || 'signup'
 
   const type = emailType === 'signup' ? '注册' : '登录'
 
