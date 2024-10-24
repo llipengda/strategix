@@ -7,6 +7,7 @@ import { DynamoDBAdapter } from '@auth/dynamodb-adapter'
 import bcrypt from 'bcryptjs'
 import { v4 } from 'uuid'
 
+import { getUserByEmail } from '@/lib/actions/user'
 import { dbDocument, query } from '@/lib/database'
 import { html, text } from '@/lib/email'
 import type { User } from '@/types/user'
@@ -53,7 +54,6 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
       from: process.env.EMAIL_FROM,
       async sendVerificationRequest({ identifier: to, url, provider }) {
         const emailType = cookies().get('email-type')?.value ?? 'signup'
-        cookies().delete('email-type')
         const { host } = new URL(url)
         const res = await fetch('https://api.resend.com/emails', {
           method: 'POST',
@@ -81,7 +81,13 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
     strategy: 'jwt'
   },
   callbacks: {
-    jwt({ token, user, trigger, session }) {
+    async jwt({ token, user, trigger, session }) {
+      if (!user && token.email) {
+        const dbUser = await getUserByEmail(token.email)
+        if (dbUser) {
+          user = dbUser
+        }
+      }
       if (user) {
         token.id = user.id || `user-${v4()}`
         token.role = user.role || 'temp-user'
@@ -107,6 +113,7 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
   pages: {
     signIn: '/auth/signin',
     signOut: '/auth/signout',
-    verifyRequest: '/auth/verify-request'
+    verifyRequest: '/auth/verify-request',
+    error: '/auth/error'
   }
 })

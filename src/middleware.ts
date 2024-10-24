@@ -3,9 +3,10 @@ import { auth } from '@/auth'
 const allowed = [
   '/',
   '/auth/signin',
+  '/auth/signin/email',
   '/auth/signup',
   '/auth/verify-request',
-  '/auth/signin/email'
+  '/auth/error'
 ]
 
 const allowedTempUser = ['/auth/setup']

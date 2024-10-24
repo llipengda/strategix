@@ -92,8 +92,6 @@ export const authenticateByResend = async (
 
   const user = await getUserByEmail(email)
 
-  console.log(user)
-
   let url = callbackUrl
 
   if (!user) {
