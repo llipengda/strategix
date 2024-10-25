@@ -1,12 +1,12 @@
 import React from 'react'
-import { FaGithub } from 'react-icons/fa'
 import { MdEmail } from 'react-icons/md'
 
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
 
+import GitHubSigninForm from '@/app/auth/signin/github-signin-form'
+import Signed from '@/app/auth/signin/signed'
 import SigninForm from '@/app/auth/signin/signin-form'
-import { auth, signIn } from '@/auth'
+import { auth } from '@/auth'
 
 const Page = async (props: Page) => {
   const searchParams = await props.searchParams
@@ -15,7 +15,7 @@ const Page = async (props: Page) => {
   const session = await auth()
 
   if (session?.user) {
-    redirect(callbackUrl || '/')
+    return <Signed callbackUrl={callbackUrl} />
   }
 
   return (
@@ -39,20 +39,7 @@ const Page = async (props: Page) => {
         >
           <MdEmail className='text-xl' /> 通过电子邮件登录
         </Link>
-        <form
-          className='w-full'
-          action={async () => {
-            'use server'
-            await signIn('github', { redirectTo: callbackUrl })
-          }}
-        >
-          <button
-            className='text-center w-full px-4 py-2 font-bold text-gray-500 bg-gray-300 rounded-md flex items-center justify-center gap-2 dark:bg-gray-600 dark:text-gray-200'
-            type='submit'
-          >
-            <FaGithub className='text-xl' /> 通过 GitHub 登录
-          </button>
-        </form>
+        <GitHubSigninForm callbackUrl={callbackUrl} />
       </div>
     </>
   )

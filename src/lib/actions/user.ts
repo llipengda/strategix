@@ -202,3 +202,9 @@ export const addUser = async (
   revalidatePath(callbackUrl!)
   redirect(callbackUrl)
 }
+
+export async function gitHibSignin(url: string) {
+  await signIn('github', {
+    redirectTo: url
+  })
+}
