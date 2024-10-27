@@ -17,6 +17,9 @@ const levelMap = {
   'super-admin': 3
 }
 
+/**
+ * @deprecated no need to use api route anymore
+ */
 const handle = (
   func: (
     req: NextAuthRequest,
