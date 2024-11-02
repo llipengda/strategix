@@ -17,7 +17,7 @@ const NavLink = ({
   return (
     <Link
       href={href}
-      className={`flex items-center p-4 text-label hover:bg-gray-200 hover:font-semibold rounded-md transition duration-200 dark:hover:bg-gray-700 ${isActive ? 'bg-gray-200 font-semibold' : ''}`}
+      className={`flex items-center p-4 text-label hover:bg-gray-200 hover:font-semibold rounded-md transition duration-200 dark:hover:bg-gray-700 ${isActive ? 'bg-gray-200 dark:bg-gray-700 font-semibold' : ''}`}
     >
       {children}
     </Link>

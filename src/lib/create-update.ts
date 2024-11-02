@@ -1,12 +1,12 @@
 export default function createUpdate(data: Record<string, unknown>) {
   let UpdateExpression: string | undefined = 'SET'
-  const AttributeUpdates: Record<string, string> = {}
+  const ExpressionAttributeNames: Record<string, string> = {}
   const ExpressionAttributeValues: Record<string, unknown> = {}
 
   for (const key in data) {
     if (data[key]) {
       UpdateExpression += ` #${key} = :${key},`
-      AttributeUpdates[`#${key}`] = key
+      ExpressionAttributeNames[`#${key}`] = key
       ExpressionAttributeValues[`:${key}`] = data[key]
     }
   }
@@ -17,9 +17,9 @@ export default function createUpdate(data: Record<string, unknown>) {
     UpdateExpression = undefined
   }
 
-  return [
+  return {
     UpdateExpression,
-    AttributeUpdates,
+    ExpressionAttributeNames,
     ExpressionAttributeValues
-  ] as const
+  } as const
 }
