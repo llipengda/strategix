@@ -23,21 +23,18 @@ export type User = z.infer<typeof User>
 export type Role = User['role']
 
 export const roleOrder = {
-  'super-admin': 0,
-  admin: 1,
+  'super-admin': 4,
+  admin: 3,
   manager: 2,
-  user: 3,
-  'temp-user': 4
+  user: 1,
+  'temp-user': 0
 } as const
 
 type MinimalUserWithRole = { role: Role }
 export const role = {
-  superAdmin: (user: MinimalUserWithRole) =>
-    roleOrder[user.role] <= roleOrder['super-admin'],
-  admin: (user: MinimalUserWithRole) => roleOrder[user.role] <= roleOrder.admin,
-  manager: (user: MinimalUserWithRole) =>
-    roleOrder[user.role] <= roleOrder.manager,
-  user: (user: MinimalUserWithRole) => roleOrder[user.role] <= roleOrder.user,
-  tempUser: (user: MinimalUserWithRole) =>
-    roleOrder[user.role] <= roleOrder['temp-user']
+  superAdmin: (user?: MinimalUserWithRole) => !!user && roleOrder[user.role] >= roleOrder['super-admin'],
+  admin: (user?: MinimalUserWithRole) => !!user && roleOrder[user.role] >= roleOrder.admin,
+  manager: (user?: MinimalUserWithRole) => !!user && roleOrder[user.role] >= roleOrder.manager,
+  user: (user?: MinimalUserWithRole) => !!user && roleOrder[user.role] >= roleOrder.user,
+  tempUser: (user?: MinimalUserWithRole) => !!user && roleOrder[user.role] >= roleOrder['temp-user']
 }

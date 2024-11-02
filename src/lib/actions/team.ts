@@ -7,7 +7,7 @@ import { z } from 'zod'
 import { auth } from '@/auth'
 import createUpdate from '@/lib/create-update'
 import { get, query, update } from '@/lib/database'
-import { type Role, type User, roleOrder } from '@/types/user'
+import { type Role, type User, role as checkRole } from '@/types/user'
 
 export const getTeam = async () => {
   const session = await auth()
@@ -68,7 +68,7 @@ export const getTeam = async () => {
 export const getUsersWithoutTeam = async () => {
   const user = (await auth())?.user
 
-  if (roleOrder[user?.role || 'user'] >= roleOrder['user']) {
+  if (checkRole.admin(user)) {
     throw new Error('Forbidden')
   }
 
@@ -93,7 +93,7 @@ export const addUserToTeam = async (
 ) => {
   const user = (await auth())?.user
 
-  if (roleOrder[user?.role || 'user'] >= roleOrder['user']) {
+  if (checkRole.admin(user)) {
     throw new Error('Forbidden')
   }
 
@@ -128,7 +128,7 @@ export const addUserToTeamAction = async (
 export const removeUserFromTeam = async (userId: string) => {
   const user = (await auth())?.user
 
-  if (roleOrder[user?.role || 'user'] >= roleOrder['user']) {
+  if (checkRole.admin(user)) {
     throw new Error('Forbidden')
   }
 
