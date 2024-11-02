@@ -79,7 +79,6 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
       allowDangerousEmailAccountLinking: true
     })
   ],
-  // @ts-expect-error i don't know why ts is complaining
   adapter: DynamoDBAdapter(dbDocument),
   session: {
     strategy: 'jwt'
