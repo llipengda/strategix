@@ -53,7 +53,7 @@ const AddUser = async ({ teamName }: { teamName: string }) => {
           </svg>
         </div>
       </div>
-      <SubmitButton className='w-auto' text='添加成员' disabled={disabled} />
+      <SubmitButton className='w-fit px-8 max-md:w-auto' text='添加成员' disabled={disabled} />
       {disabled && (
         <div className='text-gray-400 italic md:ml-2 max-md:text-center'>
           没有可添加的成员
