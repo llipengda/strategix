@@ -7,7 +7,12 @@ import { z } from 'zod'
 import { auth } from '@/auth'
 import createUpdate from '@/lib/create-update'
 import { get, query, update } from '@/lib/database'
-import { type Role, type User, role as checkRole } from '@/types/user'
+import {
+  type Role,
+  type User,
+  role as checkRole,
+  roleOrder
+} from '@/types/user'
 
 export const getTeam = async () => {
   const session = await auth()
@@ -49,14 +54,7 @@ export const getTeam = async () => {
   })
 
   members.sort((a, b) => {
-    const order = {
-      'super-admin': 0,
-      admin: 1,
-      manager: 2,
-      user: 3,
-      'temp-user': 4
-    }
-    return order[a.role] - order[b.role]
+    return roleOrder[b.role] - roleOrder[a.role]
   })
 
   return {
@@ -68,7 +66,7 @@ export const getTeam = async () => {
 export const getUsersWithoutTeam = async () => {
   const user = (await auth())?.user
 
-  if (checkRole.admin(user)) {
+  if (!checkRole.admin(user)) {
     throw new Error('Forbidden')
   }
 
@@ -93,7 +91,7 @@ export const addUserToTeam = async (
 ) => {
   const user = (await auth())?.user
 
-  if (checkRole.admin(user)) {
+  if (!checkRole.admin(user)) {
     throw new Error('Forbidden')
   }
 
@@ -128,7 +126,7 @@ export const addUserToTeamAction = async (
 export const removeUserFromTeam = async (userId: string) => {
   const user = (await auth())?.user
 
-  if (checkRole.admin(user)) {
+  if (!checkRole.admin(user)) {
     throw new Error('Forbidden')
   }
 

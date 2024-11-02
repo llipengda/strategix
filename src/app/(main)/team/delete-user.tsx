@@ -21,12 +21,13 @@ const DeleteUser = ({ userId }: { userId: string }) => {
         <MdDeleteForever />
       </button>
       <div
-        className={`z-50 overflow-hidden whitespace-nowrap right-0 absolute flex-row gap-1 transition-all bg-page-bg flex items-center justify-end duration-300 ease-in-out ${open ? 'w-3/4' : 'w-0'}`}
+        className={`z-50 overflow-hidden whitespace-nowrap right-0 absolute flex-row gap-1 transition-all bg-page-bg flex items-center justify-end duration-300 ease-in-out min-h-8 ${open ? 'w-3/4' : 'w-0'}`}
       >
         <p>确定要移除此成员吗？</p>
         <button
           type='button'
-          className={`bg-red-500 hover:bg-red-700 text-white rounded-md text-sm p-1 px-2 ${disabled ? 'cursor-not-allowed bg-gray-500 hover:bg-gray-500' : ''}`}
+          disabled={disabled}
+          className={`text-white rounded-md text-sm p-1 px-2 ${disabled ? 'cursor-not-allowed bg-gray-500 hover:bg-gray-500' : 'bg-red-500 hover:bg-red-700'}`}
           onClick={async () => {
             NProgress.start()
             setDisabled(true)
@@ -40,7 +41,8 @@ const DeleteUser = ({ userId }: { userId: string }) => {
         </button>
         <button
           type='button'
-          className={`bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-md text-sm p-1 px-2 ${disabled ? 'cursor-not-allowed bg-gray-500 hover:bg-gray-500 text-white' : ''}`}
+          disabled={disabled}
+          className={`rounded-md text-sm p-1 px-2 ${disabled ? 'cursor-not-allowed bg-gray-500 hover:bg-gray-500 text-white' : 'bg-gray-300 hover:bg-gray-400 text-gray-800'}`}
           onClick={() => setOpen(false)}
         >
           取消
