@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import NextTopLoader from 'nextjs-toploader'
 
-import './globals.css'
+import '@/app/globals.css'
 
 export const metadata: Metadata = {
   title: 'Strategix',
@@ -15,7 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='zh_cn'>
-      <body className={`antialiased`}>
+      <body className='antialiased bg-page-bg'>
         <NextTopLoader />
         {children}
       </body>

@@ -1,5 +1,5 @@
 import { auth } from '@/auth'
-import { Forbidden, InternalServerError, Unauthorized } from '@/lib/response'
+import { Forbidden, InternalServerError, Unauthorized } from '@/lib/deprecated/response'
 import type {
   AppRouteHandlerFn,
   AppRouteHandlerFnContext,

@@ -3,9 +3,9 @@ import { MdEmail } from 'react-icons/md'
 
 import Link from 'next/link'
 
-import GitHubSigninForm from '@/app/auth/signin/github-signin-form'
-import Signed from '@/app/auth/signin/signed'
-import SigninForm from '@/app/auth/signin/signin-form'
+import GitHubSigninForm from './github-signin-form'
+import Signed from './signed'
+import SigninForm from './signin-form'
 import { auth } from '@/auth'
 
 const Page = async (props: Page) => {
