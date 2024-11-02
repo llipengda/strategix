@@ -1,5 +1,5 @@
 import { auth } from '@/auth'
-import { Forbidden, InternalServerError, Unauthorized } from '@/lib/response'
+import { Forbidden, InternalServerError, Unauthorized } from '@/lib/deprecated/response'
 import type {
   AppRouteHandlerFn,
   AppRouteHandlerFnContext,
@@ -17,6 +17,9 @@ const levelMap = {
   'super-admin': 3
 }
 
+/**
+ * @deprecated no need to use api route anymore
+ */
 const handle = (
   func: (
     req: NextAuthRequest,

@@ -1,6 +1,6 @@
 'use client'
 
-import { useFormState } from 'react-dom'
+import { useActionState } from 'react'
 
 import { useReCaptcha } from 'next-recaptcha-v3'
 
@@ -22,7 +22,7 @@ export default function EmailForm({ callbackUrl }: { callbackUrl: string }) {
     return authenticateByResend(formData, callbackUrl)
   }
 
-  const [error, dispatch] = useFormState(added, undefined)
+  const [error, dispatch] = useActionState(added, undefined)
   return (
     <form className='space-y-4' action={dispatch}>
       <label htmlFor='email' className='block text-sm font-medium text-label'>

@@ -3,7 +3,8 @@ import React from 'react'
 import { signOut } from '@/auth'
 import SubmitButton from '@/components/submit-button'
 
-const Page = ({ searchParams }: Page) => {
+const Page = async (props: Page) => {
+  const searchParams = await props.searchParams
   const callbackUrl = searchParams?.callbackUrl || '/'
 
   return (
