@@ -1,5 +1,9 @@
 import { auth } from '@/auth'
-import { Forbidden, InternalServerError, Unauthorized } from '@/lib/deprecated/response'
+import {
+  Forbidden,
+  InternalServerError,
+  Unauthorized
+} from '@/lib/deprecated/response'
 import type {
   AppRouteHandlerFn,
   AppRouteHandlerFnContext,
@@ -13,8 +17,9 @@ const levelMap = {
   noauth: 0,
   'temp-user': 1,
   user: 1,
-  admin: 2,
-  'super-admin': 3
+  manager: 2,
+  admin: 3,
+  'super-admin': 4
 }
 
 /**
