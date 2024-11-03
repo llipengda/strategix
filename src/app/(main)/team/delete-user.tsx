@@ -7,16 +7,25 @@ import NProgress from 'nprogress'
 
 import { removeUserFromTeam } from '@/lib/actions/team'
 
-const DeleteUser = ({ userId }: { userId: string }) => {
+const DeleteUser = ({
+  userId,
+  canNotDel
+}: {
+  userId: string
+  canNotDel: boolean
+}) => {
   const [open, setOpen] = useState(false)
-  const [disabled, setDisabled] = useState(false)
+  const [_disabled, setDisabled] = useState(false)
+
+  const disabled = canNotDel || _disabled
 
   return (
     <>
       <button
-        className='rounded-full text-white p-1 bg-red-500 hover:bg-red-700 absolute right-0 top-1/2 translate-y-[-50%] text-xl'
+        className={`rounded-full absolute right-0 top-1/2 translate-y-[-50%] p-1 text-xl ${disabled ? 'cursor-not-allowed bg-gray-300 text-gray-400' : 'text-white bg-red-500 hover:bg-red-700'}`}
+        disabled={disabled}
         type='button'
-        onClick={() => setOpen(true)}
+        onClick={() => !disabled && setOpen(true)}
       >
         <MdDeleteForever />
       </button>

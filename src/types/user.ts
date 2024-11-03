@@ -32,9 +32,42 @@ export const roleOrder = {
 
 type MinimalUserWithRole = { role: Role }
 export const role = {
-  superAdmin: (user?: MinimalUserWithRole) => !!user && roleOrder[user.role] >= roleOrder['super-admin'],
-  admin: (user?: MinimalUserWithRole) => !!user && roleOrder[user.role] >= roleOrder.admin,
-  manager: (user?: MinimalUserWithRole) => !!user && roleOrder[user.role] >= roleOrder.manager,
-  user: (user?: MinimalUserWithRole) => !!user && roleOrder[user.role] >= roleOrder.user,
-  tempUser: (user?: MinimalUserWithRole) => !!user && roleOrder[user.role] >= roleOrder['temp-user']
+  superAdmin: (user?: MinimalUserWithRole) =>
+    !!user && roleOrder[user.role] >= roleOrder['super-admin'],
+  admin: (user?: MinimalUserWithRole) =>
+    !!user && roleOrder[user.role] >= roleOrder.admin,
+  manager: (user?: MinimalUserWithRole) =>
+    !!user && roleOrder[user.role] >= roleOrder.manager,
+  user: (user?: MinimalUserWithRole) =>
+    !!user && roleOrder[user.role] >= roleOrder.user,
+  tempUser: (user?: MinimalUserWithRole) =>
+    !!user && roleOrder[user.role] >= roleOrder['temp-user'],
+
+  ensure: {
+    superAdmin: (user?: MinimalUserWithRole) => {
+      if (!role.superAdmin(user)) {
+        throw new Error('This action requires at least super-admin role.')
+      }
+    },
+    admin: (user?: MinimalUserWithRole) => {
+      if (!role.admin(user)) {
+        throw new Error('This action requires at least admin role.')
+      }
+    },
+    manager: (user?: MinimalUserWithRole) => {
+      if (!role.manager(user)) {
+        throw new Error('This action requires at least manager role.')
+      }
+    },
+    user: (user?: MinimalUserWithRole) => {
+      if (!role.user(user)) {
+        throw new Error('This action requires at least user role.')
+      }
+    },
+    tempUser: (user?: MinimalUserWithRole) => {
+      if (!role.tempUser(user)) {
+        throw new Error('This action requires at least temp-user role.')
+      }
+    }
+  }
 }

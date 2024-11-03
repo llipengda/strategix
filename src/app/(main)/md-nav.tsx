@@ -28,7 +28,7 @@ const MdNav = () => {
         onClick={() => setOpen(!open)}
       >
         <IoIosArrowForward
-          className={`transition-all duration-300 ease-in-out ${open ? 'rotate-90' : 'rotate-0'}`}
+          className={`transition-all duration-200 ease-in-out ${open ? 'rotate-90' : 'rotate-0'}`}
         />
         <h1 className='text-title ml-2'>{current?.name}</h1>
       </div>

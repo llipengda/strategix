@@ -1,7 +1,9 @@
-import AddUser from '@/app/(main)/team/add-user'
-import DeleteUser from '@/app/(main)/team/delete-user'
+import { Fragment } from 'react'
+
+import AddTeamForm from '@/app/(main)/team/add-team-form'
+import Team from '@/app/(main)/team/team'
 import { auth } from '@/auth'
-import { getTeam } from '@/lib/actions/team'
+import { getAllTeams, getTeam } from '@/lib/actions/team'
 import { role } from '@/types/user'
 
 const Page = async () => {
@@ -11,44 +13,37 @@ const Page = async () => {
     return
   }
 
+  if (role.superAdmin(user)) {
+    const allTeams = await getAllTeams()
+
+    return (
+      <>
+        <div>
+          {allTeams.map(team => (
+            <Fragment key={team.teamName}>
+              <Team key={team.teamName} team={team} />
+              <div
+                key={team.teamName}
+                className='border-b my-10 border-gray-500'
+              />
+            </Fragment>
+          ))}
+        </div>
+        <div>
+          <h2 className='text-title text-2xl font-bold'>创建新团队</h2>
+          <AddTeamForm />
+        </div>
+      </>
+    )
+  }
+
   const team = await getTeam()
 
   if (!team) {
     return <div>您不在任何团队中</div>
   }
 
-  return (
-    <div>
-      <h1 className='text-2xl'>
-        所在团队：<b>{team.teamName}</b>
-      </h1>
-      <ul className='mt-5 w-full'>
-        {team.members.map(member => (
-          <li
-            key={member.id}
-            className='flex items-center border-b p-2 justify-between relative min-h-14'
-          >
-            <span>{member.name}</span>
-            {role.manager(member) && (
-              <span
-                className={`px-3 py-1 text-white rounded-full mr-8 ${
-                  member.role === 'admin'
-                    ? 'bg-red-500 dark:bg-red-600'
-                    : 'bg-blue-500 dark:bg-blue-600'
-                }`}
-              >
-                {member.role === 'admin' ? '负责人' : '管理员'}
-              </span>
-            )}
-            {member?.role !== 'admin' && role.admin(user) && (
-              <DeleteUser userId={member.id} />
-            )}
-          </li>
-        ))}
-      </ul>
-      {user?.role === 'admin' && <AddUser teamName={team.teamName} />}
-    </div>
-  )
+  return <Team team={team} />
 }
 
 export default Page

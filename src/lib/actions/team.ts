@@ -7,6 +7,7 @@ import { z } from 'zod'
 import { auth } from '@/auth'
 import createUpdate from '@/lib/create-update'
 import { get, query, update } from '@/lib/database'
+import type { Team } from '@/types/team'
 import {
   type Role,
   type User,
@@ -60,15 +61,13 @@ export const getTeam = async () => {
   return {
     teamName: team,
     members
-  }
+  } as Team
 }
 
 export const getUsersWithoutTeam = async () => {
   const user = (await auth())?.user
 
-  if (!checkRole.admin(user)) {
-    throw new Error('Forbidden')
-  }
+  checkRole.ensure.admin(user)
 
   const users = await query<User>({
     IndexName: 'type-index',
@@ -81,7 +80,7 @@ export const getUsersWithoutTeam = async () => {
     }
   })
 
-  return users.filter(user => !user.team)
+  return users.filter(user => !user.team && !checkRole.superAdmin(user))
 }
 
 export const addUserToTeam = async (
@@ -91,9 +90,7 @@ export const addUserToTeam = async (
 ) => {
   const user = (await auth())?.user
 
-  if (!checkRole.admin(user)) {
-    throw new Error('Forbidden')
-  }
+  checkRole.ensure.admin(user)
 
   await update({
     Key: {
@@ -126,9 +123,7 @@ export const addUserToTeamAction = async (
 export const removeUserFromTeam = async (userId: string) => {
   const user = (await auth())?.user
 
-  if (!checkRole.admin(user)) {
-    throw new Error('Forbidden')
-  }
+  checkRole.ensure.admin(user)
 
   if (userId === user?.id) {
     throw new Error('Cannot remove yourself')
@@ -150,4 +145,66 @@ export const removeUserFromTeam = async (userId: string) => {
   })
 
   revalidatePath('/team')
+}
+
+export const getAllTeams = async () => {
+  const user = (await auth())?.user
+
+  checkRole.ensure.superAdmin(user)
+  
+  const users = await query<User>({
+    IndexName: 'type-index',
+    KeyConditionExpression: '#type = :type',
+    ExpressionAttributeValues: {
+      ':type': 'user'
+    },
+    ExpressionAttributeNames: {
+      '#type': 'type'
+    }
+  })
+
+  const teams = users.reduce(
+    (acc, user) => {
+      if (!user.team) {
+        return acc
+      }
+
+      if (!acc[user.team]) {
+        acc[user.team] = []
+      }
+
+      acc[user.team].push(user)
+
+      return acc
+    },
+    {} as Record<string, User[]>
+  )
+
+  return Object.entries(teams).map(([team, members]) => ({
+    teamName: team,
+    members: members.sort((a, b) => {
+      return roleOrder[b.role] - roleOrder[a.role]
+    })
+  })) as Team[]
+}
+
+export const addTeam = async (teamName: string, userId: string) => {
+  const user = (await auth())?.user
+
+  checkRole.ensure.superAdmin(user)
+
+  await addUserToTeam(userId, teamName, 'admin')
+
+  revalidatePath('/team')
+}
+
+export const addTeamAction = async (formData: FormData) => {
+  const teamName = z.string().parse(formData.get('teamName'))
+  const userId = z.string().parse(formData.get('user'))
+
+  if (!teamName || !userId) {
+    return
+  }
+
+  await addTeam(teamName, userId)
 }
