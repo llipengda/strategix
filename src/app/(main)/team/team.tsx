@@ -2,7 +2,8 @@ import AddUser from '@/app/(main)/team/add-user'
 import DeleteUser from '@/app/(main)/team/delete-user'
 import { auth } from '@/auth'
 import type { Team as TTeam } from '@/types/team'
-import { role } from '@/types/user'
+
+import {role} from "@/lib/role";
 
 export default async function Team({ team }: { team: TTeam }) {
   const user = (await auth())?.user
@@ -10,7 +11,7 @@ export default async function Team({ team }: { team: TTeam }) {
   const superAdmin = role.superAdmin(user)
 
   return (
-    <div>
+    <div className='bg-white dark:bg-black p-6 shadow-lg rounded-lg'>
       <h1 className='text-2xl'>
         {!superAdmin && '所在'}团队：<b>{team.teamName}</b>
       </h1>

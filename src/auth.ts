@@ -11,7 +11,7 @@ import { v4 } from 'uuid'
 import { getUserByEmail } from '@/lib/actions/user'
 import { dbDocument, query } from '@/lib/database'
 import { html, text } from '@/lib/email'
-import type { User } from '@/types/user'
+import type { User } from '@/types/role'
 
 export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
   providers: [

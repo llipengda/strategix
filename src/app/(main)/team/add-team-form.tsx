@@ -11,7 +11,7 @@ const AddTeamForm = async () => {
 
   return (
     <form className='space-y-4 mt-5' action={addTeamAction}>
-      <div className='flex flex-row gap-2 w-auto max-lg:flex-col items-center'>
+      <div className='flex gap-2 xl:gap-4 w-auto xl:flex-col lg:flex-row flex-col items-center'>
         <label
           htmlFor='teamName'
           className='hidden text-sm font-medium text-label'
@@ -19,14 +19,14 @@ const AddTeamForm = async () => {
           团队名称
         </label>
         <Input
-          className='!w-64 max-lg:!w-full'
+          className='!max-w-64 max-lg:!w-full max-lg:!max-w-full'
           id='teamName'
           name='teamName'
           placeholder='团队名称'
           disabled={disabled}
           required
         />
-        <div className='relative inline-block w-64 max-lg:w-full'>
+        <div className='relative inline-block max-w-64 max-lg:w-full max-lg:max-w-full'>
           <label htmlFor='user' className='hidden'>
             选择成员作为负责人
           </label>
@@ -42,7 +42,7 @@ const AddTeamForm = async () => {
         </div>
         <SubmitButton
           disabled={disabled}
-          className='!w-fit px-8 max-lg:!w-full'
+          className='!w-fit px-8 max-lg:!w-full xl:!w-full'
           text='创建团队'
         />
         {disabled && (

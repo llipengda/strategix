@@ -30,7 +30,7 @@ const DeleteUser = ({
         <MdDeleteForever />
       </button>
       <div
-        className={`z-50 overflow-hidden whitespace-nowrap right-0 absolute flex-row gap-1 transition-all bg-page-bg flex items-center justify-end duration-300 ease-in-out min-h-8 ${open ? 'w-3/4' : 'w-0'}`}
+        className={`z-50 overflow-hidden whitespace-nowrap right-0 absolute flex-row gap-1 transition-all bg-white dark:bg-black flex items-center justify-end duration-300 ease-in-out min-h-8 ${open ? 'w-3/4' : 'w-0'}`}
       >
         <p>确定要移除此成员吗？</p>
         <button

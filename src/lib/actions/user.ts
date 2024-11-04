@@ -9,9 +9,10 @@ import bcrypt from 'bcryptjs'
 import { z } from 'zod'
 
 import { auth, signIn, unstable_update as update } from '@/auth'
-import { add, query } from '@/lib/database'
+import createUpdate from '@/lib/create-update'
+import { add, update as dbUpdate, get, query } from '@/lib/database'
 import validateCaptcha from '@/lib/recaptcha'
-import { User } from '@/types/user'
+import { User } from '@/types/role'
 
 export const getUserByEmail = async (email: string | null | undefined) => {
   if (!email) {
@@ -207,4 +208,45 @@ export async function gitHibSignin(url: string) {
   await signIn('github', {
     redirectTo: url
   })
+}
+
+export async function getCurrentUser() {
+  const session = await auth()
+
+  if (!session) {
+    return null
+  }
+
+  const user = await get<User>({
+    id: session.user.id,
+    sk: 'null'
+  })
+
+  if (!user) {
+    return null
+  }
+
+  user.password = undefined
+
+  return user
+}
+
+const userUpdateSchema = z.object({
+  id: z.string(),
+  name: z.string().trim().min(1, { message: '姓名不能为空' }),
+  role: z.enum(['super-admin', 'admin', 'manager', 'user', 'temp-user'])
+})
+
+export const updateUser = async (formData: FormData) => {
+  const user = userUpdateSchema.parse(Object.fromEntries(formData))
+
+  await dbUpdate({
+    Key: {
+      id: user.id,
+      sk: 'null'
+    },
+    ...createUpdate({ name: user.name, role: user.role })
+  })
+
+  revalidatePath('/user')
 }

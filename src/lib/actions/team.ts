@@ -7,13 +7,9 @@ import { z } from 'zod'
 import { auth } from '@/auth'
 import createUpdate from '@/lib/create-update'
 import { get, query, update } from '@/lib/database'
+import { Role, role as checkRole, roleOrder } from '@/lib/role'
+import { type User } from '@/types/role'
 import type { Team } from '@/types/team'
-import {
-  type Role,
-  type User,
-  role as checkRole,
-  roleOrder
-} from '@/types/user'
 
 export const getTeam = async () => {
   const session = await auth()
@@ -151,7 +147,7 @@ export const getAllTeams = async () => {
   const user = (await auth())?.user
 
   checkRole.ensure.superAdmin(user)
-  
+
   const users = await query<User>({
     IndexName: 'type-index',
     KeyConditionExpression: '#type = :type',

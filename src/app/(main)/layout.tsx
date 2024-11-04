@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
+import Link from 'next/link'
 import NextTopLoader from 'nextjs-toploader'
 
 import MdNav from '@/app/(main)/md-nav'
@@ -23,17 +24,19 @@ export default async function RootLayout({
       <body className='antialiased bg-page-bg'>
         <NextTopLoader />
         <main>
-          <div className='flex bg-page-bg max-w-[80%] mx-auto max-md:flex-col max-md:h-screen relative'>
+          <div className='flex bg-page-bg max-w-[90%] mx-auto max-md:flex-col max-md:h-screen relative'>
             {/* > md */}
             <nav className='hidden md:block w-72 sticky py-10 top-0 h-screen'>
               <div className='border-r border-gray-300 pr-10 h-full'>
-                <div className='p-4 flex items-center justify-start gap-4'>
-                  <Image src={icon} alt='icon' className='w-1/5' />
-                  <h1 className='text-lg font-semibold text-title'>
-                    STRATEGIX
-                  </h1>
-                </div>
-                <ul className='mt-6'>
+                <Link href='/'>
+                  <div className='p-4 flex items-center justify-start gap-4'>
+                    <Image src={icon} alt='icon' className='w-1/5' />
+                    <h1 className='text-lg font-semibold text-title'>
+                      STRATEGIX
+                    </h1>
+                  </div>
+                </Link>
+                <ul className='mt-6 gap-2 flex flex-col'>
                   {pages.map(item => (
                     <li key={item.url}>
                       <NavLink href={item.url}>{item.name}</NavLink>
@@ -46,7 +49,7 @@ export default async function RootLayout({
             <nav className='block md:hidden mt-10'>
               <MdNav />
             </nav>
-            <div className='flex-1 p-6 py-16 pl-10 max-md:px-2'>{children}</div>
+            <div className='flex-1 p-6 py-16 pl-10 max-md:px-2 max-md:py-8'>{children}</div>
           </div>
         </main>
       </body>

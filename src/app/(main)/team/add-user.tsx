@@ -13,7 +13,7 @@ const AddUser = async ({ teamName }: { teamName: string }) => {
       className='flex gap-2 md:items-center mt-5 md:flex-row flex-col'
       action={addUserToTeamAction.bind(null, teamName)}
     >
-      <div className='relative inline-block w-64 max-md:w-full'>
+      <div className='relative inline-block max-w-64 max-md:w-full max-md:max-w-full'>
         <label className='hidden' htmlFor='user'>
           选择用户
         </label>
@@ -27,7 +27,7 @@ const AddUser = async ({ teamName }: { teamName: string }) => {
         </Select>
         <SelectArrow />
       </div>
-      <div className='relative inline-block w-32 max-md:w-full'>
+      <div className='relative inline-block max-w-32 max-md:w-full max-md:max-w-full'>
         <label className='hidden' htmlFor='role'>
           选择角色
         </label>

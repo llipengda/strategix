@@ -1,24 +1,4 @@
-import { v4 } from 'uuid'
-import { z } from 'zod'
-
-export const User = z.object({
-  id: z
-    .string()
-    .startsWith('user-')
-    .default(() => `user-${v4()}`),
-  name: z.string(),
-  email: z.string().email(),
-  department: z.string().optional(),
-  password: z.string().optional(),
-  role: z
-    .enum(['super-admin', 'admin', 'manager', 'user', 'temp-user'])
-    .default('user'),
-  type: z.literal('user').default('user'),
-  sk: z.string().default('null'),
-  team: z.string().optional()
-})
-
-export type User = z.infer<typeof User>
+import type { User } from '@/types/role'
 
 export type Role = User['role']
 
@@ -30,7 +10,16 @@ export const roleOrder = {
   'temp-user': 0
 } as const
 
+export const roleMap = {
+  'super-admin': '超级管理员',
+  admin: '负责人',
+  manager: '管理员',
+  user: '普通用户',
+  'temp-user': '临时用户'
+} as const
+
 type MinimalUserWithRole = { role: Role }
+
 export const role = {
   superAdmin: (user?: MinimalUserWithRole) =>
     !!user && roleOrder[user.role] >= roleOrder['super-admin'],
@@ -69,5 +58,45 @@ export const role = {
         throw new Error('This action requires at least temp-user role.')
       }
     }
-  }
+  },
+
+  map:
+    (_user?: MinimalUserWithRole) =>
+    <T>({
+      superAdmin,
+      admin,
+      manager,
+      user,
+      tempUser,
+      default: _default
+    }: {
+      superAdmin?: () => T
+      admin?: () => T
+      manager?: () => T
+      user?: () => T
+      tempUser?: () => T,
+      default: () => T
+    }) => {
+      if (role.superAdmin(_user)) {
+        return superAdmin?.()
+      }
+
+      if (role.admin(_user)) {
+        return admin?.()
+      }
+
+      if (role.manager(_user)) {
+        return manager?.()
+      }
+
+      if (role.user(_user)) {
+        return user?.()
+      }
+
+      if (role.tempUser(_user)) {
+        return tempUser?.()
+      }
+
+      return _default()
+    }
 }

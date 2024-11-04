@@ -2,7 +2,7 @@ import type { DefaultSession, Session } from 'next-auth'
 import 'next-auth/jwt'
 import type { NextRequest } from 'next/server'
 
-import { type User as TUser } from '@/types/user'
+import { type User as TUser } from '@/types/role'
 
 declare module 'next-auth' {
   /**
