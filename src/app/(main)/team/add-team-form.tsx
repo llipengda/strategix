@@ -42,7 +42,7 @@ const AddTeamForm = async () => {
         </div>
         <SubmitButton
           disabled={disabled}
-          className='w-fit px-8 max-lg:w-full'
+          className='!w-fit px-8 max-lg:!w-full'
           text='创建团队'
         />
         {disabled && (

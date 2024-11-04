@@ -46,7 +46,7 @@ export default async function RootLayout({
             <nav className='block md:hidden mt-10'>
               <MdNav />
             </nav>
-            <div className='flex-1 p-6 py-16 pl-10'>{children}</div>
+            <div className='flex-1 p-6 py-16 pl-10 max-md:px-2'>{children}</div>
           </div>
         </main>
       </body>
