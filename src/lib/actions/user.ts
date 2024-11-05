@@ -267,14 +267,12 @@ export const deleteUser = async () => {
     throw new Error('未验证')
   }
 
-  await signOut({ redirect: false })
-
   await db.del({
     id,
     sk: 'null'
   })
 
-  revalidatePath('/')
+  await signOut({ redirect: true, redirectTo: '/' })
 
-  redirect('/')
+  revalidatePath('/')
 }

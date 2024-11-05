@@ -42,7 +42,8 @@ const handle = (
       }
     }
     try {
-      // @ts-expect-error I don't know why this error occurs
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       return await func(req, ctx)
     } catch (error) {
       console.error(error)

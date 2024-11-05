@@ -14,7 +14,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang='zh_cn'>
+    <html lang='zh-Hans'>
       <body className='antialiased bg-page-bg'>
         <NextTopLoader />
         {children}
