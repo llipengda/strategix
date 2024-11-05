@@ -30,7 +30,9 @@ const UserInfo: React.FC<Props> = ({ user, currentUser }) => {
 
   return (
     <div className='p-6 bg-white dark:bg-black shadow-lg rounded-lg mt-8 max-w-lg transition-all duration-300 ease-in-out'>
-      <h2 className='text-2xl font-semibold mb-4 text-title'>您的信息</h2>
+      <h2 className='text-2xl font-semibold mb-4 text-title'>
+        {user === currentUser ? '您的' : '用户'}信息
+      </h2>
       <form
         action={async formData => {
           await updateUser(formData)
@@ -94,7 +96,7 @@ const UserInfo: React.FC<Props> = ({ user, currentUser }) => {
                 >
                   {Object.entries(roleMap).map(
                     ([key, value]) =>
-                      roleOrder[key as Role] <= roleOrder[user.role] &&
+                      roleOrder[key as Role] <= roleOrder[currentUser.role] &&
                       (key === 'temp-user'
                         ? _role.superAdmin(currentUser)
                         : true) && (

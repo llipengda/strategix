@@ -250,3 +250,10 @@ export const updateUser = async (formData: FormData) => {
 
   revalidatePath('/user')
 }
+
+export const getUser = async (id: string) => {
+  return get<User>({
+    id,
+    sk: 'null'
+  })
+}

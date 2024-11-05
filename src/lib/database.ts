@@ -108,3 +108,14 @@ export async function del(key: Record<string, unknown>) {
     })
   )
 }
+
+const db = {
+  add,
+  scan,
+  get,
+  query,
+  update,
+  del
+}
+
+export default db
