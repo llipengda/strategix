@@ -40,7 +40,7 @@ export const dbDocument = DynamoDBDocument.from(new DynamoDB(config), {
   }
 })
 
-export async function add<T extends Record<string, unknown>>(
+async function add<T extends Record<string, unknown>>(
   item: T,
   cmd?: Omit<PutCommandInput, 'TableName' | 'Item'>
 ) {
@@ -53,7 +53,7 @@ export async function add<T extends Record<string, unknown>>(
   )
 }
 
-export async function scan<T>() {
+async function scan<T>() {
   const data = await docClient.send(
     new ScanCommand({
       TableName: TABLE_NAME
@@ -62,7 +62,7 @@ export async function scan<T>() {
   return data.Items?.map(i => unmarshall(i)) as T[]
 }
 
-export async function get<T>(key: Record<string, unknown>) {
+async function get<T>(key: Record<string, unknown>) {
   const cmd = new GetCommand({
     TableName: TABLE_NAME,
     Key: key
@@ -71,7 +71,7 @@ export async function get<T>(key: Record<string, unknown>) {
   return data.Item as T | undefined
 }
 
-export async function query<T>(command: Omit<QueryCommandInput, 'TableName'>) {
+async function query<T>(command: Omit<QueryCommandInput, 'TableName'>) {
   if (command.ExpressionAttributeValues) {
     command = {
       ...command,
@@ -92,7 +92,7 @@ export async function query<T>(command: Omit<QueryCommandInput, 'TableName'>) {
   return data.Items?.map(i => unmarshall(i)) as T[]
 }
 
-export async function update(command: Omit<UpdateCommandInput, 'TableName'>) {
+async function update(command: Omit<UpdateCommandInput, 'TableName'>) {
   const cmd = new UpdateCommand({
     TableName: TABLE_NAME,
     ...command
@@ -100,7 +100,7 @@ export async function update(command: Omit<UpdateCommandInput, 'TableName'>) {
   await docClient.send(cmd)
 }
 
-export async function del(key: Record<string, unknown>) {
+async function del(key: Record<string, unknown>) {
   await docClient.send(
     new DeleteCommand({
       TableName: TABLE_NAME,

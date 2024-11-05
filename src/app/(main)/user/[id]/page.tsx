@@ -24,7 +24,7 @@ const Page = async ({ params }: Page) => {
     return notFound()
   }
 
-  return <UserInfo user={user} currentUser={currentUser} />
+  return <UserInfo user={user} currentUser={currentUser} full />
 }
 
 export default Page

@@ -8,9 +8,9 @@ import { redirect } from 'next/navigation'
 import bcrypt from 'bcryptjs'
 import { z } from 'zod'
 
-import { auth, signIn, unstable_update as update } from '@/auth'
+import { auth, signIn, signOut, unstable_update as update } from '@/auth'
 import createUpdate from '@/lib/create-update'
-import { add, update as dbUpdate, get, query } from '@/lib/database'
+import db from '@/lib/database'
 import validateCaptcha from '@/lib/recaptcha'
 import { User } from '@/types/role'
 
@@ -19,7 +19,7 @@ export const getUserByEmail = async (email: string | null | undefined) => {
     return null
   }
 
-  const users = await query<User>({
+  const users = await db.query<User>({
     IndexName: 'email-index',
     KeyConditionExpression: 'email = :email',
     ExpressionAttributeValues: {
@@ -190,7 +190,7 @@ export const addUser = async (
     password: hashedPassword
   })
 
-  await add(newUser)
+  await db.add(newUser)
 
   newUser.password = undefined
 
@@ -217,7 +217,7 @@ export async function getCurrentUser() {
     return null
   }
 
-  const user = await get<User>({
+  const user = await db.get<User>({
     id: session.user.id,
     sk: 'null'
   })
@@ -234,26 +234,48 @@ export async function getCurrentUser() {
 const userUpdateSchema = z.object({
   id: z.string(),
   name: z.string().trim().min(1, { message: '姓名不能为空' }),
-  role: z.enum(['super-admin', 'admin', 'manager', 'user', 'temp-user'])
+  role: z
+    .enum(['super-admin', 'admin', 'manager', 'user', 'temp-user'])
+    .optional(),
+  originalRole: z.enum(['super-admin', 'admin', 'manager', 'user', 'temp-user'])
 })
 
 export const updateUser = async (formData: FormData) => {
   const user = userUpdateSchema.parse(Object.fromEntries(formData))
 
-  await dbUpdate({
+  await db.update({
     Key: {
       id: user.id,
       sk: 'null'
     },
-    ...createUpdate({ name: user.name, role: user.role })
+    ...createUpdate({ name: user.name, role: user.role || user.originalRole })
   })
 
   revalidatePath('/user')
 }
 
 export const getUser = async (id: string) => {
-  return get<User>({
+  return db.get<User>({
     id,
     sk: 'null'
   })
+}
+
+export const deleteUser = async () => {
+  const id = (await auth())?.user.id
+
+  if (!id) {
+    throw new Error('未验证')
+  }
+
+  await signOut({ redirect: false })
+
+  await db.del({
+    id,
+    sk: 'null'
+  })
+
+  revalidatePath('/')
+
+  redirect('/')
 }

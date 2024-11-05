@@ -6,7 +6,7 @@ import { z } from 'zod'
 
 import { auth } from '@/auth'
 import createUpdate from '@/lib/create-update'
-import { get, query, update } from '@/lib/database'
+import db from '@/lib/database'
 import { Role, role as checkRole, roleOrder } from '@/lib/role'
 import { type User } from '@/types/role'
 import type { Team } from '@/types/team'
@@ -18,7 +18,7 @@ export const getTeam = async () => {
     throw new Error('no session')
   }
 
-  const user = await get<User>({
+  const user = await db.get<User>({
     id: session.user.id,
     sk: 'null'
   })
@@ -33,7 +33,7 @@ export const getTeam = async () => {
     return null
   }
 
-  const members = await query<{
+  const members = await db.query<{
     id: string
     name: string
     role: Role
@@ -65,7 +65,7 @@ export const getUsersWithoutTeam = async () => {
 
   checkRole.ensure.admin(user)
 
-  const users = await query<User>({
+  const users = await db.query<User>({
     IndexName: 'type-index',
     KeyConditionExpression: '#type = :type',
     ExpressionAttributeValues: {
@@ -88,7 +88,7 @@ export const addUserToTeam = async (
 
   checkRole.ensure.admin(user)
 
-  await update({
+  await db.update({
     Key: {
       id: userId,
       sk: 'null'
@@ -125,7 +125,7 @@ export const removeUserFromTeam = async (userId: string) => {
     throw new Error('Cannot remove yourself')
   }
 
-  await update({
+  await db.update({
     Key: {
       id: userId,
       sk: 'null'
@@ -148,7 +148,7 @@ export const getAllTeams = async () => {
 
   checkRole.ensure.superAdmin(user)
 
-  const users = await query<User>({
+  const users = await db.query<User>({
     IndexName: 'type-index',
     KeyConditionExpression: '#type = :type',
     ExpressionAttributeValues: {

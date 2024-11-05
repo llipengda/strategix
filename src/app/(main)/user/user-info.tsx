@@ -17,9 +17,10 @@ import type { User } from '@/types/role'
 interface Props {
   user: User
   currentUser: User
+  full?: boolean
 }
 
-const UserInfo: React.FC<Props> = ({ user, currentUser }) => {
+const UserInfo: React.FC<Props> = ({ user, currentUser, full = false }) => {
   const { id, name, email, role, team } = user
 
   const [isEditing, setIsEditing] = useState(false)
@@ -29,7 +30,9 @@ const UserInfo: React.FC<Props> = ({ user, currentUser }) => {
     (_role.admin(currentUser) && team === currentUser.team)
 
   return (
-    <div className='p-6 bg-white dark:bg-black shadow-lg rounded-lg mt-8 max-w-lg transition-all duration-300 ease-in-out'>
+    <div
+      className={`p-6 ${full ? 'w-fit h-full bg-transparent' : 'shadow-lg rounded-lg mt-8 max-w-lg transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-2xl bg-white dark:bg-black'}`}
+    >
       <h2 className='text-2xl font-semibold mb-4 text-title'>
         {user === currentUser ? '您的' : '用户'}信息
       </h2>
@@ -81,15 +84,24 @@ const UserInfo: React.FC<Props> = ({ user, currentUser }) => {
           )}
         </div>
         <div className='mb-4'>
-          <label className='block text-label mb-1 font-bold'>权限</label>
+          <label htmlFor='role' className='block text-label mb-1 font-bold'>
+            权限
+          </label>
           {isEditing ? (
             <div className='relative'>
+              <input
+                type='hidden'
+                name='originalRole'
+                id='originalRole'
+                value={role}
+              />
               <Tooltip
                 message='您的权限不足以进行此操作。'
                 className='w-full'
                 disabled={canChangeRole}
               >
                 <Select
+                  id='role'
                   name='role'
                   defaultValue={role}
                   disabled={!canChangeRole}
