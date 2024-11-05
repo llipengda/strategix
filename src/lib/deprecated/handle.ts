@@ -42,6 +42,7 @@ const handle = (
       }
     }
     try {
+      // @ts-expect-error I don't know why this error occurs
       return await func(req, ctx)
     } catch (error) {
       console.error(error)

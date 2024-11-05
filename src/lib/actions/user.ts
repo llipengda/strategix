@@ -122,7 +122,6 @@ const userSetupSchema = z
     confirmPassword: z.string().optional()
   })
   .superRefine((data, ctx) => {
-    console.log(data)
     if (data.usePassword) {
       if (!data.password) {
         ctx.addIssue({
