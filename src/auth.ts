@@ -9,7 +9,7 @@ import bcrypt from 'bcryptjs'
 import { v4 } from 'uuid'
 
 import { getUserByEmail } from '@/lib/actions/user'
-import { dbDocument, query } from '@/lib/database'
+import db, { dbDocument } from '@/lib/database'
 import { html, text } from '@/lib/email'
 import type { User } from '@/types/role'
 
@@ -21,7 +21,7 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
         password: {}
       },
       authorize: async credentials => {
-        const user = await query<User>({
+        const user = await db.query<User>({
           IndexName: 'email-index',
           KeyConditionExpression: 'email = :email',
           ExpressionAttributeValues: {

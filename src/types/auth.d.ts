@@ -33,7 +33,7 @@ declare module 'next-auth/jwt' {
   }
 }
 
-interface NextAuthRequest extends NextRequest {
+export interface NextAuthRequest extends NextRequest {
   auth: Session | null
 }
 

@@ -1,9 +1,12 @@
+import { MdLink } from 'react-icons/md'
+
+import Link from 'next/link'
+
 import AddUser from '@/app/(main)/team/add-user'
 import DeleteUser from '@/app/(main)/team/delete-user'
 import { auth } from '@/auth'
+import { role } from '@/lib/role'
 import type { Team as TTeam } from '@/types/team'
-
-import {role} from "@/lib/role";
 
 export default async function Team({ team }: { team: TTeam }) {
   const user = (await auth())?.user
@@ -21,7 +24,18 @@ export default async function Team({ team }: { team: TTeam }) {
             key={member.id}
             className='flex items-center border-b p-2 justify-between relative min-h-14'
           >
-            <span>{member.name}</span>
+            {role.admin(user) ? (
+              <Link
+                href={`/user/${member.id}`}
+                className='flex gap-1 items-center hover:text-blue-600'
+              >
+                <span>{member.name}</span>
+                <MdLink />
+              </Link>
+            ) : (
+              <span>{member.name}</span>
+            )}
+
             {role.manager(member) && (
               <span
                 className={`px-3 py-1 text-white rounded-full mr-8 ${

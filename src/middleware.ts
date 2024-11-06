@@ -14,7 +14,10 @@ const allowedTempUser = ['/auth/setup']
 export default auth(req => {
   const { pathname } = req.nextUrl
   if (!req.auth && !allowed.includes(pathname)) {
-    const newUrl = new URL('/auth/signin', req.nextUrl.origin)
+    const newUrl = new URL(
+      `/auth/signin?callbackUrl=${pathname}`,
+      req.nextUrl.origin
+    )
     return Response.redirect(newUrl)
   }
 
@@ -22,7 +25,10 @@ export default auth(req => {
     req.auth?.user.role === 'temp-user' &&
     !allowedTempUser.includes(pathname)
   ) {
-    const newUrl = new URL('/auth/setup', req.nextUrl.origin)
+    const newUrl = new URL(
+      `/auth/setup?callbackUrl=${pathname}`,
+      req.nextUrl.origin
+    )
     return Response.redirect(newUrl)
   }
 })

@@ -21,7 +21,7 @@ const Signed = ({ callbackUrl }: { callbackUrl: string }) => {
     if (time === 0) {
       router.replace(callbackUrl)
     }
-  }, [time])
+  }, [callbackUrl, router, time])
 
   return (
     <>

@@ -12,7 +12,7 @@ const NavLink = ({
 }>) => {
   const pathname = usePathname()
 
-  const isActive = pathname === href
+  const isActive = pathname.split('/')[1] === href.slice(1)
 
   return (
     <Link
