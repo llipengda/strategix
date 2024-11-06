@@ -1,38 +1,34 @@
-import {getCurrentUser} from "@/lib/actions/user";
+import PostItem from "@/app/(main)/schedule/post-item";
+import Calendar from "@/app/(main)/schedule/calendar";
+import {createPostAction, getPosts} from "@/lib/actions/post";
+import { Post } from "@/types/post";
+import AddPosts from "./add-post";
 
 const Page = async () => {
-  const user = await getCurrentUser()
 
+  const year = new Date().getFullYear()
+  const month = new Date().getMonth() + 1
+  const postInfo: Post[] = await getPosts(year, month)
   return (
 
-      <div className='w-full h-full bg-white flex flex-col *:w-full'>
-        <div className='w-full flex flex-row max-lg:flex-col gap-2'>
-          <div className=' bg-pink-500 flex flex-col aspect-video w-1/2 max-lg:w-full'>
+      <div className='w-full h-full flex flex-col *:w-full gap-2'>
+
+          <div className='bg-pink-500 flex flex-col aspect-video w-3/4 mx-auto'>
             <div className=' h-6 text-xl bg-blue-300'>
               日历
             </div>
-            <div className=' w-full grid grid-cols-7 grid-rows-5 flex-grow gap-1'>
-              {'1'.repeat(31).split('').map((v, index) => (
-                <div className='bg-amber-300 rounded-sm' key={index}>
-                  {index}
-                </div>
-              ))}
-            </div>
+            <Calendar onItemClick={()=>{}} />
+
           </div>
-          <div className='w-1/2 bg-red-400 max-lg:w-full max-lg:aspect-video'>
-            今日头版
-          </div>
-        </div>
 
-        <div className=' bg-blue-500 flex flex-col mt-4 gap-0.5 *:rounded-md *:bg-blue-400'>
+        <div className='flex flex-col gap-0.5 *:rounded-md'>
+
+              <AddPosts />
 
 
-            {'1'.repeat(40).split('').map(
-              (v, i) => (
-                <div key={i} className='flex justify-between p-2'>
-                  <div>schedule title</div>
-                  <div className='bg-red-300 p-0.5 rounded-md text-sm'>teamA</div>
-                </div>
+            {postInfo.map(
+              v => (
+                <PostItem title={v.title} teamName={v.team} key={v.id} />
               )
             )}
 

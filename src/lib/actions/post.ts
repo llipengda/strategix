@@ -2,6 +2,7 @@
 
 import db from '@/lib/database'
 import { Post } from '@/types/post'
+import { revalidatePath } from 'next/cache'
 
 export const createPost = async (post: Post) => {
   await db.add(post)
@@ -34,6 +35,7 @@ export const createPostAction = async (formData: FormData) => {
   }
 
   await createPost(post)
+  revalidatePath('/schedule')
 }
 
 export const getPosts = async (year: number, month: number) => {
