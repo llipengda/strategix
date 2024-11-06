@@ -5,6 +5,7 @@ import { MdEdit, MdLink, MdSave } from 'react-icons/md'
 
 import Link from 'next/link'
 
+import Card from '@/components/card'
 import Input from '@/components/input'
 import Select from '@/components/select'
 import SelectArrow from '@/components/select-arrow'
@@ -20,7 +21,7 @@ interface Props {
   full?: boolean
 }
 
-const UserInfo: React.FC<Props> = ({ user, currentUser, full = false }) => {
+const UserInfo: React.FC<Props> = ({ user, currentUser, full }) => {
   const { id, name, email, role, team } = user
 
   const [isEditing, setIsEditing] = useState(false)
@@ -30,9 +31,7 @@ const UserInfo: React.FC<Props> = ({ user, currentUser, full = false }) => {
     (_role.admin(currentUser) && team === currentUser.team)
 
   return (
-    <div
-      className={`p-6 ${full ? 'w-fit h-full bg-transparent' : 'shadow-lg rounded-lg mt-8 max-w-lg transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-2xl bg-white dark:bg-black'}`}
-    >
+    <Card full={full} className={full ? '' : 'mt-8'}>
       <h2 className='text-2xl font-semibold mb-4 text-title'>
         {user === currentUser ? '您的' : '用户'}信息
       </h2>
@@ -184,7 +183,7 @@ const UserInfo: React.FC<Props> = ({ user, currentUser, full = false }) => {
           )}
         </div>
       </form>
-    </div>
+    </Card>
   )
 }
 

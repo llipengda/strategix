@@ -14,10 +14,11 @@ export default async function RootLayout({
 }>) {
   return (
     <main>
-      <div className='flex bg-page-bg max-w-[90%] mx-auto max-md:flex-col max-md:h-screen relative'>
+      <div className='flex bg-page-bg mx-auto max-md:flex-col max-md:h-screen relative'>
+        <div className='h-full w-[5%] max-md:hidden'></div>
         {/* > md */}
-        <nav className='hidden md:block w-72 sticky py-10 top-0 h-screen'>
-          <div className='border-r border-gray-300 pr-10 h-full'>
+        <nav className='hidden md:block w-72 sticky top-0 h-screen'>
+          <div className='border-r border-gray-300 dark:border-gray-700 py-10 pr-10 h-full'>
             <Link href='/'>
               <div className='p-4 flex items-center justify-start gap-4'>
                 <Image src={icon} alt='icon' className='w-1/5' />
@@ -37,7 +38,7 @@ export default async function RootLayout({
         <nav className='block md:hidden mt-10'>
           <MdNav />
         </nav>
-        <div className='flex-1 p-6 py-16 pl-10 max-md:px-2 max-md:py-8'>
+        <div className='flex-1 p-16 max-md:px-2 max-md:py-4 max-md:bg-page-bg bg-slate-50 dark:bg-slate-900'>
           {children}
         </div>
       </div>
