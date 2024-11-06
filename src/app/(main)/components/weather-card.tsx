@@ -71,7 +71,9 @@ const WeatherCard = async () => {
             {currentConditions.temp}
             <span className='text-lg align-top'>°C</span>
           </p>
-          <p className='text-gray-600 dark:text-gray-400'>{currentConditions.conditions}</p>
+          <p className='text-gray-600 dark:text-gray-400'>
+            {currentConditions.conditions}
+          </p>
         </div>
         <div className='text-gray-700 dark:text-gray-300 text-left space-y-1 whitespace-nowrap'>
           <p className='text-3xl font-bold'>
@@ -88,7 +90,7 @@ const WeatherCard = async () => {
       <div className='flex flex-row gap-3 text-sm mt-4 items-center justify-center'>
         {hours.map(hour => {
           const h = parseInt(hour.datetime.split(':')[0])
-          if (h < nowHour - 1 || h > nowHour + 4) {
+          if (h < nowHour || h > nowHour + 5) {
             return null
           }
           return (

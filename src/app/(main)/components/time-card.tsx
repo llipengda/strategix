@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import ContentLoader from 'react-content-loader'
 
 import dynamic from 'next/dynamic'
 
@@ -8,7 +9,14 @@ import Card from '@/components/card'
 
 import './time-card.css'
 
-const Clock = dynamic(() => import('react-clock'), { ssr: false })
+const Clock = dynamic(() => import('react-clock'), {
+  ssr: false,
+  loading: () => (
+    <ContentLoader speed={2} width={200} height={200}>
+      <circle r={80} cx={100} cy={100} />
+    </ContentLoader>
+  )
+})
 
 const TimeCard = () => {
   const [time, setTime] = useState(new Date())
