@@ -1,5 +1,3 @@
-import Input from "@/components/input";
-import SubmitButton from "@/components/submit-button";
 import { getPosts } from "@/lib/actions/post";
 import { Post } from "@/types/post";
 
@@ -70,8 +68,6 @@ const Calendar = async () => {
 
   return (
     <>
-      <Input type="month" placeholder="选择月份" />
-      <SubmitButton text="查询" />
       <div className=' w-full grid grid-cols-7 grid-rows-5 flex-grow gap-1'>
         {dateInfo.map((v, index) => {
 
