@@ -1,5 +1,5 @@
-import TimeCard from '@/app/(main)/components/time-card'
-import WeatherCard from '@/app/(main)/components/weather-card'
+import TimeCard from '@/app/(main)/time-card'
+import WeatherCard from '@/app/(main)/weather-card'
 import '@/lib/database'
 
 export default async function Page() {

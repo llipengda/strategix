@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
-import MdNav from '@/app/(main)/components/md-nav'
+import MdNav from '@/app/(main)/md-nav'
 import pages from '@/app/(main)/pages'
 import icon from '@/app/favicon.ico'
 import '@/app/globals.css'
