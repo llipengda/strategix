@@ -13,6 +13,7 @@ import snow from '@/assets/icons/snow.svg'
 import wind from '@/assets/icons/wind.svg'
 import Card from '@/components/card'
 import { getWeatherByCity } from '@/lib/actions/weather'
+import localTime from '@/lib/local-time'
 import type { WeatherData } from '@/types/weather'
 
 const getIcon = (iconString: WeatherData['currentConditions']['icon']) => {
@@ -56,7 +57,7 @@ const WeatherCard = async () => {
       }))
   )
 
-  const nowHour = new Date().getHours()
+  const nowHour = localTime().getHours()
 
   return (
     <Card className='min-h-[280px] min-w-[360px] max-xl:min-w-[512px] max-lg:min-w-min max-lg:w-full'>
