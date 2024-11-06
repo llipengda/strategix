@@ -1,0 +1,114 @@
+import React from 'react'
+
+import Image from 'next/image'
+
+import clearDay from '@/assets/icons/clear-day.svg'
+import clearNight from '@/assets/icons/clear-night.svg'
+import cloudy from '@/assets/icons/cloudy.svg'
+import fog from '@/assets/icons/fog.svg'
+import partlyCloudyDay from '@/assets/icons/partly-cloudy-day.svg'
+import partlyCloudyNight from '@/assets/icons/partly-cloudy-night.svg'
+import rain from '@/assets/icons/rain.svg'
+import snow from '@/assets/icons/snow.svg'
+import wind from '@/assets/icons/wind.svg'
+import Card from '@/components/card'
+import { getWeatherByCity } from '@/lib/actions/weather'
+import type { WeatherData } from '@/types/weather'
+
+const getIcon = (iconString: WeatherData['currentConditions']['icon']) => {
+  switch (iconString) {
+    case 'snow':
+      return snow
+    case 'rain':
+      return rain
+    case 'fog':
+      return fog
+    case 'wind':
+      return wind
+    case 'cloudy':
+      return cloudy
+    case 'partly-cloudy-day':
+      return partlyCloudyDay
+    case 'partly-cloudy-night':
+      return partlyCloudyNight
+    case 'clear-day':
+      return clearDay
+    case 'clear-night':
+      return clearNight
+    default:
+      return null
+  }
+}
+
+const WeatherCard = async () => {
+  const weatherData = await getWeatherByCity('Shanghai')
+
+  const today = weatherData.days[0]
+  const tomorrow = weatherData.days[1]
+  const currentConditions = weatherData.currentConditions
+
+  const hours = today.hours.concat(
+    tomorrow.hours
+      .filter(h => parseInt(h.datetime.split(':')[0]) < 6)
+      .map(h => ({
+        ...h,
+        datetime: `${parseInt(h.datetime.split(':')[0]) + 24}:00`
+      }))
+  )
+
+  const nowHour = new Date().getHours()
+
+  return (
+    <Card className='min-h-[280px] min-w-[360px] max-xl:min-w-[512px] max-lg:min-w-min max-lg:w-full'>
+      <div className='flex flex-row items-center justify-center gap-12 mt-1 p-2 py-1'>
+        <div className='flex flex-col items-center justify-center gap-1'>
+          <Image
+            src={getIcon(currentConditions.icon)}
+            alt={today.conditions}
+            className='w-[70px]'
+          />
+          <p className='text-3xl font-semibold text-gray-900 dark:text-gray-100'>
+            {currentConditions.temp}
+            <span className='text-lg align-top'>°C</span>
+          </p>
+          <p className='text-gray-600 dark:text-gray-400'>{currentConditions.conditions}</p>
+        </div>
+        <div className='text-gray-700 dark:text-gray-300 text-left space-y-1 whitespace-nowrap'>
+          <p className='text-3xl font-bold'>
+            {today.tempmin}~{today.tempmax}
+            <span className='text-lg align-top'>°C</span>
+          </p>
+          <p>
+            体感 {today.feelslikemin}~{today.feelslikemax}°C
+          </p>
+          <p>湿度 {today.humidity}%</p>
+          <p>风速 {today.windspeed} km/h</p>
+        </div>
+      </div>
+      <div className='flex flex-row gap-3 text-sm mt-4 items-center justify-center'>
+        {hours.map(hour => {
+          const h = parseInt(hour.datetime.split(':')[0])
+          if (h < nowHour - 1 || h > nowHour + 4) {
+            return null
+          }
+          return (
+            <div
+              key={hour.datetime}
+              className='text-gray-700 dark:text-gray-300 flex items-center justify-center flex-col gap-1'
+            >
+              <p>{h >= 24 ? h - 24 : h}:00</p>
+              <Image
+                className='w-[20px] h-[20px]'
+                src={getIcon(hour.icon)}
+                alt={hour.conditions}
+              />
+              <p>{hour.temp}°C</p>
+            </div>
+          )
+        })}
+      </div>
+    </Card>
+  )
+}
+
+export default WeatherCard
