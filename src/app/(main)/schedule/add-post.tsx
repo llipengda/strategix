@@ -8,7 +8,7 @@ interface PostData {
     team: string,
     publishDate: string
     isFrontPage: 'on'|'off'
-  }
+}
 const AddPosts = () => {
     
     return (

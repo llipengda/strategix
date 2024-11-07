@@ -1,6 +1,18 @@
 import { getPosts } from "@/lib/actions/post";
 import { Post } from "@/types/post";
-
+const getHashColorByTeamName = (team: string) => {
+  let hash = 0
+  for (let i = 0; i < team.length; i++) {
+    hash = team.charCodeAt(i) + (hash << 5) - hash
+  }
+  let color = '#'
+  for (let i = 0; i < 3; i++) {
+    const value = (hash >> (i * 8)) & 0xFF
+    color += ('00' + value.toString(16)).substr(-2)
+  }
+  console.log(`generate hash color (${color}) for ${team}`)
+  return color
+}
 const getDayName = (day: number) => {
   switch (day) {
     case 0: return "日";
@@ -50,7 +62,7 @@ const generateDateInfo = async (year: number, month: number) => {
     dateInfo.push({ day: i });
   for (let i = 1; i <= dateNum; i++) {
     dateInfo.push({
-      day: (predays + i) % 7, 
+      day: (predays + i) % 7,
       date: i,
       posts: postInfo.filter(v => {
         const d = new Date(v.publishDate)
@@ -68,16 +80,23 @@ const Calendar = async () => {
 
   return (
     <>
+      <div className='text-bold text-xl'>本月日历</div>
       <div className=' w-full grid grid-cols-7 grid-rows-5 flex-grow gap-1'>
         {dateInfo.map((v, index) => {
 
           return (
-            <div className={`${v.date ? 'bg-amber-300' : 'bg-slate-500'} rounded-sm`} key={index}>
+            <div className={`${v.date ? (v.day > 0 && v.day < 6 ? 'bg-blue-600' : 'bg-blue-800') : 'opacity-0'} rounded-md p-2`} key={index}>
               <div>{getDayName(v.day)}</div>
               <div>{v.date}</div>
-              <div>{v.posts?.map((v, index) => {
+              <div className="flex flex-col gap-1">{v.posts?.map((v, index) => {
+                
                 return (
-                  <div key={index} className='text-xs'>{v.title}</div>
+                  <div key={index} className={`text-sm py-0.5 px-1` }
+                    style={{ backgroundColor: getHashColorByTeamName(v.team) }}
+                  >
+                  <p>{v.title}</p>
+                  <p className='bg-black/30 w-fit py-0.5 px-1 rounded-md text-xs'>{v.team}</p>
+                  </div>
                 )
               })
               }</div>
