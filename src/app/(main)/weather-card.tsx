@@ -12,6 +12,7 @@ import rain from '@/assets/icons/rain.svg'
 import snow from '@/assets/icons/snow.svg'
 import wind from '@/assets/icons/wind.svg'
 import Card from '@/components/card'
+import Tooltip from '@/components/tool-tip'
 import { getWeatherByCity } from '@/lib/actions/weather'
 import { localDate } from '@/lib/time'
 import type { WeatherData } from '@/types/weather'
@@ -43,6 +44,18 @@ const getIcon = (iconString: WeatherData['currentConditions']['icon']) => {
 
 const WeatherCard = async () => {
   const weatherData = await getWeatherByCity('Shanghai')
+
+  console.log(weatherData)
+
+  if (!weatherData) {
+    return (
+      <Card className='min-h-[280px] min-w-[360px] max-xl:min-w-[512px] max-lg:min-w-min max-lg:w-full flex items-center justify-center'>
+        <Tooltip message='联系管理员以获取更多信息' className='cursor-help'>
+          天气信息不可用
+        </Tooltip>
+      </Card>
+    )
+  }
 
   const today = weatherData.days[0]
   const tomorrow = weatherData.days[1]
