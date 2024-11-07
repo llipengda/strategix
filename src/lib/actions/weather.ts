@@ -2,6 +2,8 @@
 
 import type { WeatherData } from '@/types/weather'
 
+process.env.TZ = 'Asia/Shanghai'
+
 export async function getWeather(latitude: number, longitude: number) {
   const today = new Date().toISOString().split('T')[0]
   const tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
