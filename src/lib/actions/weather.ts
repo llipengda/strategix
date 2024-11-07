@@ -29,8 +29,6 @@ export async function getWeatherByCity(city: string) {
     .split('T')[0]
     .split(' ')[0]
 
-  console.log(today, tomorrow)
-
   const data = await fetch(
     `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}/${today}/${tomorrow}?key=${process.env.VISUAL_CROSSING_API_KEY}&lang=zh&unitGroup=metric`,
     { next: { revalidate: 3600, tags: ['weather'] } }
