@@ -3,10 +3,11 @@ import { MdEmail } from 'react-icons/md'
 
 import Link from 'next/link'
 
+import { auth } from '@/auth'
+
 import GitHubSigninForm from './github-signin-form'
 import Signed from './signed'
 import SigninForm from './signin-form'
-import { auth } from '@/auth'
 
 const Page = async (props: Page) => {
   const searchParams = await props.searchParams

@@ -1,5 +1,5 @@
-import {v4} from 'uuid'
-import {z} from 'zod'
+import { v4 } from 'uuid'
+import { z } from 'zod'
 
 export const User = z.object({
   id: z
@@ -18,4 +18,3 @@ export const User = z.object({
 })
 
 export type User = z.infer<typeof User>
-

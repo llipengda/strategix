@@ -74,7 +74,7 @@ export const role = {
       admin?: () => T
       manager?: () => T
       user?: () => T
-      tempUser?: () => T,
+      tempUser?: () => T
       default: () => T
     }) => {
       if (role.superAdmin(_user)) {
