@@ -80,22 +80,27 @@ const Calendar = async () => {
 
   return (
     <>
-      <div className='text-bold text-xl'>本月日历</div>
+      <div className='font-bold text-2xl bg-slate-800 py-1 px-2 rounded-md mb-2'>本月日历</div>
       <div className=' w-full grid grid-cols-7 grid-rows-5 flex-grow gap-1'>
         {dateInfo.map((v, index) => {
 
           return (
-            <div className={`${v.date ? (v.day > 0 && v.day < 6 ? 'bg-blue-600' : 'bg-blue-800') : 'opacity-0'} rounded-md p-2`} key={index}>
+            <div className={`${v.date ? (v.day > 0 && v.day < 6 ? 'bg-slate-800' : 'bg-slate-700') : 'opacity-0'} rounded-md p-2`} key={index}>
               <div>{getDayName(v.day)}</div>
               <div>{v.date}</div>
               <div className="flex flex-col gap-1">{v.posts?.map((v, index) => {
-                
+
                 return (
-                  <div key={index} className={`text-sm py-0.5 px-1` }
+                  <div key={index} className={`text-sm py-0.5 px-1`}
                     style={{ backgroundColor: getHashColorByTeamName(v.team) }}
                   >
-                  <p>{v.title}</p>
-                  <p className='bg-black/30 w-fit py-0.5 px-1 rounded-md text-xs'>{v.team}</p>
+                    <p>
+                      <span className={`bg-yellow-600/50 rounded-md mr-1 text-sm ${v.isFrontPage ? 'px-1 py-0.5' : ''}`} >
+                      {v.isFrontPage ? '头版' : ''}
+                      </span>
+                      <span>{v.title}</span>
+                    </p>
+                    <p className='bg-black/30 w-fit py-0.5 px-1 rounded-md text-xs'>{v.team}</p>
                   </div>
                 )
               })
