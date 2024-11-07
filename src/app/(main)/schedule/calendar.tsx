@@ -58,12 +58,12 @@ const generateDateInfo = async (year: number, month: number) => {
   const dateNum = getHowManyDate(year, month);
   const predays = new Date(year, month - 1, 1).getDay();
 
-  for (let i = 0; i < predays; i++)
+  for (let i = 1; i < predays; i++)
     dateInfo.push({ day: i });
-  for (let i = 1; i <= dateNum; i++) {
+  for (let i = 0; i < dateNum; i++) {
     dateInfo.push({
       day: (predays + i) % 7,
-      date: i,
+      date: i+1,
       posts: postInfo.filter(v => {
         const d = new Date(v.publishDate)
         return d.getDate() === i
@@ -85,7 +85,7 @@ const Calendar = async () => {
         {dateInfo.map((v, index) => {
 
           return (
-            <div className={`${v.date ? (v.day > 0 && v.day < 6 ? 'bg-slate-800' : 'bg-slate-700') : 'opacity-0'} rounded-md p-2`} key={index}>
+            <div className={`${v.date ? (v.day > 0 && v.day < 6 ? 'bg-slate-800' : 'bg-slate-700') : 'opacity-0'} rounded-md p-2 ${v.date === new Date().getDate()?' animate-pulse bg-slate-500':''}`} key={index}>
               <div>{getDayName(v.day)}</div>
               <div>{v.date}</div>
               <div className="flex flex-col gap-1">{v.posts?.map((v, index) => {
@@ -98,7 +98,7 @@ const Calendar = async () => {
                       <span className={`bg-yellow-600/50 rounded-md mr-1 text-sm ${v.isFrontPage ? 'px-1 py-0.5' : ''}`} >
                       {v.isFrontPage ? '头版' : ''}
                       </span>
-                      <span>{v.title}</span>
+                      <span className={`${new Date(v.publishDate) > new Date() ? '' : ' line-through'}`}>{v.title}</span>
                     </p>
                     <p className='bg-black/30 w-fit py-0.5 px-1 rounded-md text-xs'>{v.team}</p>
                   </div>
