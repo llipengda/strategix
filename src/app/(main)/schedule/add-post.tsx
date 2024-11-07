@@ -2,19 +2,14 @@ import Input from "@/components/input"
 import Select from "@/components/select"
 import SubmitButton from "@/components/submit-button"
 import { createPostAction } from "@/lib/actions/post"
+import { getCurrentUser } from "@/lib/actions/user"
 
-interface PostData {
-    title: string,
-    team: string,
-    publishDate: string
-    isFrontPage: 'on'|'off'
-}
-const AddPosts = () => {
-    
+const AddPosts = async () => {
+   const user = await getCurrentUser()
     return (
         <form action={createPostAction}>
-            <Input id="title" name="title" placeholder="请输入推送内容" required/>
-            <Input id="team" name="team" placeholder="请输入团队"/>
+            <Input id="title" name="title" placeholder="标题" required/>
+            <Input id="team" name="team" placeholder="请输入团队" value={user?.team} required/>
             <Input id="publishDate" placeholder="请输入推送日期" name="publishDate" type="date" required/>
             <Select id="isFrontPage" name="isFrontPage" defaultValue={'off'}>
                 <option value="off">否</option>
