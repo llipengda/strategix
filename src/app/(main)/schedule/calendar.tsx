@@ -85,22 +85,25 @@ const Calendar = async () => {
         {dateInfo.map((v, index) => {
 
           return (
-            <div className={`${v.date ? (v.day > 0 && v.day < 6 ? 'bg-slate-800' : 'bg-slate-700') : 'opacity-0'} rounded-md p-2 ${v.date === new Date().getDate()?' animate-pulse bg-slate-500':''}`} key={index}>
+            <div className={`${v.date ? (v.day > 0 && v.day < 6 ? 'bg-slate-800' : 'bg-slate-700') : 'opacity-0'} rounded-md p-2 ${v.date === new Date().getDate()?' animate-pulse border-white/20 border-2':''}`} key={index}>
               <div>{getDayName(v.day)}</div>
               <div>{v.date}</div>
-              <div className="flex flex-col gap-1">{v.posts?.map((v, index) => {
+              <div className="flex flex-col gap-1">{v.posts?.map((_v, index) => {
 
                 return (
                   <div key={index} className={`text-sm py-0.5 px-1`}
-                    style={{ backgroundColor: getHashColorByTeamName(v.team) }}
+                    style={{ backgroundColor: getHashColorByTeamName(_v.team) }}
                   >
                     <p>
-                      <span className={`bg-yellow-600/50 rounded-md mr-1 text-sm ${v.isFrontPage ? 'px-1 py-0.5' : ''}`} >
-                      {v.isFrontPage ? '头版' : ''}
+                      <span className={`bg-yellow-600/50 rounded-md text-sm ${_v.isFrontPage ? 'px-1 py-0.5 mr-1 ' : ''}`} >
+                      {_v.isFrontPage ? '头版' : ''}
                       </span>
-                      <span className={`${new Date(v.publishDate) > new Date() ? '' : ' line-through'}`}>{v.title}</span>
+                      <span className={`bg-green-800 rounded-md text-sm ${new Date(_v.publishDate).getTime() <= new Date().getTime()?'px-1 py-0.5 mr-1':''}`} >
+                      {new Date(_v.publishDate).getTime() <= new Date().getTime() ? '已推送' : ''}
+                      </span>
+                      <span className={`${new Date(_v.publishDate) > new Date() ? '' : ' line-through'}`}>{_v.title}</span>
                     </p>
-                    <p className='bg-black/30 w-fit py-0.5 px-1 rounded-md text-xs'>{v.team}</p>
+                    <p className='bg-black/30 w-fit py-0.5 px-1 rounded-md text-xs'>{_v.team}</p>
                   </div>
                 )
               })
