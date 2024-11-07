@@ -2,7 +2,7 @@ import Calendar from '@/app/(main)/schedule/calendar'
 
 import AddPosts from './add-post'
 
-const Page = async (props: Page) => {
+const Page = async (props: PageProps) => {
   const p = await props.searchParams
   const year =
     p?.year === undefined

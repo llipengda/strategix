@@ -9,7 +9,7 @@ import GitHubSigninForm from './github-signin-form'
 import Signed from './signed'
 import SigninForm from './signin-form'
 
-const Page = async (props: Page) => {
+const Page = async (props: PageProps) => {
   const searchParams = await props.searchParams
   const callbackUrl = searchParams?.callbackUrl || '/'
 
