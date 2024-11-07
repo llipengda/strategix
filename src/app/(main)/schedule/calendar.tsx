@@ -1,6 +1,18 @@
 import { getPosts } from "@/lib/actions/post";
 import { Post } from "@/types/post";
-
+const getHashColorByTeamName = (team: string) => {
+  let hash = 0
+  for (let i = 0; i < team.length; i++) {
+    hash = team.charCodeAt(i) + (hash << 5) - hash
+  }
+  let color = '#'
+  for (let i = 0; i < 3; i++) {
+    const value = (hash >> (i * 8)) & 0xFF
+    color += ('00' + value.toString(16)).substr(-2)
+  }
+  console.log(`generate hash color (${color}) for ${team}`)
+  return color
+}
 const getDayName = (day: number) => {
   switch (day) {
     case 0: return "日";
@@ -46,12 +58,12 @@ const generateDateInfo = async (year: number, month: number) => {
   const dateNum = getHowManyDate(year, month);
   const predays = new Date(year, month - 1, 1).getDay();
 
-  for (let i = 0; i < predays; i++)
+  for (let i = 1; i < predays; i++)
     dateInfo.push({ day: i });
-  for (let i = 1; i <= dateNum; i++) {
+  for (let i = 0; i < dateNum; i++) {
     dateInfo.push({
-      day: (predays + i) % 7, 
-      date: i,
+      day: (predays + i) % 7,
+      date: i+1,
       posts: postInfo.filter(v => {
         const d = new Date(v.publishDate)
         return d.getDate() === i
@@ -68,16 +80,31 @@ const Calendar = async () => {
 
   return (
     <>
+      <div className='font-bold text-2xl bg-slate-800 py-1 px-2 rounded-md mb-2'>本月日历</div>
       <div className=' w-full grid grid-cols-7 grid-rows-5 flex-grow gap-1'>
         {dateInfo.map((v, index) => {
 
           return (
-            <div className={`${v.date ? 'bg-amber-300' : 'bg-slate-500'} rounded-sm`} key={index}>
+            <div className={`${v.date ? (v.day > 0 && v.day < 6 ? 'bg-slate-800' : 'bg-slate-700') : 'opacity-0'} rounded-md p-2 ${v.date === new Date().getDate()?' animate-pulse border-white/20 border-2':''}`} key={index}>
               <div>{getDayName(v.day)}</div>
               <div>{v.date}</div>
-              <div>{v.posts?.map((v, index) => {
+              <div className="flex flex-col gap-1">{v.posts?.map((_v, index) => {
+
                 return (
-                  <div key={index} className='text-xs'>{v.title}</div>
+                  <div key={index} className={`text-sm py-0.5 px-1 rounded-sm`}
+                    style={{ backgroundColor: getHashColorByTeamName(_v.team) }}
+                  >
+                    <p>
+                      <span className={`bg-yellow-600/50 rounded-sm text-sm ${_v.isFrontPage ? 'px-1 py-0.5 mr-1 ' : ''}`} >
+                      {_v.isFrontPage ? '头版' : ''}
+                      </span>
+                      <span className={`bg-green-800 rounded-sm text-sm ${new Date(_v.publishDate).getTime() <= new Date().getTime()?'px-1 py-0.5 mr-1':''}`} >
+                      {new Date(_v.publishDate).getTime() <= new Date().getTime() ? '已推送' : ''}
+                      </span>
+                      <span className={`${new Date(_v.publishDate) > new Date() ? '' : ' line-through'}`}>{_v.title}</span>
+                    </p>
+                    <p className='bg-black/30 w-fit py-0.5 px-1 rounded-md text-xs'>{_v.team}</p>
+                  </div>
                 )
               })
               }</div>
