@@ -7,7 +7,7 @@ import icon from '@/app/favicon.ico'
 import '@/app/globals.css'
 import NavLink from '@/components/nav-link'
 
-export default async function RootLayout({
+export default function RootLayout({
   children
 }: Readonly<{
   children: React.ReactNode

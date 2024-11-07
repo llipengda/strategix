@@ -20,9 +20,9 @@ export const verifyTurnstile = async (response: string, ip: string) => {
       body: verifyFormData
     })
 
-    const outcome = await res.json()
+    const outcome = (await res.json()) as { success?: boolean } | undefined
 
-    return outcome?.success ?? false
+    return outcome?.success || false
   } catch (e) {
     console.error(e)
     return false

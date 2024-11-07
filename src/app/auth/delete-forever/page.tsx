@@ -3,7 +3,7 @@ import React from 'react'
 import SubmitButton from '@/components/submit-button'
 import { deleteUser } from '@/lib/actions/user'
 
-const Page = async () => {
+const Page = () => {
   return (
     <>
       <h2 className='text-2xl font-bold text-center text-title !text-red-500'>

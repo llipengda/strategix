@@ -20,25 +20,25 @@ import type { WeatherData } from '@/types/weather'
 const getIcon = (iconString: WeatherData['currentConditions']['icon']) => {
   switch (iconString) {
     case 'snow':
-      return snow
+      return snow as string
     case 'rain':
-      return rain
+      return rain as string
     case 'fog':
-      return fog
+      return fog as string
     case 'wind':
-      return wind
+      return wind as string
     case 'cloudy':
-      return cloudy
+      return cloudy as string
     case 'partly-cloudy-day':
-      return partlyCloudyDay
+      return partlyCloudyDay as string
     case 'partly-cloudy-night':
-      return partlyCloudyNight
+      return partlyCloudyNight as string
     case 'clear-day':
-      return clearDay
+      return clearDay as string
     case 'clear-night':
-      return clearNight
+      return clearNight as string
     default:
-      return null
+      throw new Error('Unknown weather icon')
   }
 }
 
