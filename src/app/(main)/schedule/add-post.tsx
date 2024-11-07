@@ -11,9 +11,9 @@ const AddPosts = async () => {
             <Input id="title" name="title" placeholder="标题" required/>
             <Input id="team" name="team" placeholder="请输入团队" value={user?.team} required/>
             <Input id="publishDate" placeholder="请输入推送日期" name="publishDate" type="date" required/>
-            <Select id="isFrontPage" name="isFrontPage" defaultValue={'off'}>
-                <option value="off">否</option>
-                <option value="on">是</option>
+            <Select id="isFrontPage" name="isFrontPage" defaultValue={'off'} className="my-1">
+                <option value="off">设置为非版头</option>
+                <option value="on">设置为版头</option>
             </Select>
             <SubmitButton text='添加推送'  />
         </form>
