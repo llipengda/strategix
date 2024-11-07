@@ -91,14 +91,14 @@ const Calendar = async () => {
               <div className="flex flex-col gap-1">{v.posts?.map((_v, index) => {
 
                 return (
-                  <div key={index} className={`text-sm py-0.5 px-1`}
+                  <div key={index} className={`text-sm py-0.5 px-1 rounded-sm`}
                     style={{ backgroundColor: getHashColorByTeamName(_v.team) }}
                   >
                     <p>
-                      <span className={`bg-yellow-600/50 rounded-md text-sm ${_v.isFrontPage ? 'px-1 py-0.5 mr-1 ' : ''}`} >
+                      <span className={`bg-yellow-600/50 rounded-sm text-sm ${_v.isFrontPage ? 'px-1 py-0.5 mr-1 ' : ''}`} >
                       {_v.isFrontPage ? '头版' : ''}
                       </span>
-                      <span className={`bg-green-800 rounded-md text-sm ${new Date(_v.publishDate).getTime() <= new Date().getTime()?'px-1 py-0.5 mr-1':''}`} >
+                      <span className={`bg-green-800 rounded-sm text-sm ${new Date(_v.publishDate).getTime() <= new Date().getTime()?'px-1 py-0.5 mr-1':''}`} >
                       {new Date(_v.publishDate).getTime() <= new Date().getTime() ? '已推送' : ''}
                       </span>
                       <span className={`${new Date(_v.publishDate) > new Date() ? '' : ' line-through'}`}>{_v.title}</span>
