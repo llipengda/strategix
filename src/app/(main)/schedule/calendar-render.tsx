@@ -78,7 +78,11 @@ const CalendarRender = ({
                           : ''}
                       </span>
                       <span
-                        className={new Date(_v.publishDate) > new Date() ? '' : ' line-through'}
+                        className={
+                          new Date(_v.publishDate) > new Date()
+                            ? ''
+                            : ' line-through'
+                        }
                       >
                         {_v.title}
                       </span>
