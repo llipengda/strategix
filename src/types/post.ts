@@ -1,7 +1,7 @@
 import { v4 } from 'uuid'
 import { z } from 'zod'
 
-import localTime from '@/lib/local-time'
+import { localDate } from '@/lib/time'
 
 export const Post = z
   .object({
@@ -13,7 +13,7 @@ export const Post = z
     previewUrl: z.string().optional(),
     createdAt: z
       .date()
-      .default(localTime())
+      .default(localDate())
       .transform(value => value.toISOString()),
     type: z.literal('post').optional().default('post'),
     sk: z.string().optional()

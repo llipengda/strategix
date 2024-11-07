@@ -1,13 +1,13 @@
 'use server'
 
-import localTime from '@/lib/local-time'
+import { localDate, localISOFormat } from '@/lib/time'
 import type { WeatherData } from '@/types/weather'
 
 process.env.TZ = 'Asia/Shanghai'
 
 export async function getWeather(latitude: number, longitude: number) {
-  const today = localTime().toISOString().split('T')[0]
-  const tomorrow = new Date(localTime().getTime() + 24 * 60 * 60 * 1000)
+  const today = localISOFormat().split('T')[0]
+  const tomorrow = new Date(localDate().getTime() + 24 * 60 * 60 * 1000)
     .toISOString()
     .split('T')[0]
 
@@ -20,8 +20,8 @@ export async function getWeather(latitude: number, longitude: number) {
 }
 
 export async function getWeatherByCity(city: string) {
-  const today = localTime().toISOString().split('T')[0]
-  const tomorrow = new Date(localTime().getTime() + 24 * 60 * 60 * 1000)
+  const today = localISOFormat().split('T')[0]
+  const tomorrow = new Date(localDate().getTime() + 24 * 60 * 60 * 1000)
     .toISOString()
     .split('T')[0]
 
