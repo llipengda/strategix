@@ -8,8 +8,8 @@ const Page = async (props: {
 }) => {
   
   const p: SearchParams = await props.searchParams
-  let year =  p.year===undefined ? new Date().getFullYear() : parseInt(p.year as string)
-  let month = p.month===undefined ? new Date().getMonth()+1 : parseInt(p.month as string)
+  const year =  p.year===undefined ? new Date().getFullYear() : parseInt(p.year as string)
+  const month = p.month===undefined ? new Date().getMonth()+1 : parseInt(p.month as string)
   return (
       <div className='w-full h-full flex flex-col *:w-full gap-2'>
           <div className='flex flex-col aspect-video w-3/4 mx-auto dark:border-white/10 border-2 rounded-md p-2'>

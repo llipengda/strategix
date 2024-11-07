@@ -31,7 +31,7 @@ const generateDateInfo = async (year: number, month: number) => {
     }
   }
   const dateNum = getHowManyDate(year, month);
-  let predays = new Date(year, month - 1, 1).getDay();
+  const predays = new Date(year, month - 1, 1).getDay();
   for (let i = 1; i <= predays; i++)
     dateInfo.push({ day: i });
   for (let i = 0; i < dateNum; i++) {
