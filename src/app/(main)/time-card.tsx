@@ -6,6 +6,7 @@ import ContentLoader from 'react-content-loader'
 import dynamic from 'next/dynamic'
 
 import Card from '@/components/card'
+import localTime from '@/lib/local-time'
 
 import './time-card.css'
 
@@ -19,11 +20,11 @@ const Clock = dynamic(() => import('react-clock'), {
 })
 
 const TimeCard = () => {
-  const [time, setTime] = useState(new Date())
+  const [time, setTime] = useState(localTime())
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTime(new Date())
+      setTime(localTime())
     }, 1000)
 
     return () => {
@@ -40,7 +41,9 @@ const TimeCard = () => {
             {time.getFullYear()}年{time.getMonth() + 1}月{time.getDate()}日
           </p>
           <p className='text-5xl text-gray-900 dark:text-gray-100 font-semibold'>
-            <time suppressHydrationWarning>{time.toLocaleTimeString()}</time>
+            <time suppressHydrationWarning>
+              {time.toLocaleTimeString('zh-CN')}
+            </time>
           </p>
         </div>
       </div>
