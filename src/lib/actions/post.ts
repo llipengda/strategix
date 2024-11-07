@@ -30,7 +30,7 @@ export const createPostAction = async (formData: FormData) => {
     })
 
     if (frontPages.length > 0) {
-      throw new Error('该日期已有头版')
+      throw new Error('该日期已有版头')
     }
   }
 
