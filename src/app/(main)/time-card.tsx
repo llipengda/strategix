@@ -6,7 +6,7 @@ import ContentLoader from 'react-content-loader'
 import dynamic from 'next/dynamic'
 
 import Card from '@/components/card'
-import localTime from '@/lib/local-time'
+import { localDate } from '@/lib/time'
 
 import './time-card.css'
 
@@ -20,11 +20,11 @@ const Clock = dynamic(() => import('react-clock'), {
 })
 
 const TimeCard = () => {
-  const [time, setTime] = useState(localTime())
+  const [time, setTime] = useState(localDate())
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTime(localTime())
+      setTime(localDate())
     }, 1000)
 
     return () => {
