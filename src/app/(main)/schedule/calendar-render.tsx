@@ -12,8 +12,6 @@ const getHashColorByTeamName = (team: string) => {
     const value = (hash >> (i * 8)) & 0xff
     color += ('00' + value.toString(16)).slice(-2)
   }
-  // if(!window.matchMedia('(prefers-color-scheme: dark)').matches)
-  //   color+='80'
   return (color += '70')
 }
 const getDayName = (day: number) => {
