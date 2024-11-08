@@ -15,7 +15,7 @@ const Page: React.FC<PageProps> = async ({ params }) => {
   const user = (await auth())?.user
 
   return (
-    <div id='detail' className='flex w-full h-full gap-8'>
+    <div id='detail' className='flex w-full h-full gap-8 max-md:gap-2 max-md:flex-col'>
       <Schedules year={year} month={month} day={day} />
       <AddPosts year={year} month={month} day={day} user={user!} />
     </div>

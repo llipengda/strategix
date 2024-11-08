@@ -13,7 +13,7 @@ const Schedules: React.FC<SchedulesProps> = async ({ year, month, day }) => {
   const schedules = await getSchedules(year, month, day)
 
   return (
-    <div className='w-3/5 h-full dark:border-white/1 border-2 rounded-md p-6'>
+    <div className='w-3/5 h-full dark:border-white/20 border-2 rounded-md p-6 max-md:w-full'>
       <h2 className='text-2xl font-bold text-center'>
         日程：{year} 年 {month} 月 {day} 日
       </h2>
