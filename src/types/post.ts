@@ -7,7 +7,7 @@ export const Post = z
   .object({
     id: z.string().default(`post-${v4()}`),
     title: z.string(),
-    team: z.string(),
+    team: z.string().min(1, { message: '团队不能为空' }),
     publishDate: z.date().transform(value => value.toISOString()),
     isFrontPage: z.boolean().default(false),
     previewUrl: z.string().optional(),

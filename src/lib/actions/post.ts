@@ -3,20 +3,28 @@
 import { revalidatePath } from 'next/cache'
 
 import db from '@/lib/database'
-import { local } from '@/lib/time'
+import { local, localFormat } from '@/lib/time'
 import { Post } from '@/types/post'
 
 export const createPost = async (post: Post) => {
   await db.add(post)
 }
 
-export const createPostAction = async (formData: FormData) => {
-  const post = await Post.parseAsync({
+export const createPostAction = async (_: unknown, formData: FormData) => {
+  const {
+    data: post,
+    success,
+    error
+  } = await Post.safeParseAsync({
     title: formData.get('title') as string,
     team: formData.get('team') as string,
     publishDate: new Date(formData.get('publishDate') as string),
     isFrontPage: formData.get('isFrontPage') === 'on'
   })
+
+  if (!success) {
+    return error.errors.flatMap(e => e.message).join('; ')
+  }
 
   if (post.isFrontPage) {
     const frontPages = await db.query<Post>({
@@ -32,17 +40,22 @@ export const createPostAction = async (formData: FormData) => {
     })
 
     if (frontPages.length > 0) {
-      throw new Error('该日期已有版头')
+      return '该日期已有头版推送'
     }
   }
 
   await createPost(post)
   revalidatePath('/schedule')
+  revalidatePath(`/schedule/${localFormat(post.publishDate, 'd')}`)
   revalidatePath('/')
 }
 
-export const getPosts = async (year: number, month: number) => {
+export const getPosts = async (year: number, month: number, day?: number) => {
   const yearMonth = `${year}-${month.toString().padStart(2, '0')}`
+
+  const date = !!day
+    ? `${yearMonth}-${day.toString().padStart(2, '0')}`
+    : yearMonth
 
   const posts = await db.query<Post>({
     IndexName: 'type-index',
@@ -52,7 +65,7 @@ export const getPosts = async (year: number, month: number) => {
     },
     ExpressionAttributeValues: {
       ':type': 'post',
-      ':sk': `${yearMonth}`
+      ':sk': date
     }
   })
 

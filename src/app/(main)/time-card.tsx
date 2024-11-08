@@ -1,10 +1,10 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import ContentLoader from 'react-content-loader'
 
 import dynamic from 'next/dynamic'
 
+import { ClockFallback } from '@/app/(main)/fallbacks'
 import Card from '@/components/card'
 import { localDate } from '@/lib/time'
 
@@ -12,11 +12,7 @@ import './time-card.css'
 
 const Clock = dynamic(() => import('react-clock'), {
   ssr: false,
-  loading: () => (
-    <ContentLoader speed={2} width={200} height={200}>
-      <circle r={80} cx={100} cy={100} />
-    </ContentLoader>
-  )
+  loading: () => <ClockFallback />
 })
 
 const TimeCard = () => {

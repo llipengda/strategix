@@ -13,7 +13,7 @@ import SubmitButton from '@/components/submit-button'
 import Tooltip from '@/components/tool-tip'
 import { updateUser } from '@/lib/actions/user'
 import { type Role, role as _role, roleMap, roleOrder } from '@/lib/role'
-import type { User } from '@/types/role'
+import type { User } from '@/types/user'
 
 interface Props {
   user: User

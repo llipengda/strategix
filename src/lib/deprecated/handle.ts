@@ -9,7 +9,7 @@ import type {
   AppRouteHandlerFnContext,
   NextAuthRequest
 } from '@/types/auth'
-import type { User } from '@/types/role'
+import type { User } from '@/types/user'
 
 type Level = User['role'] | 'noauth'
 

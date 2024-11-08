@@ -1,5 +1,7 @@
 import { FaCheckCircle } from 'react-icons/fa'
 
+import Link from 'next/link'
+
 import { getDayName, getHashColorByTeamName } from '@/lib/schedule'
 import type { IDateInfo } from '@/types/date-info'
 
@@ -18,8 +20,9 @@ export default function CalendarDay(props: {
   const isWorkday = v.day > 0 && v.day < 6
 
   return (
-    <div
-      className={`${v.date ? (isWorkday ? 'dark:bg-slate-800 bg-slate-200 ' : 'dark:bg-slate-700 bg-blue-100 ') : 'opacity-0'} transition-[height] duration-300 ease-in-out rounded-md w-40 min-h-28 h-auto relative overflow-hidden p-2 ${isToday ? 'animate-pulse bg-slate-300 border-black/10 dark:border-white/20 border-2' : ''}`}
+    <Link
+      href={`/schedule/${v.date}?year=${year}&month=${month}#detail`}
+      className={`${v.date ? (isWorkday ? 'dark:bg-slate-800 bg-slate-200' : 'dark:bg-slate-700 bg-blue-100 ') : 'opacity-0'} transition-[height] duration-300 ease-in-out rounded-md w-[14.285%] min-h-28 h-auto relative overflow-hidden p-2 block ${isToday ? 'animate-pulse bg-slate-300 border-black/10 dark:border-white/20 border-2' : ''} ${v.date ? 'cursor-pointer' : 'cursor-default pointer-events-none'}`}
       key={index}
     >
       <div>{getDayName(v.day)}</div>
@@ -64,6 +67,6 @@ export default function CalendarDay(props: {
           )
         })}
       </div>
-    </div>
+    </Link>
   )
 }
