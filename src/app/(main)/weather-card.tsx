@@ -45,8 +45,6 @@ const getIcon = (iconString: WeatherData['currentConditions']['icon']) => {
 const WeatherCard = async () => {
   const weatherData = await getWeatherByCity('Shanghai')
 
-  console.log(weatherData)
-
   if (!weatherData) {
     return (
       <Card className='min-h-[280px] min-w-[360px] max-xl:min-w-[512px] max-lg:min-w-min max-lg:w-full flex items-center justify-center'>
