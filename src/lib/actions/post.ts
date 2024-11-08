@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 
 import db from '@/lib/database'
+import { local } from '@/lib/time'
 import { Post } from '@/types/post'
 
 export const createPost = async (post: Post) => {
@@ -37,6 +38,7 @@ export const createPostAction = async (formData: FormData) => {
 
   await createPost(post)
   revalidatePath('/schedule')
+  revalidatePath('/')
 }
 
 export const getPosts = async (year: number, month: number) => {
@@ -51,6 +53,22 @@ export const getPosts = async (year: number, month: number) => {
     ExpressionAttributeValues: {
       ':type': 'post',
       ':sk': `${yearMonth}`
+    }
+  })
+
+  return posts
+}
+
+export const getPostsStartingToday = async () => {
+  const posts = await db.query<Post>({
+    IndexName: 'type-index',
+    KeyConditionExpression: '#type = :type AND sk > :sk',
+    ExpressionAttributeNames: {
+      '#type': 'type'
+    },
+    ExpressionAttributeValues: {
+      ':type': 'post',
+      ':sk': local(Date.now() - 1000 * 60 * 60 * 24).toISOString()
     }
   })
 
