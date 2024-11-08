@@ -46,12 +46,13 @@ const generateDateInfo = async (year: number, month: number) => {
   const predays = new Date(year, month - 1, 1).getDay()
   for (let i = 1; i <= predays; i++) dateInfo.push({ day: i })
   for (let i = 0; i < dateNum; i++) {
+    const realDate = i + 1
     dateInfo.push({
       day: (predays + i) % 7,
-      date: i + 1,
+      date: realDate,
       posts: postInfo.filter(v => {
         const d = new Date(v.publishDate)
-        return d.getDate() === i
+        return d.getDate() === realDate
       })
     })
   }
