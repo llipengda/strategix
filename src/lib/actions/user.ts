@@ -193,13 +193,13 @@ export const addUser = async (
 
   newUser.password = undefined
 
-  update({
+  await update({
     user: {
       ...newUser
     }
   })
 
-  revalidatePath(callbackUrl!)
+  revalidatePath(callbackUrl)
   redirect(callbackUrl)
 }
 

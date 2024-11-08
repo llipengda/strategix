@@ -12,6 +12,7 @@ import rain from '@/assets/icons/rain.svg'
 import snow from '@/assets/icons/snow.svg'
 import wind from '@/assets/icons/wind.svg'
 import Card from '@/components/card'
+import Tooltip from '@/components/tool-tip'
 import { getWeatherByCity } from '@/lib/actions/weather'
 import { localDate } from '@/lib/time'
 import type { WeatherData } from '@/types/weather'
@@ -19,30 +20,42 @@ import type { WeatherData } from '@/types/weather'
 const getIcon = (iconString: WeatherData['currentConditions']['icon']) => {
   switch (iconString) {
     case 'snow':
-      return snow
+      return snow as string
     case 'rain':
-      return rain
+      return rain as string
     case 'fog':
-      return fog
+      return fog as string
     case 'wind':
-      return wind
+      return wind as string
     case 'cloudy':
-      return cloudy
+      return cloudy as string
     case 'partly-cloudy-day':
-      return partlyCloudyDay
+      return partlyCloudyDay as string
     case 'partly-cloudy-night':
-      return partlyCloudyNight
+      return partlyCloudyNight as string
     case 'clear-day':
-      return clearDay
+      return clearDay as string
     case 'clear-night':
-      return clearNight
+      return clearNight as string
     default:
-      return null
+      throw new Error('Unknown weather icon')
   }
 }
 
 const WeatherCard = async () => {
   const weatherData = await getWeatherByCity('Shanghai')
+
+  console.log(weatherData)
+
+  if (!weatherData) {
+    return (
+      <Card className='min-h-[280px] min-w-[360px] max-xl:min-w-[512px] max-lg:min-w-min max-lg:w-full flex items-center justify-center'>
+        <Tooltip message='联系管理员以获取更多信息' className='cursor-help'>
+          天气信息不可用
+        </Tooltip>
+      </Card>
+    )
+  }
 
   const today = weatherData.days[0]
   const tomorrow = weatherData.days[1]

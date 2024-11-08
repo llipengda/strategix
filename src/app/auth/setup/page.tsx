@@ -9,7 +9,7 @@ import Input from '@/components/input'
 import SubmitButton from '@/components/submit-button'
 import { addUser } from '@/lib/actions/user'
 
-const Page = (props: Page) => {
+const Page = (props: PageProps) => {
   const searchParams = use(props.searchParams!)
   const [error, dispatch] = useActionState(
     addUser.bind(undefined, searchParams?.callbackUrl),

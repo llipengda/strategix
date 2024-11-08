@@ -5,7 +5,7 @@ import Forbidden from '@/components/forbidden'
 import { getCurrentUser, getUser } from '@/lib/actions/user'
 import { role } from '@/lib/role'
 
-const Page = async ({ params }: Page) => {
+const Page = async ({ params }: PageProps) => {
   const id = (await params)?.id as string | undefined
 
   if (!id) {

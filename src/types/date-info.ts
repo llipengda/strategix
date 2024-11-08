@@ -1,7 +1,7 @@
-import { Post } from "./post"
+import { Post } from './post'
 
 export interface IDateInfo {
-    day: number
-    date?: number
-    posts?: Post[]
-  }
+  day: number
+  date?: number
+  posts?: Post[]
+}

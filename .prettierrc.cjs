@@ -11,7 +11,6 @@ module.exports = {
   bracketSpacing: true,
   arrowParens: 'avoid',
   printWidth: 80,
-  jsxBracketSameLine: false,
   trailingComma: 'none',
   importOrder: [
     '^react(.*)',

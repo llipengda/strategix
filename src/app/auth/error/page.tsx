@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-const Page = async (props: Page) => {
+const Page = async (props: PageProps) => {
   const searchParams = await props.searchParams
   const error = searchParams?.error
 

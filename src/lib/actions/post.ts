@@ -1,8 +1,9 @@
 'use server'
 
+import { revalidatePath } from 'next/cache'
+
 import db from '@/lib/database'
 import { Post } from '@/types/post'
-import { revalidatePath } from 'next/cache'
 
 export const createPost = async (post: Post) => {
   await db.add(post)
@@ -43,14 +44,13 @@ export const getPosts = async (year: number, month: number) => {
 
   const posts = await db.query<Post>({
     IndexName: 'type-index',
-    KeyConditionExpression:
-      '#type = :type AND begins_with(sk, :sk)',
+    KeyConditionExpression: '#type = :type AND begins_with(sk, :sk)',
     ExpressionAttributeNames: {
       '#type': 'type'
     },
     ExpressionAttributeValues: {
       ':type': 'post',
-      ':sk': `${yearMonth}`,
+      ':sk': `${yearMonth}`
     }
   })
 

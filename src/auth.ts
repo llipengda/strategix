@@ -7,6 +7,7 @@ import { cookies } from 'next/headers'
 import { DynamoDBAdapter } from '@auth/dynamodb-adapter'
 import bcrypt from 'bcryptjs'
 import { v4 } from 'uuid'
+import { z } from 'zod'
 
 import { getUserByEmail } from '@/lib/actions/user'
 import db, { dbDocument } from '@/lib/database'
@@ -97,9 +98,25 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
         token.name = user.name || ''
       }
       if (trigger === 'update' && session) {
-        token.id = session.user.id
-        token.role = session.user.role
-        token.name = session.user.name
+        const sessionParsed = await z
+          .object({
+            user: z.object({
+              id: z.string(),
+              role: z.enum([
+                'super-admin',
+                'admin',
+                'manager',
+                'user',
+                'temp-user'
+              ]),
+              name: z.string()
+            })
+          })
+          .parseAsync(session)
+
+        token.id = sessionParsed.user.id
+        token.role = sessionParsed.user.role
+        token.name = sessionParsed.user.name
       }
       return token
     },
