@@ -7,5 +7,10 @@ export const localNow = () => toZonedTime(Date.now(), 'Asia/Shanghai')
 export const localISOFormat = () =>
   formatInTimeZone(new Date(), 'Asia/Shanghai', "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 
-export const localFormat = (date: Date | string) =>
-  formatInTimeZone(date, 'Asia/Shanghai', 'yyyy-MM-dd HH:mm:ss')
+export const localFormat = (
+  date: Date | string | number,
+  formatStr: string = 'yyyy-MM-dd HH:mm:ss'
+) => formatInTimeZone(date, 'Asia/Shanghai', formatStr)
+
+export const local = (date: Date | string | number) =>
+  toZonedTime(date, 'Asia/Shanghai')

@@ -12,7 +12,7 @@ import { auth, signIn, signOut, unstable_update as update } from '@/auth'
 import createUpdate from '@/lib/create-update'
 import db from '@/lib/database'
 import validateCaptcha from '@/lib/recaptcha'
-import { User } from '@/types/role'
+import { User } from '@/types/user'
 
 export const getUserByEmail = async (email: string | null | undefined) => {
   if (!email) {

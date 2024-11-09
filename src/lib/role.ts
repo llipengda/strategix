@@ -1,4 +1,4 @@
-import type { User } from '@/types/role'
+import type { User } from '@/types/user'
 
 export type Role = User['role']
 

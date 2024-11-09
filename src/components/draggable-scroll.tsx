@@ -1,10 +1,12 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useRef } from 'react'
 import { useDraggable } from 'react-use-draggable-scroll'
 
 import { MacScrollbar } from 'mac-scrollbar'
 import 'mac-scrollbar/dist/mac-scrollbar.css'
+
+import useTheme from '@/lib/hooks/use-theme'
 
 type DraggableScrollProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'ref'>
 
@@ -13,21 +15,7 @@ const DraggableScroll: React.FC<DraggableScrollProps> = props => {
 
   const { events } = useDraggable(ref)
 
-  const [theme, setTheme] = useState<'light' | 'dark'>('light')
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-
-    setTheme(mediaQuery.matches ? 'dark' : 'light')
-
-    const handleChange = (e: MediaQueryListEvent) => {
-      setTheme(e.matches ? 'dark' : 'light')
-    }
-
-    mediaQuery.addEventListener('change', handleChange)
-
-    return () => mediaQuery.removeEventListener('change', handleChange)
-  }, [])
+  const theme = useTheme()
 
   return (
     <MacScrollbar ref={ref} {...props} {...events} skin={theme}>

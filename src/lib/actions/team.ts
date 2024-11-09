@@ -8,8 +8,8 @@ import { auth } from '@/auth'
 import createUpdate from '@/lib/create-update'
 import db from '@/lib/database'
 import { Role, role as checkRole, roleOrder } from '@/lib/role'
-import { type User } from '@/types/role'
 import type { Team } from '@/types/team'
+import { type User } from '@/types/user'
 
 export const getTeam = async () => {
   const session = await auth()

@@ -12,7 +12,7 @@ import { z } from 'zod'
 import { getUserByEmail } from '@/lib/actions/user'
 import db, { dbDocument } from '@/lib/database'
 import { html, text } from '@/lib/email'
-import type { User } from '@/types/role'
+import type { User } from '@/types/user'
 
 export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
   providers: [
@@ -96,6 +96,7 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
         token.id = user.id || `user-${v4()}`
         token.role = user.role || 'temp-user'
         token.name = user.name || ''
+        token.team = user.team
       }
       if (trigger === 'update' && session) {
         const sessionParsed = await z
@@ -109,7 +110,8 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
                 'user',
                 'temp-user'
               ]),
-              name: z.string()
+              name: z.string(),
+              team: z.string().optional()
             })
           })
           .parseAsync(session)
@@ -117,6 +119,7 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
         token.id = sessionParsed.user.id
         token.role = sessionParsed.user.role
         token.name = sessionParsed.user.name
+        token.team = sessionParsed.user.team
       }
       return token
     },
@@ -124,6 +127,7 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
       session.user.id = token.id
       session.user.role = token.role
       session.user.name = token.name
+      session.user.team = token.team
       return session
     },
     authorized({ auth }) {
