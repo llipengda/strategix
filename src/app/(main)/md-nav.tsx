@@ -17,6 +17,11 @@ const MdNav = () => {
 
   const current = pages.find(item => item.url === pathname)
 
+  const menuSwitcher = () => {
+    console.log('open', open)
+    setOpen(!open)
+  }
+
   useEffect(() => {
     setOpen(false)
   }, [pathname])
@@ -25,16 +30,20 @@ const MdNav = () => {
     <>
       <div
         className='flex flex-row items-center text-xl font-bold cursor-pointer'
-        onClick={() => setOpen(!open)}
+        onClick={menuSwitcher}
       >
         <IoIosArrowForward
-          className={`transition-all duration-200 ease-in-out ${open ? 'rotate-90' : 'rotate-0'}`}
+          className={`transition-all duration-200 ease-in-out ml-2 my-4 ${open ? 'rotate-90' : 'rotate-0'}`}
         />
-        <h1 className='text-title ml-2'>{current?.name}</h1>
+        <h1 className='text-title ml-2 my-2'>{current?.name}</h1>
       </div>
-      <div className='h-px bg-gray-300 my-2 dark:bg-gray-600' />
+
+      <div
+        className={`h-[100vh] absolute w-full z-50 bg-black/50 my-2 dark:bg-black/70 ${open ? '' : 'hidden'}`}
+        onClick={menuSwitcher}
+      />
       <ul
-        className={`transition-all duration-200 ease-in-out px-8 overflow-hidden ${open ? 'h-full' : 'h-0'}`}
+        className={`pt-4 absolute -ml-[60%] left-0 z-50 w-[60%] h-[100vh] bg-page-bg transition-all duration-200 ease-in-out px-4 overflow-hidden ${open ? 'translate-x-full' : '-translate-x-full'}`}
       >
         {pages.map(item => (
           <li key={item.url}>
