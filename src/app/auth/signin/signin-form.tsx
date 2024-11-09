@@ -47,7 +47,10 @@ export default function SigninForm({ callbackUrl }: { callbackUrl?: string }) {
       </div>
 
       <div className='flex items-center justify-between'>
-        <Tooltip className='w-40' message='请使用邮箱或GitHub登录。登录后，您可在“用户”页面重设密码'>
+        <Tooltip
+          className='w-40'
+          message='请使用邮箱或GitHub登录。登录后，您可在“用户”页面重设密码'
+        >
           <span className='text-sm font-semibold text-main hover:underline cursor-help'>
             忘记密码？
           </span>
