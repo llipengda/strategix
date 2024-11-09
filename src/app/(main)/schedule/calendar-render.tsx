@@ -23,6 +23,7 @@ const generateDateInfo = async (year: number, month: number) => {
       })
     })
   }
+  for (let i = preDays + dateNum; i < 35; i++) dateInfo.push({ day: i % 7 })
   const result: IDateInfo[][] = []
   let week: IDateInfo[] = []
   for (const info of dateInfo) {
