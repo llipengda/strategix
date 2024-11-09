@@ -7,6 +7,7 @@ import Link from 'next/link'
 import ErrorMessage from '@/components/error-message'
 import Input from '@/components/input'
 import SubmitButton from '@/components/submit-button'
+import Tooltip from '@/components/tool-tip'
 import { authenticateByCredentials } from '@/lib/actions/user'
 
 export default function SigninForm({ callbackUrl }: { callbackUrl?: string }) {
@@ -46,12 +47,11 @@ export default function SigninForm({ callbackUrl }: { callbackUrl?: string }) {
       </div>
 
       <div className='flex items-center justify-between'>
-        <Link
-          href='#'
-          className='text-sm font-semibold text-main hover:underline'
-        >
-          忘记密码？
-        </Link>
+        <Tooltip className='w-40' message='请使用邮箱或GitHub登录。登录后，您可在“用户”页面重设密码'>
+          <span className='text-sm font-semibold text-main hover:underline cursor-help'>
+            忘记密码？
+          </span>
+        </Tooltip>
         <p className='text-sm text-disabled'>
           没有账号？
           <Link

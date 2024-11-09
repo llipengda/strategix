@@ -225,7 +225,7 @@ export async function getCurrentUser() {
     return null
   }
 
-  user.password = undefined
+  user.password = !!user.password ? 'has-password' : undefined
 
   return user
 }
@@ -275,4 +275,50 @@ export const deleteUser = async () => {
   await signOut({ redirect: true, redirectTo: '/' })
 
   revalidatePath('/')
+}
+
+const resetPasswordSchema = z
+  .object({
+    email: z.string().email(),
+    password: z.string().min(8, { message: '密码长度至少为8位' }),
+    confirmPassword: z.string().min(8, { message: '密码长度至少为8位' })
+  })
+  .superRefine((data, ctx) => {
+    if (data.password !== data.confirmPassword) {
+      ctx.addIssue({
+        path: ['confirmPassword'],
+        message: '密码不匹配',
+        code: 'custom'
+      })
+    }
+  })
+
+export const resetPasswordAction = async (_: unknown, formData: FormData) => {
+  const { success, data, error } = resetPasswordSchema.safeParse(
+    Object.fromEntries(formData)
+  )
+
+  if (!success) {
+    return error.errors.flatMap(e => e.message).join('; ')
+  }
+
+  const user = await getUserByEmail(data.email)
+
+  if (!user) {
+    return '用户不存在'
+  }
+
+  const hashedPassword = await bcrypt.hash(data.password, 10)
+
+  await db.update({
+    Key: {
+      id: user.id,
+      sk: 'null'
+    },
+    ...createUpdate({ password: hashedPassword })
+  })
+
+  revalidatePath('/auth/signin')
+  revalidatePath('/user')
+  redirect('/user')
 }
