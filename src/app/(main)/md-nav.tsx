@@ -4,10 +4,10 @@ import { useEffect, useState } from 'react'
 import { IoIosArrowForward } from 'react-icons/io'
 
 import Link from 'next/link'
+
 import { usePathname } from 'next/navigation'
 
 import _pages from '@/app/(main)/pages'
-import { createPortal } from 'react-dom'
 
 const pages = [{ name: '首页', url: '/' }, ..._pages]
 
@@ -54,8 +54,6 @@ const MdNav = () => {
                 </li>
               ))}
             </ul>
-
-
     </>
   )
 }
