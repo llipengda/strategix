@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { createPortal } from 'react-dom'
 import { IoIosArrowForward } from 'react-icons/io'
 
 import Link from 'next/link'
@@ -34,7 +33,7 @@ const MdNav = () => {
         onClick={menuSwitcher}
       >
         <IoIosArrowForward
-          className={`transition-all duration-200 ease-in-out ml-2 my-2 ${open ? 'rotate-90' : 'rotate-0'}`}
+          className={`transition-all duration-200 ease-in-out ml-2 my-4 ${open ? 'rotate-90' : 'rotate-0'}`}
         />
         <h1 className='text-title ml-2 my-2'>{current?.name}</h1>
       </div>
