@@ -35,7 +35,7 @@ export default function RootLayout({
           </div>
         </nav>
         {/* < md */}
-        <nav className='block md:hidden mt-10'>
+        <nav className='block md:hidden mt-8 sticky top-0 overflow-y-visible z-40 bg-page-bg'>
           <MdNav />
         </nav>
         <div className='flex-1 p-16 max-md:px-2 max-md:py-4 max-md:bg-page-bg bg-slate-50 dark:bg-slate-900'>
