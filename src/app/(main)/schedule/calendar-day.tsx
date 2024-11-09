@@ -69,7 +69,7 @@ export default function CalendarDay(props: {
               </p>
               {pushed && (
                 <div className='absolute right-1 top-1'>
-                  <FaCheckCircle className='text-green-600 bg-white rounded-full' />
+                  <FaCheckCircle className='text-green-700' />
                 </div>
               )}
             </div>
