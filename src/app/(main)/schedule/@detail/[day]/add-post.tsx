@@ -28,7 +28,7 @@ const AddPosts = ({
   return (
     <form
       action={action}
-      className='flex flex-col gap-2 w-2/5 h-fit dark:border-white/20 border-2 rounded-md p-6 max-md:w-full'
+      className='flex flex-col gap-2 w-2/5 h-fit dark:border-white/20 border-2 rounded-md p-6 max-lg:w-full'
     >
       <h2 className='text-2xl font-bold text-center mb-3'>添加推送</h2>
       <div>
