@@ -25,7 +25,9 @@ export default function CalendarDay(props: {
       className={`${v.date ? (isWorkday ? 'dark:bg-slate-800 bg-slate-200' : 'dark:bg-slate-700 bg-blue-100 ') : 'opacity-0'} transition-[height] duration-300 ease-in-out rounded-md w-[14.285%] min-h-28 max-sm:min-h-16 max-lg:md:min-h-16 h-auto relative overflow-hidden p-2 block ${isToday ? 'animate-pulse bg-slate-300 border-black/10 dark:border-white/20 border-2' : ''} ${v.date ? 'cursor-pointer' : 'cursor-default pointer-events-none'}`}
       key={index}
     >
-      <div className='max-sm:text-xs max-lg:md:text-xs'>{getDayName(v.day)}</div>
+      <div className='max-sm:text-xs max-lg:md:text-xs'>
+        {getDayName(v.day)}
+      </div>
       <div className='max-sm:text-xs max-lg:md:text-xs'>{v.date}</div>
       {v.posts && v.posts?.length > 1 && (
         <div className='absolute right-2 top-2 group-hover:opacity-0 transition-[opacity] duration-300 ease-in-out max-sm:hidden max-lg:md:hidden'>
