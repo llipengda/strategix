@@ -30,14 +30,14 @@ pnpm dev
 
 ### 验证码配置
 
-#### Turnstile
+#### Turnstile（实际上并未使用）
 
 | 变量名                            | 说明                          |
 | --------------------------------- | ----------------------------- |
 | NEXT_PUBLIC_TURNSTILE_SITE_KEY    | Cloudflare Turnstile 站点密钥 |
 | NEXT_PRIVATE_TURNSTILE_SECRET_KEY | Cloudflare Turnstile 密钥     |
 
-#### reCAPTCHA（实际上并未使用）
+#### reCAPTCHA
 
 | 变量名                             | 说明                      |
 | ---------------------------------- | ------------------------- |
