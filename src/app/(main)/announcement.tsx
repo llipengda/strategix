@@ -6,14 +6,20 @@ import type { Announcement as TAnnouncement } from '@/types/announcement'
 
 interface AnnouncementProps {
   announcement: TAnnouncement
+  draggable?: boolean
 }
 
-const Announcement: React.FC<AnnouncementProps> = ({ announcement }) => {
+const Announcement: React.FC<AnnouncementProps> = ({
+  announcement,
+  draggable = true
+}) => {
+  const Wrapper = draggable ? DraggableScroll : Div
+
   return (
-    <DraggableScroll className='bg-blue-50 relative dark:bg-slate-900 rounded-md h-full p-2 shadow-md min-w-[30%] max-h-56 overflow-y-auto'>
+    <Wrapper className='bg-blue-50 relative dark:bg-slate-900 rounded-md h-full p-2 shadow-md min-w-[30%] max-h-56 overflow-y-auto'>
       {announcement.pin && (
         <BsFillPinAngleFill
-          className='absolute top-1 right-1 text-blue-500 dark:text-slate-400'
+          className='absolute top-1 right-1 text-blue-500 dark:text-slate-400 drop-shadow-lg'
           size={24}
         />
       )}
@@ -26,8 +32,12 @@ const Announcement: React.FC<AnnouncementProps> = ({ announcement }) => {
       <div className='mt-2'>
         <p>{announcement.content}</p>
       </div>
-    </DraggableScroll>
+    </Wrapper>
   )
+}
+
+const Div: React.FC<React.PropsWithChildren> = props => {
+  return <div {...props}>{props.children}</div>
 }
 
 export default Announcement
