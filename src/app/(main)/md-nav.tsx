@@ -39,7 +39,7 @@ const MdNav = () => {
       </div>
 
       <div
-        className={`h-[100vh] absolute w-full z-50 bg-black/50 my-2 dark:bg-black/70 ${open ? '' : 'hidden'}`}
+        className={`h-[100vh] absolute w-full z-50 bg-black/50 dark:bg-black/70 ${open ? '' : 'hidden'}`}
         onClick={menuSwitcher}
       />
       <ul
