@@ -55,8 +55,8 @@ const Schedules: React.FC<SchedulesProps> = async ({ year, month, day }) => {
               </div>
             )
           })}
-        </ul>)
-      }
+        </ul>
+      )}
     </div>
   )
 }
