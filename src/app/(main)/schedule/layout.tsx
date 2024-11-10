@@ -10,7 +10,7 @@ const Layout = async ({
       <div className='flex flex-col aspect-video mx-auto dark:border-white/10 border-2 rounded-md p-2'>
         {children}
       </div>
-      <div className='flex flex-col mx-auto'>{detail}</div>
+      <div className='flex flex-col aspect-video mx-auto'>{detail}</div>
     </div>
   )
 }

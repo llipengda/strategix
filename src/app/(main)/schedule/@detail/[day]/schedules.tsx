@@ -18,9 +18,9 @@ const Schedules: React.FC<SchedulesProps> = async ({ year, month, day }) => {
         日程：{year} 年 {month} 月 {day} 日
       </h2>
       {schedules.length === 0 ? (
-        <p className='text-center text-lg my-auto italic text-gray-400 dark:text-gray-600'>
-          当前日期暂无日程
-        </p>
+        <div className='flex text-center text-lg my-auto h-full items-center justify-center italic text-gray-400 dark:text-gray-600'>
+          <p>当前日期暂无日程</p>
+        </div>
       ) : (
         <ul className='flex mt-8 items-center w-full h-full flex-col gap-2'>
           {schedules.map(p => {
