@@ -5,7 +5,7 @@ import { localDate } from '@/lib/time'
 
 export const Post = z
   .object({
-    id: z.string().default(`post-${v4()}`),
+    id: z.string().uuid().default(v4),
     title: z.string(),
     team: z.string().min(1, { message: '团队不能为空' }),
     publishDate: z.date().transform(value => value.toISOString()),

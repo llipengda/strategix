@@ -2,10 +2,7 @@ import { v4 } from 'uuid'
 import { z } from 'zod'
 
 export const User = z.object({
-  id: z
-    .string()
-    .startsWith('user-')
-    .default(() => `user-${v4()}`),
+  id: z.string().uuid().default(v4),
   name: z.string(),
   email: z.string().email(),
   password: z.string().optional(),

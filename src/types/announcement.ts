@@ -5,7 +5,7 @@ import { localDate } from '@/lib/time'
 
 const _Announcement = z
   .object({
-    id: z.string().default(`announcement-${v4()}`),
+    id: z.string().uuid().default(v4),
     publisherId: z.string().optional(),
     publisherName: z.string(),
     content: z.string(),
