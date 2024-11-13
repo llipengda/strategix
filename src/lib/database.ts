@@ -6,6 +6,7 @@ import {
   ScanCommand
 } from '@aws-sdk/client-dynamodb'
 import {
+  BatchWriteCommand,
   DeleteCommand,
   DynamoDBDocument,
   DynamoDBDocumentClient,
@@ -109,13 +110,30 @@ async function del(key: Record<string, unknown>) {
   )
 }
 
+async function batchAdd<T extends Record<string, unknown>>(items: T[]) {
+  const request = items.map(item => ({
+    PutRequest: {
+      Item: item
+    }
+  }))
+
+  await docClient.send(
+    new BatchWriteCommand({
+      RequestItems: {
+        [TABLE_NAME]: request
+      }
+    })
+  )
+}
+
 const db = {
   add,
   scan,
   get,
   query,
   update,
-  del
+  del,
+  batchAdd
 }
 
 export default db
