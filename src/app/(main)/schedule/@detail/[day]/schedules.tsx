@@ -1,5 +1,7 @@
 import { FaCheckCircle } from 'react-icons/fa'
 
+import { DeleteButton } from '@/components/delete-button'
+import { deletePostAction } from '@/lib/actions/post'
 import { getSchedules } from '@/lib/actions/schedule'
 import { getHashColorByTeamName } from '@/lib/schedule'
 
@@ -52,6 +54,15 @@ const Schedules: React.FC<SchedulesProps> = async ({ year, month, day }) => {
                     <FaCheckCircle className='text-green-700 text-lg' />
                   </div>
                 )}
+                <form
+                  action={deletePostAction.bind(
+                    null,
+                    p,
+                    `/schedule/${day}?year=${year}&month=${month}#detail`
+                  )}
+                >
+                  <DeleteButton />
+                </form>
               </div>
             )
           })}

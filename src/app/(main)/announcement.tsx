@@ -1,6 +1,8 @@
 import { BsFillPinAngleFill } from 'react-icons/bs'
 
+import { DeleteButton } from '@/components/delete-button'
 import DraggableScroll from '@/components/draggable-scroll'
+import { deleteAnnouncementAction } from '@/lib/actions/announcement'
 import { localFormat } from '@/lib/time'
 import type { Announcement as TAnnouncement } from '@/types/announcement'
 
@@ -32,6 +34,9 @@ const Announcement: React.FC<AnnouncementProps> = ({
       <div className='mt-2'>
         <p>{announcement.content}</p>
       </div>
+      <form action={deleteAnnouncementAction.bind(null, announcement)}>
+        <DeleteButton />
+      </form>
     </Wrapper>
   )
 }

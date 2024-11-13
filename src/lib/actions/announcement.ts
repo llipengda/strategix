@@ -2,8 +2,11 @@
 
 import { revalidatePath } from 'next/cache'
 
+import { auth } from '@/auth'
 import db from '@/lib/database'
 import { Announcement } from '@/types/announcement'
+
+import { role } from '../role'
 
 export const getAllAnnouncements = async () => {
   const data = await db.query<Announcement>({
@@ -25,10 +28,20 @@ export const addAnnouncement = async (announcement: Announcement) => {
   await db.add(announcement)
 
   revalidatePath('/')
-  revalidatePath('/announcements')
+  revalidatePath('/announcement')
+}
+
+export const deleteAnnouncement = async (announcement: Announcement) => {
+  await db.del({
+    id: announcement.id,
+    sk: announcement.sk
+  })
 }
 
 export const addAnnouncementAction = async (formData: FormData) => {
+  const user = (await auth())?.user
+  role.ensure.admin(user)
+
   const announcement = await Announcement.parseAsync({
     content: formData.get('content') as string,
     publisherName: formData.get('publisherName') as string,
@@ -39,4 +52,16 @@ export const addAnnouncementAction = async (formData: FormData) => {
   })
 
   await addAnnouncement(announcement)
+}
+
+export const deleteAnnouncementAction = async (announcement: Announcement) => {
+  const user = (await auth())?.user
+
+  role.ensure.admin(user)
+
+  if (role.superAdmin(user) || announcement.publisherId === user?.id) {
+    await deleteAnnouncement(announcement)
+    revalidatePath('/')
+    revalidatePath('/announcement')
+  }
 }

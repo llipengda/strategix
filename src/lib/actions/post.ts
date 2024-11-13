@@ -87,3 +87,12 @@ export const getPostsStartingToday = async () => {
 
   return posts
 }
+
+export const deletePostAction = async (post: Post, path: string) => {
+  await db.del({
+    id: post.id,
+    sk: post.sk
+  })
+  revalidatePath(path)
+  revalidatePath('/schedule')
+}
