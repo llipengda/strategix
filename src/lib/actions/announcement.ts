@@ -57,7 +57,7 @@ export const deleteAnnouncementAction = async (announcement: Announcement) => {
   role.ensure.admin(user)
 
   if (role.superAdmin(user) || announcement.publisherId === user?.id) {
-    deleteAnnouncement(announcement)
+    await deleteAnnouncement(announcement);
     revalidatePath('/')
     revalidatePath('/announcement')
   }
