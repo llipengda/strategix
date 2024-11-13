@@ -51,6 +51,7 @@ export const Activity = z
       .transform(v => [v[0].toISOString(), v[1].toISOString()] as const)
       .optional(),
     createdAt: z.string().datetime().default(localDate().toISOString()),
+    stage: z.enum(['draft', 'inProgress', 'completed', 'archived']).default('draft'),
     sk: z.string().optional()
   })
   .superRefine((data, ctx) => {

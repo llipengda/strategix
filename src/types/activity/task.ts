@@ -3,7 +3,10 @@ import { z } from 'zod'
 
 export const Task = z
   .object({
-    id: z.string().uuid().default(v4),
+    id: z.string().uuid(),
+    name: z.string(),
+    taskId: z.string().uuid().default(v4),
+    dueDate: z.date().transform(v => v.toISOString()),
     type: z.literal('task').default('task'),
     description: z.string(),
     references: z.array(z.string()).default([]),
@@ -20,7 +23,7 @@ export const Task = z
   })
   .transform(data => ({
     ...data,
-    sk: `task#${data.id}`
+    sk: `task#${data.taskId}`
   }))
 
 export type Task = Expand<z.infer<typeof Task>>
