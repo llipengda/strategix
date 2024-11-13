@@ -1,10 +1,10 @@
 import { BsFillPinAngleFill } from 'react-icons/bs'
 
+import { DeleteButton } from '@/components/delete-button'
 import DraggableScroll from '@/components/draggable-scroll'
+import { deleteAnnouncementAction } from '@/lib/actions/announcement'
 import { localFormat } from '@/lib/time'
 import type { Announcement as TAnnouncement } from '@/types/announcement'
-import { deleteAnnouncementAction } from '@/lib/actions/announcement'
-import { DeleteButton } from '@/components/delete-button'
 
 interface AnnouncementProps {
   announcement: TAnnouncement
@@ -12,7 +12,7 @@ interface AnnouncementProps {
 }
 
 const Announcement: React.FC<AnnouncementProps> = ({
-  announcement, 
+  announcement,
   draggable = true
 }) => {
   const Wrapper = draggable ? DraggableScroll : Div

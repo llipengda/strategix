@@ -2,9 +2,10 @@
 
 import { revalidatePath } from 'next/cache'
 
+import { auth } from '@/auth'
 import db from '@/lib/database'
 import { Announcement } from '@/types/announcement'
-import { auth } from '@/auth'
+
 import { role } from '../role'
 
 export const getAllAnnouncements = async () => {
@@ -56,7 +57,7 @@ export const deleteAnnouncementAction = async (announcement: Announcement) => {
   role.ensure.admin(user)
 
   if (role.superAdmin(user) || announcement.publisherId === user?.id) {
-    deleteAnnouncement(announcement);
+    deleteAnnouncement(announcement)
     revalidatePath('/')
     revalidatePath('/announcement')
   }
