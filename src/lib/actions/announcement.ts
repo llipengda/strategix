@@ -39,6 +39,9 @@ export const deleteAnnouncement = async (announcement: Announcement) => {
 }
 
 export const addAnnouncementAction = async (formData: FormData) => {
+  const user = (await auth())?.user
+  role.ensure.admin(user)
+  
   const announcement = await Announcement.parseAsync({
     content: formData.get('content') as string,
     publisherName: formData.get('publisherName') as string,
