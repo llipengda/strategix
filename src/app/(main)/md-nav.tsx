@@ -6,7 +6,7 @@ import { IoIosArrowForward } from 'react-icons/io'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-import _pages from '@/app/(main)/pages'
+import _pages from '@/app/(main)/routes'
 
 const pages = [{ name: '首页', url: '/' }, ..._pages]
 
