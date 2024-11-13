@@ -52,6 +52,7 @@ const Schedules: React.FC<SchedulesProps> = async ({ year, month, day }) => {
                     <FaCheckCircle className='text-green-700 text-lg' />
                   </div>
                 )}
+                <div className='absolute bottom-0 right-0 px-2 py-1 rounded-tl-lg rounded-br-lg bg-red-500/80 text-white cursor-pointer hover:bg-red-600'>删除</div>
               </div>
             )
           })}
