@@ -5,6 +5,8 @@ import { revalidatePath } from 'next/cache'
 import db from '@/lib/database'
 import { local, localFormat } from '@/lib/time'
 import { Post } from '@/types/post'
+import { auth } from '@/auth'
+import { role } from '../role'
 
 export const createPost = async (post: Post) => {
   await db.add(post)
@@ -89,6 +91,9 @@ export const getPostsStartingToday = async () => {
 }
 
 export const deletePostAction = async (post: Post, path: string) => {
+  const user = (await auth())?.user
+  role.ensure.admin(user)
+
   await db.del({
     id: post.id,
     sk: post.sk

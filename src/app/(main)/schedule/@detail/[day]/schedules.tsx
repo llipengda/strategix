@@ -4,6 +4,7 @@ import { DeleteButton } from '@/components/delete-button'
 import { deletePostAction } from '@/lib/actions/post'
 import { getSchedules } from '@/lib/actions/schedule'
 import { getHashColorByTeamName } from '@/lib/schedule'
+import { getCurrentUser } from '@/lib/actions/user'
 
 interface SchedulesProps {
   year: number
@@ -13,7 +14,8 @@ interface SchedulesProps {
 
 const Schedules: React.FC<SchedulesProps> = async ({ year, month, day }) => {
   const schedules = await getSchedules(year, month, day)
-
+  const user = await getCurrentUser()
+  const baseRight = user?.role === 'admin' || user?.role === 'super-admin'
   return (
     <div className='w-3/5 h-full dark:border-white/20 border-2 rounded-md p-6 max-lg:w-full'>
       <h2 className='text-2xl font-bold text-center'>
@@ -54,7 +56,7 @@ const Schedules: React.FC<SchedulesProps> = async ({ year, month, day }) => {
                     <FaCheckCircle className='text-green-700 text-lg' />
                   </div>
                 )}
-                <form
+                {baseRight && (<form
                   action={deletePostAction.bind(
                     null,
                     p,
@@ -63,6 +65,7 @@ const Schedules: React.FC<SchedulesProps> = async ({ year, month, day }) => {
                 >
                   <DeleteButton />
                 </form>
+                )}
               </div>
             )
           })}
