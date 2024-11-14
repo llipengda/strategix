@@ -27,12 +27,7 @@ const Note = SectionBase.extend({
   value: z.string()
 })
 
-const Section = z.union([
-  Description,
-  Purpose,
-  Note,
-  SectionBase
-])
+const Section = z.union([Description, Purpose, Note, SectionBase])
 
 type Description = z.infer<typeof Description>
 type Purpose = z.infer<typeof Purpose>
