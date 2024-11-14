@@ -13,12 +13,19 @@ interface SchedulesProps {
   isAdmin: boolean
 }
 
-const Schedules: React.FC<SchedulesProps> = async ({ year, month, day, isAdmin }) => {
+const Schedules: React.FC<SchedulesProps> = async ({
+  year,
+  month,
+  day,
+  isAdmin
+}) => {
   const schedules = await getSchedules(year, month, day)
   const user = await getCurrentUser()
   const baseRight = user?.role === 'admin' || user?.role === 'super-admin'
   return (
-    <div className={`h-full dark:border-white/20 border-2 rounded-md p-6 max-lg:w-full ${isAdmin?'w-3/5 ':'w-full'}`}>
+    <div
+      className={`h-full dark:border-white/20 border-2 rounded-md p-6 max-lg:w-full ${isAdmin ? 'w-3/5 ' : 'w-full'}`}
+    >
       <h2 className='text-2xl font-bold text-center'>
         日程：{year} 年 {month} 月 {day} 日
       </h2>
