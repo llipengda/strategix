@@ -36,13 +36,11 @@ const Announcement: React.FC<AnnouncementProps> = ({
       <div className='mt-2'>
         <p>{announcement.content}</p>
       </div>
-      {
-        showDelete  && (
-          <form action={deleteAnnouncementAction.bind(null, announcement)}>
-            <DeleteButton />
-          </form>
-        )
-      }
+      {showDelete && (
+        <form action={deleteAnnouncementAction.bind(null, announcement)}>
+          <DeleteButton />
+        </form>
+      )}
     </Wrapper>
   )
 }
