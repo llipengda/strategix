@@ -14,6 +14,8 @@ export const createPost = async (post: Post) => {
 }
 
 export const createPostAction = async (_: unknown, formData: FormData) => {
+  const user = (await auth())?.user
+  role.ensure.admin(user)
   const {
     data: post,
     success,
