@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 import Assignment from '@/app/(main)/activity/assignment'
 import { auth } from '@/auth'
 import { type BriefActivity, getAssignments } from '@/lib/actions/activity'
@@ -28,7 +30,7 @@ const Activity: React.FC<ActivityProps> = async ({ activity }) => {
   const isCompleted = activity.stage === 'completed'
 
   return (
-    <div
+    <Link
       className={`${
         isDraft
           ? 'bg-slate-300'
@@ -37,7 +39,8 @@ const Activity: React.FC<ActivityProps> = async ({ activity }) => {
             : isCompleted
               ? 'bg-blue-50'
               : 'bg-yellow-50'
-      } w-full p-4 rounded-md shadow-md space-y-2`}
+      } w-full p-4 rounded-md shadow-md space-y-2 block`}
+      href={`/activity/${activity.id}`}
     >
       <h2 className='text-xl font-bold'>
         <span
@@ -77,7 +80,7 @@ const Activity: React.FC<ActivityProps> = async ({ activity }) => {
         </div>
       )}
       <div className='text-gray-400 italic text-sm'>{activity.team}</div>
-    </div>
+    </Link>
   )
 }
 

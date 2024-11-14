@@ -3,30 +3,40 @@ import { z } from 'zod'
 
 import { localDate } from '@/lib/time'
 
-const sectionBaseSchema = z.object({
+const SectionBase = z.object({
   type: z.string(),
+  name: z.string(),
   value: z.unknown()
 })
 
-const descriptionSchema = sectionBaseSchema.extend({
+const Description = SectionBase.extend({
   type: z.literal('description'),
+  name: z.literal('活动简介'),
   value: z.string()
 })
 
-const purposeSchema = sectionBaseSchema.extend({
+const Purpose = SectionBase.extend({
   type: z.literal('purpose'),
+  name: z.literal('活动目的'),
   value: z.string()
 })
 
-const sectionSchema = z.union([
-  descriptionSchema,
-  purposeSchema,
-  sectionBaseSchema
+const Note = SectionBase.extend({
+  type: z.literal('note'),
+  name: z.literal('注意事项'),
+  value: z.string()
+})
+
+const Section = z.union([
+  Description,
+  Purpose,
+  Note,
+  SectionBase
 ])
 
-type Description = z.infer<typeof descriptionSchema>
-type Purpose = z.infer<typeof purposeSchema>
-type Section = z.infer<typeof sectionSchema>
+type Description = z.infer<typeof Description>
+type Purpose = z.infer<typeof Purpose>
+export type Section = z.infer<typeof Section>
 
 export const section = {
   isDescription: (section: Section): section is Description =>
@@ -41,7 +51,7 @@ export const Activity = z
     type: z.literal('activity').optional().default('activity'),
     name: z.string(),
     team: z.string(),
-    sections: z.array(sectionSchema),
+    sections: z.array(Section),
     time: z
       .date()
       .transform(v => v.toISOString())
@@ -51,7 +61,9 @@ export const Activity = z
       .transform(v => [v[0].toISOString(), v[1].toISOString()] as const)
       .optional(),
     createdAt: z.string().datetime().default(localDate().toISOString()),
-    stage: z.enum(['draft', 'inProgress', 'completed', 'archived']).default('draft'),
+    stage: z
+      .enum(['draft', 'inProgress', 'completed', 'archived'])
+      .default('draft'),
     sk: z.string().optional()
   })
   .superRefine((data, ctx) => {
