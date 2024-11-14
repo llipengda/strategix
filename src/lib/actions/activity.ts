@@ -1,7 +1,15 @@
+'use server'
+
+import { revalidatePath } from 'next/cache'
+
+import { generateUpdateExpression } from '@auth/dynamodb-adapter'
+
+import { getCurrentUser } from '@/lib/actions/user'
 import db from '@/lib/database'
-import type { Activity } from '@/types/activity/activity'
-import type { Assignment } from '@/types/activity/assignment'
-import type { Task } from '@/types/activity/task'
+import { role } from '@/lib/role'
+import { Activity, type Section } from '@/types/activity/activity'
+import { Assignment } from '@/types/activity/assignment'
+import { Task } from '@/types/activity/task'
 
 export const addActivity = async (activity: Activity) => {
   await db.add(activity)
@@ -35,17 +43,18 @@ export const addAssignments = async (assignments: Assignment[]) => {
 
 export type BriefActivity = Pick<
   Activity,
-  'id' | 'name' | 'stage' | 'team' | 'time' | 'timeRange'
+  'id' | 'sk' | 'name' | 'stage' | 'team' | 'time' | 'timeRange'
 >
 
 export const getBriefActivities = async () => {
   return await db.query<BriefActivity>({
     IndexName: 'type-index',
     KeyConditionExpression: '#type = :type',
-    ProjectionExpression: '#id, #name, #stage, #team, #time, #timeRange',
+    ProjectionExpression: '#id, #sk, #name, #stage, #team, #time, #timeRange',
     ExpressionAttributeNames: {
       '#type': 'type',
       '#id': 'id',
+      '#sk': 'sk',
       '#name': 'name',
       '#stage': 'stage',
       '#team': 'team',
@@ -104,16 +113,124 @@ export const getTaskById = async (activityId: string, taskId: string) => {
   return tasks[0]
 }
 
-export const addFullActivity = async (
-  activity: Activity,
-  tasks: Task[],
-  assignments: Assignment[]
+export const addNewDraftActivityAction = async (
+  name: string,
+  {
+    time,
+    timeRange
+  }: {
+    time?: Date
+    timeRange?: [Date, Date]
+  }
 ) => {
-  const promises = [
-    addActivity(activity),
-    addTasks(tasks),
-    addAssignments(assignments)
-  ]
+  const user = await getCurrentUser()
 
-  await Promise.all(promises)
+  if (!user) {
+    throw new Error('请先登录')
+  }
+
+  role.ensure.admin(user)
+
+  if (!time && !timeRange) {
+    return {
+      error: '时间不能为空'
+    }
+  }
+
+  if (!!timeRange && timeRange[0] >= timeRange[1]) {
+    return {
+      error: '时间范围不合法'
+    }
+  }
+
+  if (!user.team) {
+    throw new Error('请先设置团队')
+  }
+
+  const activity = Activity.parse({
+    name,
+    time,
+    timeRange,
+    team: user.team,
+    sections: []
+  })
+
+  await addActivity(activity)
+
+  revalidatePath('/activity')
+
+  return {
+    key: {
+      id: activity.id,
+      sk: activity.sk
+    }
+  }
+}
+
+type UpdateActivity = Partial<Omit<Activity, 'id' | 'sk'>>
+
+export const updateActivityAction = async (
+  key: { id: string; sk: string },
+  activity: UpdateActivity
+) => {
+  await db.update({
+    Key: key,
+    ...generateUpdateExpression(activity)
+  })
+
+  revalidatePath('/activity')
+}
+
+export const addOrUpdateSectionAction = async (
+  key: { id: string; sk: string },
+  id: string,
+  section: Section
+) => {
+  const activity = await db.get<Activity>(key)
+
+  if (!activity) {
+    throw new Error('活动不存在')
+  }
+
+  const index = activity.sections?.findIndex(s => s.id === id) ?? -1
+
+  if (index === -1) {
+    if (!activity.sections) {
+      activity.sections = []
+    }
+    activity.sections.push(section)
+  } else {
+    activity.sections[index] = section
+  }
+
+  await db.update({
+    Key: key,
+    ...generateUpdateExpression({ sections: activity.sections })
+  })
+
+  revalidatePath(`/activity/${key.id}`)
+  revalidatePath('/activity/new')
+  revalidatePath(`/activity/new?id=${key.id}&sk=${encodeURIComponent(key.sk)}`)
+}
+
+export const deleteSectionAction = async (
+  key: { id: string; sk: string },
+  id: string
+) => {
+  const activity = await db.get<Activity>(key)
+
+  if (!activity) {
+    throw new Error('活动不存在')
+  }
+
+  activity.sections = activity.sections?.filter(s => s.id !== id)
+
+  await db.update({
+    Key: key,
+    ...generateUpdateExpression({ sections: activity.sections })
+  })
+
+  revalidatePath(`/activity/${key.id}`)
+  revalidatePath('/activity/new')
+  revalidatePath(`/activity/new?id=${key.id}&sk=${encodeURIComponent(key.sk)}`)
 }

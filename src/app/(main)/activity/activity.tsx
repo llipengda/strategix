@@ -40,7 +40,11 @@ const Activity: React.FC<ActivityProps> = async ({ activity }) => {
               ? 'bg-blue-50'
               : 'bg-yellow-50'
       } w-full p-4 rounded-md shadow-md space-y-2 block`}
-      href={`/activity/${activity.id}`}
+      href={
+        isDraft
+          ? `/activity/new?id=${activity.id}&sk=${encodeURIComponent(activity.sk)}`
+          : `/activity/${activity.id}`
+      }
     >
       <h2 className='text-xl font-bold'>
         <span

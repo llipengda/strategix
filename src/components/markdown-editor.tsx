@@ -32,6 +32,7 @@ export default function MarkdownEditor({
         markdownShortcutPlugin()
       ]}
       className={`${theme === 'dark' ? 'dark-theme' : ''}`}
+      contentEditableClassName={`prose max-w-none dark:prose-invert ${props.readOnly ? '' : 'bg-gray-50 dark:bg-gray-900'} rounded-lg`}
       {...props}
       ref={editorRef}
     />
