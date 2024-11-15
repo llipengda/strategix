@@ -3,19 +3,29 @@ import { FaCheckCircle } from 'react-icons/fa'
 import { DeleteButton } from '@/components/delete-button'
 import { deletePostAction } from '@/lib/actions/post'
 import { getSchedules } from '@/lib/actions/schedule'
+import { getCurrentUser } from '@/lib/actions/user'
 import { getHashColorByTeamName } from '@/lib/schedule'
 
 interface SchedulesProps {
   year: number
   month: number
   day: number
+  isAdmin: boolean
 }
 
-const Schedules: React.FC<SchedulesProps> = async ({ year, month, day }) => {
+const Schedules: React.FC<SchedulesProps> = async ({
+  year,
+  month,
+  day,
+  isAdmin
+}) => {
   const schedules = await getSchedules(year, month, day)
-
+  const user = await getCurrentUser()
+  const baseRight = user?.role === 'admin' || user?.role === 'super-admin'
   return (
-    <div className='w-3/5 h-full dark:border-white/20 border-2 rounded-md p-6 max-lg:w-full'>
+    <div
+      className={`h-full dark:border-white/20 border-2 rounded-md p-6 max-lg:w-full ${isAdmin ? 'w-3/5 ' : 'w-full'}`}
+    >
       <h2 className='text-2xl font-bold text-center'>
         日程：{year} 年 {month} 月 {day} 日
       </h2>
@@ -54,15 +64,17 @@ const Schedules: React.FC<SchedulesProps> = async ({ year, month, day }) => {
                     <FaCheckCircle className='text-green-700 text-lg' />
                   </div>
                 )}
-                <form
-                  action={deletePostAction.bind(
-                    null,
-                    p,
-                    `/schedule/${day}?year=${year}&month=${month}#detail`
-                  )}
-                >
-                  <DeleteButton />
-                </form>
+                {baseRight && (
+                  <form
+                    action={deletePostAction.bind(
+                      null,
+                      p,
+                      `/schedule/${day}?year=${year}&month=${month}#detail`
+                    )}
+                  >
+                    <DeleteButton />
+                  </form>
+                )}
               </div>
             )
           })}

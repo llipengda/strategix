@@ -4,15 +4,17 @@ import { DeleteButton } from '@/components/delete-button'
 import DraggableScroll from '@/components/draggable-scroll'
 import { deleteAnnouncementAction } from '@/lib/actions/announcement'
 import { localFormat } from '@/lib/time'
-import type { Announcement as TAnnouncement } from '@/types/announcement'
+import { Announcement as TAnnouncement } from '@/types/announcement'
 
 interface AnnouncementProps {
   announcement: TAnnouncement
+  showDelete?: boolean
   draggable?: boolean
 }
 
 const Announcement: React.FC<AnnouncementProps> = ({
   announcement,
+  showDelete = false,
   draggable = true
 }) => {
   const Wrapper = draggable ? DraggableScroll : Div
@@ -34,9 +36,11 @@ const Announcement: React.FC<AnnouncementProps> = ({
       <div className='mt-2'>
         <p>{announcement.content}</p>
       </div>
-      <form action={deleteAnnouncementAction.bind(null, announcement)}>
-        <DeleteButton />
-      </form>
+      {showDelete && (
+        <form action={deleteAnnouncementAction.bind(null, announcement)}>
+          <DeleteButton />
+        </form>
+      )}
     </Wrapper>
   )
 }

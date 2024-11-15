@@ -1,6 +1,7 @@
 import AddPosts from '@/app/(main)/schedule/@detail/[day]/add-post'
 import Schedules from '@/app/(main)/schedule/@detail/[day]/schedules'
 import { auth } from '@/auth'
+import { role } from '@/lib/role'
 import { localDate } from '@/lib/time'
 
 const Page: React.FC<PageProps> = async ({ params }) => {
@@ -14,13 +15,15 @@ const Page: React.FC<PageProps> = async ({ params }) => {
 
   const user = (await auth())?.user
 
+  const isAdmin = role.admin(user)
+
   return (
     <div
       id='detail'
       className='flex w-full h-full gap-8 max-md:gap-2 max-lg:flex-col'
     >
-      <Schedules year={year} month={month} day={day} />
-      <AddPosts year={year} month={month} day={day} user={user!} />
+      <Schedules year={year} month={month} day={day} isAdmin={isAdmin} />
+      {isAdmin && <AddPosts year={year} month={month} day={day} user={user!} />}
     </div>
   )
 }
