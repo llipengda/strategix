@@ -2,10 +2,12 @@
 
 import dynamic from 'next/dynamic'
 
+import MdEditorFallback from '@/app/(main)/activity/md-editor-fallback'
 import type { Section as TSection } from '@/types/activity/activity'
 
 const MarkdownEditor = dynamic(() => import('@/components/markdown-editor'), {
-  ssr: false
+  ssr: false,
+  loading: () => <MdEditorFallback />
 })
 
 const Section = ({ section }: { section: TSection }) => {

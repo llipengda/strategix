@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { localDate } from '@/lib/time'
 
 const SectionBase = z.object({
+  id: z.string().uuid().default(v4),
   type: z.string(),
   name: z.string(),
   value: z.unknown()
@@ -27,7 +28,16 @@ const Note = SectionBase.extend({
   value: z.string()
 })
 
-const Section = z.union([Description, Purpose, Note, SectionBase])
+export const predefinedSections = [
+  { type: 'description', name: '活动简介' },
+  { type: 'purpose', name: '活动目的' },
+  { type: 'note', name: '注意事项' },
+  { type: 'custom', name: '自定义' }
+]
+
+export const sectionMap = new Map(predefinedSections.map(s => [s.type, s.name]))
+
+export const Section = z.union([Description, Purpose, Note, SectionBase])
 
 type Description = z.infer<typeof Description>
 type Purpose = z.infer<typeof Purpose>

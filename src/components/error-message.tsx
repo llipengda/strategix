@@ -1,12 +1,14 @@
 import { MdError } from 'react-icons/md'
 
 export default function ErrorMessage({
-  errorMessage
+  errorMessage,
+  defaultHeight = true
 }: {
   errorMessage?: string
+  defaultHeight?: boolean
 }) {
   if (!errorMessage) {
-    return <div className='h-3' />
+    return defaultHeight ? <div className='h-3' /> : null
   }
 
   return (
