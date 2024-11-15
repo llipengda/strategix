@@ -22,6 +22,7 @@ import {
   toolbarPlugin
 } from '@mdxeditor/editor'
 
+import MdEditorFallback from '@/app/(main)/activity/md-editor-fallback'
 import { KeyContext } from '@/app/(main)/activity/new/key-context'
 import ErrorMessage from '@/components/error-message'
 import {
@@ -36,7 +37,8 @@ import {
 } from '@/types/activity/activity'
 
 const MarkdownEditor = dynamic(() => import('@/components/markdown-editor'), {
-  ssr: false
+  ssr: false,
+  loading: () => <MdEditorFallback />
 })
 
 interface EditProps {
@@ -75,8 +77,24 @@ const Edit: React.FC<EditProps> = ({
     return () => clearInterval(timer)
   }, [])
 
+  const typeRef = useRef(type)
+  const customNameRef = useRef(customName)
+  const valueRef = useRef(value)
+
   const save = useCallback(async () => {
     if (!key) return
+
+    if (
+      typeRef.current === type &&
+      customNameRef.current === customName &&
+      valueRef.current === value
+    ) {
+      return
+    }
+
+    typeRef.current = type
+    customNameRef.current = customName
+    valueRef.current = value
 
     setError('')
 
@@ -117,18 +135,21 @@ const Edit: React.FC<EditProps> = ({
     setValue(markdown)
   }
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!key) return
     if (isDeleting) return
     setIsDeleting(true)
+    await deleteSectionAction(key, id)
     onDelete(id)
-    void deleteSectionAction(key, id).then(() => {
-      setIsDeleting(false)
-    })
+    setIsDeleting(false)
   }
 
   return (
-    <div className='relative space-y-2 rounded-lg p-4 bg-white border-dashed border-2 border-gray-300'>
+    <div
+      className={`relative space-y-2 rounded-lg p-4 bg-white border-2 border-gray-300
+        ${!!saveTime ? '' : 'border-dashed'}
+        ${isDeleting ? 'opacity-50' : ''}`}
+    >
       <button
         className='absolute top-4 right-4 bg-red-500 text-white rounded-lg text-xl p-1 disabled:bg-gray-300'
         onClick={handleDelete}
@@ -153,7 +174,7 @@ const Edit: React.FC<EditProps> = ({
             type='text'
             value={customName}
             onChange={e => setCustomName(e.target.value)}
-            className='text-2xl font-bold border-b-2 pb-1 border-gray-300 focus:border-blue-500 outline-none ml-2'
+            className='text-2xl font-bold border-b-2 pb-0.5 border-gray-300 focus:border-blue-500 outline-none ml-2'
             placeholder='输入标题...'
           />
         )}

@@ -22,7 +22,9 @@ const Page: React.FC<PageProps> = async ({ searchParams }) => {
 
   return (
     <div>
-      <h1 className='text-3xl text-center font-semibold mb-14'>创建新活动</h1>
+      <h1 className='text-3xl text-center font-semibold mb-14'>
+        {id ? `${activity?.name} - 编辑草案` : '创建新活动'}
+      </h1>
       <div className='space-y-8'>
         <KeyContextProvider initialKey={id && sk ? { id, sk } : undefined}>
           <EditNameAndTime

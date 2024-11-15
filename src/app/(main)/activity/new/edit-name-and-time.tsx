@@ -115,7 +115,11 @@ const EditNameAndTime: React.FC<EditNameAndTimeProps> = ({
   }, [])
 
   return (
-    <div className='space-y-2 rounded-lg p-4 bg-white border-dashed border-2 border-gray-300'>
+    <div
+      className={`space-y-2 rounded-lg p-4 bg-white border-2 border-gray-300 ${
+        !!saveTime ? '' : 'border-dashed'
+      }`}
+    >
       <h2 className='text-2xl font-bold'>
         活动名称
         <span className='text-red-500'> *</span>
