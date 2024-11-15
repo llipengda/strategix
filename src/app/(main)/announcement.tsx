@@ -8,13 +8,13 @@ import { Announcement as TAnnouncement } from '@/types/announcement'
 
 interface AnnouncementProps {
   announcement: TAnnouncement
-  showDelete: boolean
+  showDelete?: boolean
   draggable?: boolean
 }
 
 const Announcement: React.FC<AnnouncementProps> = ({
   announcement,
-  showDelete,
+  showDelete = false,
   draggable = true
 }) => {
   const Wrapper = draggable ? DraggableScroll : Div
