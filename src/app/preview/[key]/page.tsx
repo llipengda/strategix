@@ -25,7 +25,7 @@ const Page: React.FC<PageProps> = async ({ params }) => {
       )}
       {isPdf && (
         <iframe
-          src={`/api/download/${key}?noRedirect=true`}
+          src={`/api/download/${key}?noRedirect=true&noDownload=true`}
           className='w-screen h-screen'
           title={key}
         />
@@ -33,7 +33,7 @@ const Page: React.FC<PageProps> = async ({ params }) => {
       {isOffice && (
         <iframe
           src={`http://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(
-            `${process.env.DEPLOY_URL}/api/download/${key}?noRedirect=true`
+            `${process.env.DEPLOY_URL}/api/download/${key}?noRedirect=true&noDownload=true`
           )}`}
           className='w-screen h-screen'
           title={key}

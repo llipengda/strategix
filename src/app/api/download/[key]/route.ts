@@ -10,12 +10,17 @@ export const GET = async (
   const signedUrl = await generateSignedUrl(key, true)
 
   const noRedirect = req.nextUrl.searchParams.get('noRedirect') === 'true'
+  const noDownload = req.nextUrl.searchParams.get('noDownload') === 'true'
 
   if (noRedirect) {
     const data = await fetch(signedUrl)
+    if (noDownload) {
+      return new Response(data.body)
+    }
     return new Response(data.body, {
       headers: {
-        'Content-Type': 'application/octet-stream'
+        'Content-Type': 'application/octet-stream',
+        'Content-Disposition': `attachment; filename="${decodeURIComponent(key.split('/').pop() || '')}"`
       }
     })
   }
