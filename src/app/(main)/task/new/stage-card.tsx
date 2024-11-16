@@ -17,9 +17,27 @@ const MarkdownEditor = dynamic(() => import('@/components/markdown-editor'), {
 export type Stage = {
   id: string
   name: string
-  requiresApproval: boolean
+  approval: 'none' | 'manager' | 'admin' | 'super-admin'
   content: string
 }
+
+const approvalOptions = [
+  '不需要审核',
+  '需要管理员审核',
+  '需要管理员和负责人审核',
+  '需要管理员、负责人和超级管理员审核'
+]
+
+const approvalMap = {
+  none: '不需要审核',
+  manager: '需要管理员审核',
+  admin: '需要管理员和负责人审核',
+  'super-admin': '需要管理员、负责人和超级管理员审核'
+}
+
+const approvalMapReverse = Object.fromEntries(
+  Object.entries(approvalMap).map(([key, value]) => [value, key])
+) as Record<string, 'none' | 'manager' | 'admin' | 'super-admin'>
 
 export default function StageCard({
   stage,
@@ -32,14 +50,12 @@ export default function StageCard({
 }) {
   const [name, setName] = useState(stage.name)
   const [content, setContent] = useState(stage.content)
-  const [requiresApproval, setRequiresApproval] = useState(
-    stage.requiresApproval
-  )
+  const [approval, setApproval] = useState(stage.approval)
 
   const editorRef = useRef<MDXEditorMethods>(null)
 
   const handleSave = () => {
-    onUpdate({ ...stage, name, requiresApproval })
+    onUpdate({ ...stage, name, approval })
   }
 
   const handleContentChange = (markdown: string) => {
@@ -63,14 +79,9 @@ export default function StageCard({
           editorRef={editorRef}
         />
         <ToggleButtonGroup
-          options={[
-            '不需要审核',
-            '需要管理员审核',
-            '需要管理员和负责人审核',
-            '需要管理员、负责人和超级管理员审核'
-          ]}
-          value={requiresApproval ? '需要审核' : '不需要审核'}
-          onChange={v => setRequiresApproval(v === '需要审核')}
+          options={approvalOptions}
+          value={approvalMap[approval]}
+          onChange={v => setApproval(approvalMapReverse[v])}
         />
       </div>
       <div className='mt-4 flex gap-2'>

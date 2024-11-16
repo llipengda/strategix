@@ -1,8 +1,16 @@
+'use client'
+
+import { use, useEffect, useState } from 'react'
+
 import { generateSignedUrl } from '@/lib/b2'
 
-const Page: React.FC<PageProps> = async ({ params }) => {
-  const key = (await params)?.key as string
-  const signedUrl = await generateSignedUrl(key)
+const Page: React.FC<PageProps> = ({ params }) => {
+  const key = use(params!)?.key as string
+  const [signedUrl, setSignedUrl] = useState('')
+
+  useEffect(() => {
+    void generateSignedUrl(key).then(setSignedUrl)
+  }, [key])
 
   const isImage =
     key.endsWith('.png') || key.endsWith('.jpg') || key.endsWith('.jpeg')
@@ -33,7 +41,7 @@ const Page: React.FC<PageProps> = async ({ params }) => {
       {isOffice && (
         <iframe
           src={`http://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(
-            `${process.env.DEPLOY_URL}/api/download/${key}?noRedirect=true&noDownload=true`
+            `${process.env.NEXT_PUBLIC_DEPLOY_URL}/api/download/${key}?noRedirect=true&noDownload=true`
           )}`}
           className='w-screen h-screen'
           title={key}

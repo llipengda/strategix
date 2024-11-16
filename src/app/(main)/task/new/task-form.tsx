@@ -19,7 +19,7 @@ export default function TaskForm() {
       {
         id: Date.now().toString(),
         name: '',
-        requiresApproval: false,
+        approval: 'none',
         content: ''
       }
     ])

@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
 
 import { generateSignedUrl } from '@/lib/b2'
+import getContentType from '@/lib/content-type'
 
 export const GET = async (
   req: NextRequest,
@@ -15,7 +16,11 @@ export const GET = async (
   if (noRedirect) {
     const data = await fetch(signedUrl)
     if (noDownload) {
-      return new Response(data.body)
+      return new Response(data.body, {
+        headers: {
+          'Content-Type': getContentType(key)
+        }
+      })
     }
     return new Response(data.body, {
       headers: {
