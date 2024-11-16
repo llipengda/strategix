@@ -7,9 +7,9 @@ import dynamic from 'next/dynamic'
 
 import { type MDXEditorMethods } from '@mdxeditor/editor'
 
-import MdEditorFallback from '@/components/md-editor-fallback'
 import { KeyContext } from '@/app/(main)/activity/new/key-context'
 import ErrorMessage from '@/components/error-message'
+import MdEditorFallback from '@/components/md-editor-fallback'
 import {
   addOrUpdateSectionAction,
   deleteSectionAction
