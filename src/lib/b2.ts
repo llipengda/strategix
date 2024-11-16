@@ -1,5 +1,6 @@
 'use server'
 
+import { auth } from '@/auth'
 import {
   GetObjectCommand,
   PutObjectCommand,
@@ -19,14 +20,29 @@ const b2Client = new S3Client({
 export const upload = async (file: File, prefix: string = '') => {
   const _prefix = prefix === '' ? '' : `${prefix}/`
 
+  const user = (await auth())?.user
+
+  if (!user) {
+    throw new Error('用户未登录')
+  }
+
+  const key = `${_prefix}${user.id}/${file.name}`
+
   const command = new PutObjectCommand({
     Bucket: process.env.B2_BUCKET_NAME,
-    Key: `${_prefix}${file.name}`,
+    Key: key,
     ContentType: file.type,
     Body: new Uint8Array(await file.arrayBuffer())
   })
-  const res = await b2Client.send(command)
-  return res
+
+  try {
+    await b2Client.send(command)
+  } catch (error) {
+    console.error(error)
+    throw new Error('上传失败')
+  }
+
+  return key
 }
 
 export const uploadFiles = async (files: File[], prefix: string = '') => {

@@ -6,19 +6,14 @@ import { MdClose, MdUpload } from 'react-icons/md'
 import Link from 'next/link'
 
 interface FileUploadProps {
-  onUpload: (files: File[]) => Promise<void> | void
+  onUpload: (files: File[]) => Promise<string[]> | string[]
   onRemove: (file: File) => Promise<void> | void
-  prefix?: string
 }
 
-const FileUpload: React.FC<FileUploadProps> = ({
-  onUpload,
-  onRemove,
-  prefix = ''
-}) => {
+const FileUpload: React.FC<FileUploadProps> = ({ onUpload, onRemove }) => {
   const [dragging, setDragging] = useState(false)
   const [uploadingFiles, setUploadingFiles] = useState<File[]>([])
-  const [fileList, setFileList] = useState<File[]>([])
+  const [fileList, setFileList] = useState<{ file: File; key: string }[]>([])
 
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -38,8 +33,11 @@ const FileUpload: React.FC<FileUploadProps> = ({
 
     const files = Array.from(e.dataTransfer.files)
     setUploadingFiles(prev => [...prev, ...files])
-    await onUpload(files)
-    setFileList(prev => [...prev, ...files])
+    const keys = await onUpload(files)
+    setFileList(prev => [
+      ...prev,
+      ...files.map((file, index) => ({ file, key: keys[index] }))
+    ])
     setUploadingFiles(prev => prev.filter(f => !files.includes(f)))
   }
 
@@ -47,9 +45,15 @@ const FileUpload: React.FC<FileUploadProps> = ({
     if (e.target.files) {
       const files = Array.from(e.target.files)
       setUploadingFiles(prev => [...prev, ...files])
-      await onUpload(files)
+      const keys = await onUpload(files)
       setUploadingFiles(prev => prev.filter(f => !files.includes(f)))
-      setFileList(prev => [...prev, ...files])
+      setFileList(prev => [
+        ...prev,
+        ...files.map((file, index) => ({
+          file,
+          key: keys[index]
+        }))
+      ])
     }
   }
 
@@ -58,7 +62,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
   }
 
   const handleRemove = async (file: File) => {
-    setFileList(prev => prev.filter(f => f !== file))
+    setFileList(prev => prev.filter(f => f.file !== file))
     if (inputRef.current) {
       inputRef.current.value = ''
     }
@@ -94,17 +98,15 @@ const FileUpload: React.FC<FileUploadProps> = ({
           {fileList.map((file, index) => (
             <li key={index} className='text-gray-500 flex items-center gap-2'>
               <Link
-                href={`/preview/${encodeURIComponent(
-                  `${prefix ? `${prefix}/` : ''}${file.name}`
-                )}`}
+                href={`/preview/${encodeURIComponent(file.key)}`}
                 target='_blank'
                 className='hover:text-blue-500 hover:underline'
               >
-                {file.name}
+                {file.file.name}
               </Link>
               <MdClose
                 className='text-gray-500 text-md hover:text-red-500 cursor-pointer'
-                onClick={() => handleRemove(file)}
+                onClick={() => handleRemove(file.file)}
               />
             </li>
           ))}

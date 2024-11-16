@@ -36,8 +36,9 @@ export default function TaskForm() {
   }
 
   const handleFileUpload = async (files: File[]) => {
-    await uploadFiles(files)
+    const keys = await uploadFiles(files)
     setReferenceFiles([...referenceFiles, ...files])
+    return keys
   }
 
   const handleFileRemove = (file: File) => {
