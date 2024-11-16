@@ -16,10 +16,10 @@ export const GET = async (
     const data = await fetch(signedUrl)
     return new Response(data.body, {
       headers: {
+        ...Object.fromEntries(data.headers.entries()),
         'Content-Type': getContentType(key),
-        'Content-Length': data.headers.get('Content-Length') || '',
-        'X-Download-Options': 'noopen',
-        'Content-Disposition': `attachment; filename="${decodeURIComponent(key.split('/').pop() || '')}"`
+        'Content-Disposition': `attachment; filename="${encodeURIComponent(key.split('/').pop() || '')}"`,
+        'X-Download-Options': 'noopen'
       }
     })
   }
