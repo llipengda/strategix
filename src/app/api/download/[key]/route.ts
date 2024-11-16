@@ -2,8 +2,6 @@ import { type NextRequest, NextResponse } from 'next/server'
 
 import { generateSignedUrl } from '@/lib/b2'
 
-export const dynamic = 'force-static'
-
 export const revalidate = 2592000
 
 export const GET = async (
