@@ -11,24 +11,29 @@ export const GET = async (
   const signedUrl = await generateSignedUrl(key, true)
 
   const noRedirect = req.nextUrl.searchParams.get('noRedirect') === 'true'
-  const noDownload = req.nextUrl.searchParams.get('noDownload') === 'true'
 
   if (noRedirect) {
     const data = await fetch(signedUrl)
-    if (noDownload) {
-      return new Response(data.body, {
-        headers: {
-          'Content-Type': getContentType(key)
-        }
-      })
-    }
     return new Response(data.body, {
       headers: {
-        'Content-Type': 'application/octet-stream',
+        'Content-Type': getContentType(key),
+        'Content-Length': data.headers.get('Content-Length') || '',
+        'X-Download-Options': 'noopen',
         'Content-Disposition': `attachment; filename="${decodeURIComponent(key.split('/').pop() || '')}"`
       }
     })
   }
 
   return NextResponse.redirect(signedUrl)
+}
+
+export async function OPTIONS() {
+  return NextResponse.json(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+    }
+  })
 }
