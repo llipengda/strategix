@@ -3,6 +3,7 @@
 import { useState } from 'react'
 
 import FileUpload from '@/components/file-upload'
+import { uploadFiles } from '@/lib/b2'
 
 import StageCard, { type Stage } from './stage-card'
 
@@ -34,7 +35,8 @@ export default function TaskForm() {
     setStages(stages.filter(stage => stage.id !== id))
   }
 
-  const handleFileUpload = (files: File[]) => {
+  const handleFileUpload = async (files: File[]) => {
+    await uploadFiles(files)
     setReferenceFiles([...referenceFiles, ...files])
   }
 
@@ -73,7 +75,7 @@ export default function TaskForm() {
       </div>
 
       <div>
-        <label className='block text-lg font-medium text-gray-700'>阶段</label>
+        <label className='block text-lg font-medium text-gray-700'>流程</label>
         <div className='flex mt-2'>
           {/* 左侧阶段导航 */}
           <div className='flex flex-col items-center mr-8 relative'>

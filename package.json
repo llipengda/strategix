@@ -12,7 +12,9 @@
   "dependencies": {
     "@auth/dynamodb-adapter": "^2.7.2",
     "@aws-sdk/client-dynamodb": "^3.670.0",
+    "@aws-sdk/client-s3": "^3.693.0",
     "@aws-sdk/lib-dynamodb": "^3.670.0",
+    "@aws-sdk/s3-request-presigner": "^3.693.0",
     "@aws-sdk/util-dynamodb": "^3.670.0",
     "@marsidev/react-turnstile": "^1.0.2",
     "@mdxeditor/editor": "^3.19.0",

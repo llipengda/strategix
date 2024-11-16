@@ -3,13 +3,21 @@
 import React, { useRef, useState } from 'react'
 import { MdClose, MdUpload } from 'react-icons/md'
 
+import Link from 'next/link'
+
 interface FileUploadProps {
-  onUpload: (files: File[]) => void
-  onRemove: (file: File) => void
+  onUpload: (files: File[]) => Promise<void> | void
+  onRemove: (file: File) => Promise<void> | void
+  prefix?: string
 }
 
-const FileUpload: React.FC<FileUploadProps> = ({ onUpload, onRemove }) => {
+const FileUpload: React.FC<FileUploadProps> = ({
+  onUpload,
+  onRemove,
+  prefix = ''
+}) => {
   const [dragging, setDragging] = useState(false)
+  const [uploadingFiles, setUploadingFiles] = useState<File[]>([])
   const [fileList, setFileList] = useState<File[]>([])
 
   const inputRef = useRef<HTMLInputElement>(null)
@@ -24,21 +32,24 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUpload, onRemove }) => {
     setDragging(false)
   }
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
     setDragging(false)
 
     const files = Array.from(e.dataTransfer.files)
+    setUploadingFiles(prev => [...prev, ...files])
+    await onUpload(files)
     setFileList(prev => [...prev, ...files])
-    onUpload(files)
+    setUploadingFiles(prev => prev.filter(f => !files.includes(f)))
   }
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const files = Array.from(e.target.files)
-      console.log(files)
+      setUploadingFiles(prev => [...prev, ...files])
+      await onUpload(files)
+      setUploadingFiles(prev => prev.filter(f => !files.includes(f)))
       setFileList(prev => [...prev, ...files])
-      onUpload(files)
     }
   }
 
@@ -46,12 +57,12 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUpload, onRemove }) => {
     inputRef.current?.click()
   }
 
-  const handleRemove = (file: File) => {
+  const handleRemove = async (file: File) => {
     setFileList(prev => prev.filter(f => f !== file))
     if (inputRef.current) {
       inputRef.current.value = ''
     }
-    onRemove(file)
+    await onRemove(file)
   }
 
   return (
@@ -78,15 +89,28 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUpload, onRemove }) => {
           id='file-input'
         />
       </div>
-      {fileList.length > 0 && (
+      {(fileList.length > 0 || uploadingFiles.length > 0) && (
         <ul className='mt-2 space-y-2'>
           {fileList.map((file, index) => (
             <li key={index} className='text-gray-500 flex items-center gap-2'>
-              {file.name}
+              <Link
+                href={`/preview/${encodeURIComponent(
+                  `${prefix ? `${prefix}/` : ''}${file.name}`
+                )}`}
+                target='_blank'
+                className='hover:text-blue-500 hover:underline'
+              >
+                {file.name}
+              </Link>
               <MdClose
                 className='text-gray-500 text-md hover:text-red-500 cursor-pointer'
                 onClick={() => handleRemove(file)}
               />
+            </li>
+          ))}
+          {uploadingFiles.map((file, index) => (
+            <li key={index} className='text-gray-400 flex items-center gap-2'>
+              <i>上传中...</i> {file.name}
             </li>
           ))}
         </ul>
