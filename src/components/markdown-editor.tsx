@@ -26,8 +26,12 @@ import useTheme from '@/lib/hooks/use-theme'
 
 export default function MarkdownEditor({
   editorRef,
+  additionalContentEditableClassName,
   ...props
-}: { editorRef?: ForwardedRef<MDXEditorMethods> | null } & MDXEditorProps) {
+}: {
+  editorRef?: ForwardedRef<MDXEditorMethods> | null
+  additionalContentEditableClassName?: string
+} & MDXEditorProps) {
   const theme = useTheme()
 
   return (
@@ -53,7 +57,7 @@ export default function MarkdownEditor({
         linkDialogPlugin()
       ]}
       className={`${theme === 'dark' ? 'dark-theme' : ''}`}
-      contentEditableClassName={`prose max-w-none dark:prose-invert ${props.readOnly ? '' : 'bg-gray-50 dark:bg-gray-900'} rounded-lg`}
+      contentEditableClassName={`prose max-w-none dark:prose-invert ${props.readOnly ? '' : 'bg-gray-50 dark:bg-gray-900'} rounded-lg ${additionalContentEditableClassName}`}
       {...props}
       ref={editorRef}
     />
