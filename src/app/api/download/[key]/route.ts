@@ -17,7 +17,6 @@ export const GET = async (
     return new Response(data.body, {
       headers: {
         ...Object.fromEntries(data.headers.entries()),
-        'Content-Type': getContentType(key),
         'Content-Disposition': `attachment; filename="${encodeURIComponent(key.split('/').pop() || '')}"`,
         'X-Download-Options': 'noopen'
       }
