@@ -98,7 +98,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUpload, onRemove }) => {
           {fileList.map((file, index) => (
             <li key={index} className='text-gray-500 flex items-center gap-2'>
               <Link
-                href={`/preview/${encodeURIComponent(file.key)}`}
+                href={`/api/download/${encodeURIComponent(file.key)}`}
                 target='_blank'
                 className='hover:text-blue-500 hover:underline'
               >

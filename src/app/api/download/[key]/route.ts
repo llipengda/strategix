@@ -2,6 +2,10 @@ import { type NextRequest, NextResponse } from 'next/server'
 
 import { generateSignedUrl } from '@/lib/b2'
 
+export const dynamic = 'force-static'
+
+export const revalidate = 60 * 60 * 24 * 30
+
 export const GET = async (
   req: NextRequest,
   { params }: { params: Promise<{ key: string }> }
@@ -9,23 +13,21 @@ export const GET = async (
   const key = (await params).key
   const signedUrl = await generateSignedUrl(key, true)
 
-  const noRedirect = req.nextUrl.searchParams.get('noRedirect') === 'true'
-
-  if (noRedirect) {
-    const data = await fetch(signedUrl)
-    return new Response(data.body, {
-      headers: {
-        ...Object.fromEntries(data.headers.entries()),
-        'Content-Disposition': `attachment; filename="${encodeURIComponent(key.split('/').pop() || '')}"`,
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-        'X-Download-Options': 'noopen'
-      }
-    })
-  }
-
-  return NextResponse.redirect(signedUrl)
+  const data = await fetch(signedUrl)
+  return new Response(data.body, {
+    headers: {
+      ...Object.fromEntries(
+        Array.from(data.headers.entries()).filter(
+          ([key]) => !key.toLowerCase().includes('content-disposition')
+        )
+      ),
+      'Content-Disposition': `attachment; filename="${encodeURIComponent(key.split('/').pop() || '')}"`,
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      'X-Download-Options': 'noopen'
+    }
+  })
 }
 
 export async function OPTIONS() {
