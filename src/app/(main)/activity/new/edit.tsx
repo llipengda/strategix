@@ -5,24 +5,9 @@ import { MdDelete } from 'react-icons/md'
 
 import dynamic from 'next/dynamic'
 
-import {
-  BlockTypeSelect,
-  BoldItalicUnderlineToggles,
-  InsertTable,
-  type MDXEditorMethods,
-  UndoRedo,
-  headingsPlugin,
-  linkDialogPlugin,
-  linkPlugin,
-  listsPlugin,
-  markdownShortcutPlugin,
-  quotePlugin,
-  tablePlugin,
-  thematicBreakPlugin,
-  toolbarPlugin
-} from '@mdxeditor/editor'
+import { type MDXEditorMethods } from '@mdxeditor/editor'
 
-import MdEditorFallback from '@/app/(main)/activity/md-editor-fallback'
+import MdEditorFallback from '@/components/md-editor-fallback'
 import { KeyContext } from '@/app/(main)/activity/new/key-context'
 import ErrorMessage from '@/components/error-message'
 import {
@@ -182,26 +167,6 @@ const Edit: React.FC<EditProps> = ({
       <MarkdownEditor
         markdown={value}
         onChange={handleMarkdownChange}
-        plugins={[
-          toolbarPlugin({
-            toolbarContents: () => (
-              <>
-                <UndoRedo />
-                <BlockTypeSelect />
-                <BoldItalicUnderlineToggles />
-                <InsertTable />
-              </>
-            )
-          }),
-          headingsPlugin(),
-          listsPlugin(),
-          quotePlugin(),
-          tablePlugin(),
-          thematicBreakPlugin(),
-          markdownShortcutPlugin(),
-          linkPlugin(),
-          linkDialogPlugin()
-        ]}
         editorRef={editorRef}
       />
       <ErrorMessage errorMessage={error} defaultHeight={false} />

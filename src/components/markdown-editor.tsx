@@ -3,14 +3,22 @@
 import type { ForwardedRef } from 'react'
 
 import {
+  BlockTypeSelect,
+  BoldItalicUnderlineToggles,
+  InsertTable,
   MDXEditor,
   type MDXEditorMethods,
   type MDXEditorProps,
+  UndoRedo,
   headingsPlugin,
+  linkDialogPlugin,
+  linkPlugin,
   listsPlugin,
   markdownShortcutPlugin,
   quotePlugin,
-  thematicBreakPlugin
+  tablePlugin,
+  thematicBreakPlugin,
+  toolbarPlugin
 } from '@mdxeditor/editor'
 import '@mdxeditor/editor/style.css'
 
@@ -25,11 +33,24 @@ export default function MarkdownEditor({
   return (
     <MDXEditor
       plugins={[
+        toolbarPlugin({
+          toolbarContents: () => (
+            <>
+              <UndoRedo />
+              <BlockTypeSelect />
+              <BoldItalicUnderlineToggles />
+              <InsertTable />
+            </>
+          )
+        }),
         headingsPlugin(),
         listsPlugin(),
         quotePlugin(),
+        tablePlugin(),
         thematicBreakPlugin(),
-        markdownShortcutPlugin()
+        markdownShortcutPlugin(),
+        linkPlugin(),
+        linkDialogPlugin()
       ]}
       className={`${theme === 'dark' ? 'dark-theme' : ''}`}
       contentEditableClassName={`prose max-w-none dark:prose-invert ${props.readOnly ? '' : 'bg-gray-50 dark:bg-gray-900'} rounded-lg`}
