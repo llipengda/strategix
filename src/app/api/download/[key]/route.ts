@@ -4,7 +4,7 @@ import { generateSignedUrl } from '@/lib/b2'
 
 export const dynamic = 'force-static'
 
-export const revalidate = 60 * 60 * 24 * 30
+export const revalidate = 2592000
 
 export const GET = async (
   req: NextRequest,
