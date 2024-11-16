@@ -5,12 +5,17 @@ import type { ForwardedRef } from 'react'
 import {
   BlockTypeSelect,
   BoldItalicUnderlineToggles,
+  CreateLink,
+  InsertImage,
   InsertTable,
+  InsertThematicBreak,
   MDXEditor,
   type MDXEditorMethods,
   type MDXEditorProps,
+  Separator,
   UndoRedo,
   headingsPlugin,
+  imagePlugin,
   linkDialogPlugin,
   linkPlugin,
   listsPlugin,
@@ -22,6 +27,7 @@ import {
 } from '@mdxeditor/editor'
 import '@mdxeditor/editor/style.css'
 
+import { upload } from '@/lib/b2'
 import useTheme from '@/lib/hooks/use-theme'
 
 export default function MarkdownEditor({
@@ -41,9 +47,16 @@ export default function MarkdownEditor({
           toolbarContents: () => (
             <>
               <UndoRedo />
+              <Separator />
               <BlockTypeSelect />
+              <Separator />
               <BoldItalicUnderlineToggles />
+              <Separator />
+              <InsertThematicBreak />
+              <Separator />
+              <CreateLink />
               <InsertTable />
+              <InsertImage />
             </>
           )
         }),
@@ -53,6 +66,16 @@ export default function MarkdownEditor({
         tablePlugin(),
         thematicBreakPlugin(),
         markdownShortcutPlugin(),
+        imagePlugin({
+          async imageUploadHandler(file) {
+            const timestamp = Date.now()
+            const newFile = new File([file], `${timestamp}.${file.name}`, {
+              type: file.type
+            })
+            const key = await upload(newFile, 'image')
+            return `${process.env.NEXT_PUBLIC_DEPLOY_URL}/api/download/${encodeURIComponent(key)}`
+          }
+        }),
         linkPlugin(),
         linkDialogPlugin()
       ]}
