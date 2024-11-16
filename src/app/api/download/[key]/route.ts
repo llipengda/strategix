@@ -1,7 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server'
 
 import { generateSignedUrl } from '@/lib/b2'
-import getContentType from '@/lib/content-type'
 
 export const GET = async (
   req: NextRequest,
@@ -18,6 +17,9 @@ export const GET = async (
       headers: {
         ...Object.fromEntries(data.headers.entries()),
         'Content-Disposition': `attachment; filename="${encodeURIComponent(key.split('/').pop() || '')}"`,
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
         'X-Download-Options': 'noopen'
       }
     })
