@@ -15,17 +15,14 @@ export const addActivity = async (activity: Activity) => {
   await db.add(activity)
 }
 
-export const addTasks = async (tasks: Task[]) => {
-  if (tasks.length === 0) {
-    return
+export const addTask = async (task: Task) => {
+  const activity = await getActivity(task.id)
+
+  if (!activity) {
+    throw new Error('活动不存在')
   }
 
-  if (tasks.length === 1) {
-    await db.add(tasks[0])
-    return
-  }
-
-  await db.batchAdd(tasks)
+  await db.add(task)
 }
 
 export const addAssignments = async (assignments: Assignment[]) => {
@@ -88,7 +85,7 @@ export const getAssignments = async (activityId: string, userId: string) => {
     },
     ExpressionAttributeValues: {
       ':id': activityId,
-      ':sk': `assignment#${userId}`
+      ':sk': `assignment#${activityId}#${userId}`
     }
   })
 }

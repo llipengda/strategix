@@ -6,14 +6,21 @@ import { MdClose, MdUpload } from 'react-icons/md'
 import Link from 'next/link'
 
 interface FileUploadProps {
+  initialFiles?: { file?: File; key: string }[]
   onUpload: (files: File[]) => Promise<string[]> | string[]
-  onRemove: (file: File) => Promise<void> | void
+  onRemove: (key: string) => Promise<void> | void
 }
 
-const FileUpload: React.FC<FileUploadProps> = ({ onUpload, onRemove }) => {
+const FileUpload: React.FC<FileUploadProps> = ({
+  initialFiles,
+  onUpload,
+  onRemove
+}) => {
   const [dragging, setDragging] = useState(false)
   const [uploadingFiles, setUploadingFiles] = useState<File[]>([])
-  const [fileList, setFileList] = useState<{ file: File; key: string }[]>([])
+  const [fileList, setFileList] = useState<{ file?: File; key: string }[]>(
+    initialFiles || []
+  )
 
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -61,12 +68,12 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUpload, onRemove }) => {
     inputRef.current?.click()
   }
 
-  const handleRemove = async (file: File) => {
-    setFileList(prev => prev.filter(f => f.file !== file))
+  const handleRemove = async (key: string) => {
+    setFileList(prev => prev.filter(f => f.key !== key))
     if (inputRef.current) {
       inputRef.current.value = ''
     }
-    await onRemove(file)
+    await onRemove(key)
   }
 
   return (
@@ -102,11 +109,11 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUpload, onRemove }) => {
                 target='_blank'
                 className='hover:text-blue-500 hover:underline'
               >
-                {file.file.name}
+                {file.file?.name || file.key.split('/').pop()}
               </Link>
               <MdClose
                 className='text-gray-500 text-md hover:text-red-500 cursor-pointer'
-                onClick={() => handleRemove(file.file)}
+                onClick={() => handleRemove(file.key)}
               />
             </li>
           ))}

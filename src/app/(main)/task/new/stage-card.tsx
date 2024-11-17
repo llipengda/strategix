@@ -9,19 +9,12 @@ import type { MDXEditorMethods } from '@mdxeditor/editor'
 
 import MdEditorFallback from '@/components/md-editor-fallback'
 import ToggleButtonGroup from '@/components/toggle-button-group'
+import type { Stage } from '@/types/activity/task'
 
 const MarkdownEditor = dynamic(() => import('@/components/markdown-editor'), {
   ssr: false,
   loading: () => <MdEditorFallback />
 })
-
-export type Stage = {
-  id: string
-  name: string
-  approval: 'none' | 'manager' | 'admin' | 'super-admin'
-  content: string
-  assignedTo: number[]
-}
 
 const approvalOptions = [
   '不需要审核',

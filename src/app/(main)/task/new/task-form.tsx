@@ -5,25 +5,53 @@ import { useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
 
 import type { MDXEditorMethods } from '@mdxeditor/editor'
+import { v4 } from 'uuid'
 
 import FileUpload from '@/components/file-upload'
 import MdEditorFallback from '@/components/md-editor-fallback'
+import { addTask } from '@/lib/actions/activity'
 import { uploadFiles } from '@/lib/b2'
+import { local } from '@/lib/time'
+import { Stage, Task } from '@/types/activity/task'
 
-import StageCard, { type Stage } from './stage-card'
+import StageCard from './stage-card'
 
 const MarkdownEditor = dynamic(() => import('@/components/markdown-editor'), {
   ssr: false,
   loading: () => <MdEditorFallback />
 })
 
-export default function TaskForm() {
-  const [taskName, setTaskName] = useState('')
-  const [referenceFiles, setReferenceFiles] = useState<File[]>([])
-  const [stages, setStages] = useState<Stage[]>([])
+export default function TaskForm({
+  id,
+  task
+}: {
+  id: string
+  task: Task | null
+}) {
+  const [taskName, setTaskName] = useState(task?.name || '')
+  const [referenceFiles, setReferenceFiles] = useState<string[]>(
+    task?.references || []
+  )
+  const [requiredPeople, setRequiredPeople] = useState(
+    task?.requiredPeople || 1
+  )
+  const [stages, setStages] = useState<Stage[]>(
+    task?.stages || [
+      {
+        id: v4(),
+        name: '',
+        approval: 'none',
+        content: '',
+        assignedTo: requiredPeople === 1 ? [0] : [],
+        completed: false
+      }
+    ]
+  )
   const [activeStageIndex, setActiveStageIndex] = useState(0)
-  const [requiredPeople, setRequiredPeople] = useState(1)
-  const [taskDescription, setTaskDescription] = useState('')
+  const [taskDescription, setTaskDescription] = useState(
+    task?.description || ''
+  )
+  const [dueDate, setDueDate] = useState(task?.dueDate || '')
 
   const editorRef = useRef<MDXEditorMethods>(null)
 
@@ -36,11 +64,12 @@ export default function TaskForm() {
     setStages([
       ...stages,
       {
-        id: Date.now().toString(),
+        id: v4(),
         name: '',
         approval: 'none',
         content: '',
-        assignedTo: requiredPeople === 1 ? [0] : []
+        assignedTo: requiredPeople === 1 ? [0] : [],
+        completed: false
       }
     ])
     setActiveStageIndex(stages.length)
@@ -66,27 +95,35 @@ export default function TaskForm() {
 
   const handleFileUpload = async (files: File[]) => {
     const keys = await uploadFiles(files)
-    setReferenceFiles([...referenceFiles, ...files])
+    setReferenceFiles([...referenceFiles, ...keys])
     return keys
   }
 
-  const handleFileRemove = (file: File) => {
-    setReferenceFiles(referenceFiles.filter(f => f !== file))
+  const handleFileRemove = (key: string) => {
+    setReferenceFiles(referenceFiles.filter(f => f !== key))
   }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    console.log(e)
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const taskData = { taskName, referenceFiles, stages }
-    console.log('提交的任务数据:', taskData)
-    alert('任务创建成功！')
+
+    await addTask(
+      Task.parse({
+        id,
+        name: taskName,
+        description: taskDescription,
+        references: referenceFiles,
+        dueDate: local(dueDate),
+        requiredPeople,
+        stages
+      })
+    )
   }
 
   return (
     <form onSubmit={handleSubmit} className='space-y-6'>
       <div>
         <label className='block text-lg font-medium text-gray-700'>
-          任务名称
+          任务名称 <span className='text-red-500'>*</span>
         </label>
         <input
           value={taskName}
@@ -171,9 +208,25 @@ export default function TaskForm() {
 
       <div>
         <label className='block text-lg font-medium text-gray-700 mb-2'>
+          截止时间 <span className='text-red-500'>*</span>
+        </label>
+        <input
+          type='datetime-local'
+          value={dueDate}
+          className='w-fit border-0 border-b-2 border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-0 transition-colors duration-200 bg-transparent leading-8'
+          onChange={e => setDueDate(e.target.value)}
+        />
+      </div>
+
+      <div>
+        <label className='block text-lg font-medium text-gray-700 mb-2'>
           参考文件
         </label>
-        <FileUpload onUpload={handleFileUpload} onRemove={handleFileRemove} />
+        <FileUpload
+          initialFiles={task?.references.map(key => ({ key })) || []}
+          onUpload={handleFileUpload}
+          onRemove={handleFileRemove}
+        />
       </div>
 
       <div>
@@ -244,7 +297,7 @@ export default function TaskForm() {
 
       <button
         type='submit'
-        className='w-full py-2 px-4 bg-green-600 text-white font-semibold rounded-md shadow hover:bg-green-700'
+        className='w-full mt-4 py-2 px-4 bg-green-600 text-white font-semibold rounded-md shadow hover:bg-green-700'
       >
         创建任务
       </button>
