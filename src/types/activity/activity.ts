@@ -10,45 +10,19 @@ const SectionBase = z.object({
   value: z.unknown()
 })
 
-const Description = SectionBase.extend({
-  type: z.literal('description'),
-  name: z.literal('活动简介'),
-  value: z.string()
-})
-
-const Purpose = SectionBase.extend({
-  type: z.literal('purpose'),
-  name: z.literal('活动目的'),
-  value: z.string()
-})
-
-const Note = SectionBase.extend({
-  type: z.literal('note'),
-  name: z.literal('注意事项'),
-  value: z.string()
-})
-
 export const predefinedSections = [
   { type: 'description', name: '活动简介' },
   { type: 'purpose', name: '活动目的' },
   { type: 'note', name: '注意事项' },
+  { type: 'location', name: '活动地点' },
   { type: 'custom', name: '自定义' }
 ]
 
 export const sectionMap = new Map(predefinedSections.map(s => [s.type, s.name]))
 
-export const Section = z.union([Description, Purpose, Note, SectionBase])
+export const Section = SectionBase
 
-type Description = z.infer<typeof Description>
-type Purpose = z.infer<typeof Purpose>
 export type Section = z.infer<typeof Section>
-
-export const section = {
-  isDescription: (section: Section): section is Description =>
-    section.type === 'description',
-  isPurpose: (section: Section): section is Purpose =>
-    section.type === 'purpose'
-}
 
 export const Activity = z
   .object({
