@@ -42,7 +42,7 @@ export const Activity = z
       .optional(),
     createdAt: z.string().datetime().default(localDate().toISOString()),
     stage: z
-      .enum(['draft', 'inProgress', 'completed', 'archived'])
+      .enum(['draft', 'preparing', 'inProgress', 'completed', 'archived'])
       .default('draft'),
     sk: z.string().optional()
   })

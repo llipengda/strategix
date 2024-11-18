@@ -26,7 +26,7 @@ const TasksAndAssignments: React.FC<TasksAndAssignmentsProps> = ({
               </th>
               <th className='py-4 px-6 font-semibold tracking-wider'>描述</th>
               <th className='py-4 px-6 font-semibold tracking-wider'>
-                到期日期
+                截止时间
               </th>
               <th className='py-4 px-6 font-semibold tracking-wider'>负责人</th>
               <th className='py-4 px-6 font-semibold tracking-wider'>分配</th>
@@ -50,13 +50,21 @@ const TasksAndAssignments: React.FC<TasksAndAssignmentsProps> = ({
                     {task.managerName}
                   </span>
                 </td>
-                <td className='py-4 px-6 text-gray-600 space-x-2'>
+                <td className='py-4 px-6 text-gray-600 flex flex-wrap gap-2'>
                   {task.users.map(user => (
                     <span
                       key={user.userId}
                       className='inline-block bg-blue-100 text-blue-700 rounded-full px-3 py-1 text-xs font-semibold shadow-sm'
                     >
                       {user.userName}
+                    </span>
+                  ))}
+                  {task.fakeAssignedTo?.map((f, index) => (
+                    <span
+                      key={index}
+                      className='inline-block bg-purple-100 text-purple-700 rounded-full px-3 py-1 text-xs font-semibold shadow-sm'
+                    >
+                      {f}
                     </span>
                   ))}
                 </td>

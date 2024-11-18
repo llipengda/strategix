@@ -40,45 +40,52 @@ export default function MarkdownEditor({
 } & MDXEditorProps) {
   const theme = useTheme()
 
+  const plugins = [
+    headingsPlugin(),
+    listsPlugin(),
+    quotePlugin(),
+    tablePlugin(),
+    thematicBreakPlugin(),
+    markdownShortcutPlugin(),
+    imagePlugin({
+      async imageUploadHandler(file) {
+        const timestamp = Date.now()
+        const newFile = new File([file], `${timestamp}.${file.name}`, {
+          type: file.type
+        })
+        const key = await upload(newFile, 'image')
+        return `${process.env.NEXT_PUBLIC_DEPLOY_URL}/api/download/${encodeURIComponent(key)}`
+      }
+    }),
+    linkPlugin(),
+    linkDialogPlugin()
+  ]
+
+  if (!props.readOnly) {
+    plugins.push(
+      toolbarPlugin({
+        toolbarContents: () => (
+          <>
+            <UndoRedo />
+            <Separator />
+            <BlockTypeSelect />
+            <Separator />
+            <BoldItalicUnderlineToggles />
+            <Separator />
+            <InsertThematicBreak />
+            <Separator />
+            <CreateLink />
+            <InsertTable />
+            <InsertImage />
+          </>
+        )
+      })
+    )
+  }
+
   return (
     <MDXEditor
-      plugins={[
-        toolbarPlugin({
-          toolbarContents: () => (
-            <>
-              <UndoRedo />
-              <Separator />
-              <BlockTypeSelect />
-              <Separator />
-              <BoldItalicUnderlineToggles />
-              <Separator />
-              <InsertThematicBreak />
-              <Separator />
-              <CreateLink />
-              <InsertTable />
-              <InsertImage />
-            </>
-          )
-        }),
-        headingsPlugin(),
-        listsPlugin(),
-        quotePlugin(),
-        tablePlugin(),
-        thematicBreakPlugin(),
-        markdownShortcutPlugin(),
-        imagePlugin({
-          async imageUploadHandler(file) {
-            const timestamp = Date.now()
-            const newFile = new File([file], `${timestamp}.${file.name}`, {
-              type: file.type
-            })
-            const key = await upload(newFile, 'image')
-            return `${process.env.NEXT_PUBLIC_DEPLOY_URL}/api/download/${encodeURIComponent(key)}`
-          }
-        }),
-        linkPlugin(),
-        linkDialogPlugin()
-      ]}
+      plugins={plugins}
       className={`${theme === 'dark' ? 'dark-theme' : ''}`}
       contentEditableClassName={`prose max-w-none dark:prose-invert ${props.readOnly ? '' : 'bg-gray-50 dark:bg-gray-900'} rounded-lg ${additionalContentEditableClassName}`}
       {...props}

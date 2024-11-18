@@ -2,6 +2,7 @@ import Assignments from '@/app/(main)/activity/new/assignments'
 import EditNameAndTime from '@/app/(main)/activity/new/edit-name-and-time'
 import Edits from '@/app/(main)/activity/new/edits'
 import { KeyContextProvider } from '@/app/(main)/activity/new/key-context'
+import Publish from '@/app/(main)/activity/new/publish'
 import { getActivity } from '@/lib/actions/activity'
 import { getTeam } from '@/lib/actions/team'
 import type { Activity } from '@/types/activity/activity'
@@ -55,6 +56,7 @@ const Page: React.FC<PageProps> = async ({ searchParams }) => {
             tasks={tasks}
             assignments={assignments}
           />
+          <Publish />
         </KeyContextProvider>
       </div>
     </div>

@@ -11,9 +11,26 @@ interface ActivityProps {
 
 const stageMap = {
   draft: '草案',
+  preparing: '筹备中',
   inProgress: '进行中',
   completed: '已完成',
   archived: '已归档'
+}
+
+const backgroundMap = {
+  draft: 'bg-slate-300',
+  preparing: 'bg-purple-50',
+  inProgress: 'bg-green-50',
+  completed: 'bg-blue-50',
+  archived: 'bg-yellow-50'
+}
+
+const spanClassMap = {
+  draft: 'bg-slate-200 text-slate-700',
+  preparing: 'bg-purple-200 text-purple-700',
+  inProgress: 'bg-green-200 text-green-700',
+  completed: 'bg-blue-200 text-blue-700',
+  archived: 'bg-yellow-200 text-yellow-700'
 }
 
 const Activity: React.FC<ActivityProps> = async ({ activity }) => {
@@ -26,20 +43,11 @@ const Activity: React.FC<ActivityProps> = async ({ activity }) => {
   const assignments = await getAssignments(activity.id, userId)
 
   const isDraft = activity.stage === 'draft'
-  const isInProgress = activity.stage === 'inProgress'
   const isCompleted = activity.stage === 'completed'
 
   return (
     <Link
-      className={`${
-        isDraft
-          ? 'bg-slate-300'
-          : isInProgress
-            ? 'bg-green-50'
-            : isCompleted
-              ? 'bg-blue-50'
-              : 'bg-yellow-50'
-      } w-full p-4 rounded-md shadow-md space-y-2 block`}
+      className={`${backgroundMap[activity.stage]} w-full p-4 rounded-md shadow-md space-y-2 block`}
       href={
         isDraft
           ? `/activity/new?id=${activity.id}&sk=${encodeURIComponent(activity.sk)}`
@@ -47,17 +55,7 @@ const Activity: React.FC<ActivityProps> = async ({ activity }) => {
       }
     >
       <h2 className='text-xl font-bold'>
-        <span
-          className={`text-base p-1 rounded-md font-medium mr-2 ${
-            isDraft
-              ? 'bg-slate-200 text-slate-700'
-              : isInProgress
-                ? 'bg-green-100 text-green-700'
-                : isCompleted
-                  ? 'bg-blue-100 text-blue-700'
-                  : 'bg-yellow-100 text-yellow-700'
-          }`}
-        >
+        <span className={`text-base p-1 rounded-md font-medium mr-2 ${spanClassMap[activity.stage]}`}>
           {stageMap[activity.stage]}
         </span>
         {activity.name}
