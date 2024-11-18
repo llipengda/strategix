@@ -95,6 +95,7 @@ const EditNameAndTime: React.FC<EditNameAndTimeProps> = ({
   }, [key, name, isTimeRange, time, startTime, endTime, setKey])
 
   const handleSave = useCallback(async () => {
+    setError(undefined)
     setIsSaving(true)
     await save()
     setIsSaving(false)

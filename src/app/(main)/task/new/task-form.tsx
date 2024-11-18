@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import dynamic from 'next/dynamic'
 
@@ -23,10 +23,12 @@ const MarkdownEditor = dynamic(() => import('@/components/markdown-editor'), {
 
 export default function TaskForm({
   id,
-  task
+  task,
+  onCreated
 }: {
   id: string
   task: Task | null
+  onCreated?: (task: Task) => void
 }) {
   const [taskName, setTaskName] = useState(task?.name || '')
   const [referenceFiles, setReferenceFiles] = useState<string[]>(
@@ -54,6 +56,19 @@ export default function TaskForm({
   const [dueDate, setDueDate] = useState(task?.dueDate || '')
 
   const editorRef = useRef<MDXEditorMethods>(null)
+
+  useEffect(() => {
+    if (task) {
+      setTaskName(task.name)
+      setReferenceFiles(task.references)
+      setRequiredPeople(task.requiredPeople)
+      setTaskDescription(task.description)
+      setDueDate(task.dueDate)
+      setStages(task.stages)
+
+      editorRef.current?.setMarkdown(task.description)
+    }
+  }, [task])
 
   const handleTaskDescriptionChange = (markdown: string) => {
     editorRef.current?.setMarkdown(markdown)
@@ -106,17 +121,21 @@ export default function TaskForm({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    await addTask(
-      Task.parse({
-        id,
-        name: taskName,
-        description: taskDescription,
-        references: referenceFiles,
-        dueDate: local(dueDate),
-        requiredPeople,
-        stages
-      })
-    )
+    const _task = Task.parse({
+      ...task,
+      id,
+      taskId: task?.taskId,
+      name: taskName,
+      description: taskDescription,
+      references: referenceFiles,
+      dueDate: local(dueDate),
+      requiredPeople,
+      stages
+    })
+
+    onCreated?.(_task)
+
+    await addTask(_task)
   }
 
   return (
@@ -299,7 +318,7 @@ export default function TaskForm({
         type='submit'
         className='w-full mt-4 py-2 px-4 bg-green-600 text-white font-semibold rounded-md shadow hover:bg-green-700'
       >
-        创建任务
+        {task ? '更新任务' : '创建任务'}
       </button>
     </form>
   )

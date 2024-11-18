@@ -25,6 +25,7 @@ export const Task = z
         })
       )
       .default([]),
+    fakeAssignedTo: z.array(z.string()).optional(),
     sk: z.string().optional()
   })
   .transform(data => ({

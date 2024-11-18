@@ -21,6 +21,7 @@ export default function RootLayout({
       <body className='antialiased bg-page-bg relative'>
         {!isProduction && <BreakpointDisplay />}
         <NextTopLoader />
+        <div id='modal-root' />
         {children}
       </body>
     </html>

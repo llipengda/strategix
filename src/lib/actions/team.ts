@@ -39,9 +39,10 @@ export const getTeam = async () => {
     role: Role
   }>({
     IndexName: 'team-index',
-    KeyConditionExpression: 'team = :team',
+    KeyConditionExpression: 'team = :team and sk = :sk',
     ExpressionAttributeValues: {
-      ':team': team
+      ':team': team,
+      ':sk': 'null'
     },
     ProjectionExpression: 'id, #name, #role',
     ExpressionAttributeNames: {

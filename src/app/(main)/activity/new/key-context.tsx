@@ -19,17 +19,24 @@ const KeyContextProvider = ({
   const [_key, _setKey] = useState<Key>(initialKey)
 
   const setKey = useCallback((key: Key) => {
+    if (!key) {
+      _setKey(undefined)
+      return
+    }
+
     _setKey({
-      id: encodeURIComponent(key?.id || ''),
-      sk: encodeURIComponent(key?.sk || '')
+      id: encodeURIComponent(key.id),
+      sk: encodeURIComponent(key.sk)
     })
   }, [])
 
   const key = useMemo(() => {
-    return {
-      id: decodeURIComponent(_key?.id || ''),
-      sk: decodeURIComponent(_key?.sk || '')
-    }
+    return _key
+      ? {
+          id: decodeURIComponent(_key.id),
+          sk: decodeURIComponent(_key.sk)
+        }
+      : undefined
   }, [_key])
 
   return (

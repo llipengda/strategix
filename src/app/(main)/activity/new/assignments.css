@@ -1,0 +1,41 @@
+.ReactModalPortal .ReactModal__Content {
+  width: 80% !important;
+  height: 80% !important;
+  top: 50% !important;
+  left: 50% !important;
+  right: auto !important;
+  bottom: auto !important;
+  padding: 0 !important;
+  transform: translate(-50%, -50%) scale(0);
+}
+
+.ReactModalPortal .ReactModal__Overlay {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  z-index: 1000 !important;
+}
+
+.ReactModalPortal .ReactModal__Content--after-open {
+  animation: scale-in 0.3s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+}
+
+.ReactModalPortal .ReactModal__Content--before-close {
+  animation: scale-out 0.3s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+}
+
+@keyframes scale-in {
+  from {
+    transform: translate(-50%, -50%) scale(0);
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes scale-out {
+  from {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    transform: translate(-50%, -50%) scale(0);
+  }
+}

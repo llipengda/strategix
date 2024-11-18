@@ -24,7 +24,7 @@ export const Assignment = z
   ])
   .transform(data => ({
     ...data,
-    sk: `assignment#${data.isManager ? data.managerId : data.userId}#${data.id}#${data.taskId}`
+    sk: `assignment#${data.isManager ? data.managerId : data.userId}#${data.id}#${data.taskId}#${data.isManager}`
   }))
 
 export const AssignmentArray = Assignment.array()

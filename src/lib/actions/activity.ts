@@ -25,6 +25,19 @@ export const addTask = async (task: Task) => {
   await db.add(task)
 }
 
+export const updateTaskAction = async (
+  key: { id: string; sk: string },
+  task: Omit<Partial<Task>, 'id' | 'sk'>
+) => {
+  await db.update({
+    Key: key,
+    ...generateUpdateExpression(task)
+  })
+
+  revalidatePath(`/activity/${key.id}`)
+  revalidatePath('/activity')
+}
+
 export const addAssignments = async (assignments: Assignment[]) => {
   if (assignments.length === 0) {
     return
@@ -36,6 +49,13 @@ export const addAssignments = async (assignments: Assignment[]) => {
   }
 
   await db.batchAdd(assignments)
+}
+
+export const addAssignmentsAction = async (assignments: Assignment[]) => {
+  await addAssignments(assignments)
+
+  revalidatePath('/activity')
+  revalidatePath(`/activity/${assignments[0].id}`)
 }
 
 export type BriefActivity = Pick<
@@ -99,7 +119,7 @@ export const getTaskById = async (activityId: string, taskId: string) => {
     },
     ExpressionAttributeValues: {
       ':id': activityId,
-      ':sk': `task#${taskId}`
+      ':sk': `task#${activityId}#${taskId}`
     }
   })
 
@@ -175,6 +195,16 @@ export const updateActivityAction = async (
     ...generateUpdateExpression(activity)
   })
 
+  revalidatePath('/activity')
+}
+
+export const deleteAssignmentAction = async (key: {
+  id: string
+  sk: string
+}) => {
+  await db.del(key)
+
+  revalidatePath(`/activity/${key.id}`)
   revalidatePath('/activity')
 }
 

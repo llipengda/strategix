@@ -1,3 +1,4 @@
+import { mergeTasks } from '@/lib/merge-tasks'
 import { localFormat } from '@/lib/time'
 import type { Assignment } from '@/types/activity/assignment'
 import type { Task } from '@/types/activity/task'
@@ -7,49 +8,11 @@ interface TasksAndAssignmentsProps {
   assignments: Assignment[]
 }
 
-const getMergedTasks = (tasks: Task[], assignments: Assignment[]) => {
-  type MergedTask = Task & {
-    managerId: string | null
-    managerName: string | null
-    users: { userId: string; userName: string }[]
-  }
-
-  const taskMap = tasks.reduce(
-    (map, task) => {
-      map[task.taskId] = {
-        ...task,
-        managerId: null,
-        managerName: null,
-        users: []
-      }
-      return map
-    },
-    {} as Record<string, MergedTask>
-  )
-
-  assignments.forEach(assignment => {
-    const task = taskMap[assignment.taskId]
-    if (task) {
-      if (assignment.isManager) {
-        task.managerId = assignment.managerId
-        task.managerName = assignment.managerName
-      } else {
-        task.users.push({
-          userId: assignment.userId,
-          userName: assignment.userName
-        })
-      }
-    }
-  })
-
-  return Object.values(taskMap)
-}
-
 const TasksAndAssignments: React.FC<TasksAndAssignmentsProps> = ({
   tasks,
   assignments
 }) => {
-  const mergedTasks = getMergedTasks(tasks, assignments)
+  const mergedTasks = mergeTasks(tasks, assignments)
 
   return (
     <div>
