@@ -55,7 +55,9 @@ const Activity: React.FC<ActivityProps> = async ({ activity }) => {
       }
     >
       <h2 className='text-xl font-bold'>
-        <span className={`text-base p-1 rounded-md font-medium mr-2 ${spanClassMap[activity.stage]}`}>
+        <span
+          className={`text-base p-1 rounded-md font-medium mr-2 ${spanClassMap[activity.stage]}`}
+        >
           {stageMap[activity.stage]}
         </span>
         {activity.name}
