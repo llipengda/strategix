@@ -103,9 +103,6 @@ importers:
       '@trivago/prettier-plugin-sort-imports':
         specifier: ^4.3.0
         version: 4.3.0(prettier@3.3.3)
-      '@types/bcrypt':
-        specifier: ^5.0.2
-        version: 5.0.2
       '@types/bcryptjs':
         specifier: ^2.4.6
         version: 2.4.6
@@ -1917,9 +1914,6 @@ packages:
 
   '@types/acorn@4.0.6':
     resolution: {integrity: sha512-veQTnWP+1D/xbxVrPC3zHnCZRjSrKfhbMUlEA43iMZLu7EsnTtkJklIuwrCPbOi8YkvDQAiW05VQQFvvz9oieQ==}
-
-  '@types/bcrypt@5.0.2':
-    resolution: {integrity: sha512-6atioO8Y75fNcbmj0G7UjI9lXN2pQ/IGJ2FWT4a/btd0Lk9lQalHLKhkgKVZ3r+spnmWUKfbMi1GEe9wyHQfNQ==}
 
   '@types/bcryptjs@2.4.6':
     resolution: {integrity: sha512-9xlo6R2qDs5uixm0bcIqCeMCE6HiQsIyel9KQySStiyqNl2tnj2mP3DX1Nf56MD6KMenNNlBBsy3LJ7gUEQPXQ==}
@@ -7289,10 +7283,6 @@ snapshots:
     dependencies:
       '@types/estree': 1.0.6
 
-  '@types/bcrypt@5.0.2':
-    dependencies:
-      '@types/node': 20.16.11
-
   '@types/bcryptjs@2.4.6': {}
 
   '@types/cacheable-request@6.0.3':
@@ -9791,6 +9781,7 @@ snapshots:
       '@mdxeditor/editor': 3.19.0(@codemirror/language@6.10.3)(@lezer/common@1.2.3)(@lezer/highlight@1.2.1)(react-dom@19.0.0-rc-02c0e824-20241028(react@19.0.0-rc-02c0e824-20241028))(react@19.0.0-rc-02c0e824-20241028)(types-react-dom@19.0.0-rc.1)(types-react@19.0.0-rc.1)(yjs@13.6.20)
       '@tailwindcss/typography': 0.5.15(tailwindcss@3.4.13)
       '@types/react-modal': 3.16.3
+      ably: 2.5.0(react-dom@19.0.0-rc-02c0e824-20241028(react@19.0.0-rc-02c0e824-20241028))(react@19.0.0-rc-02c0e824-20241028)
       bcryptjs: 2.4.3
       date-fns-tz: 3.2.0(date-fns@4.1.0)
       mac-scrollbar: 0.13.6
@@ -9822,11 +9813,13 @@ snapshots:
       - aws-crt
       - babel-plugin-macros
       - babel-plugin-react-compiler
+      - bufferutil
       - date-fns
       - nodemailer
       - sass
       - supports-color
       - tailwindcss
+      - utf-8-validate
       - yjs
 
   streamsearch@1.1.0: {}

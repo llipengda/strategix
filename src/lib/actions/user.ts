@@ -322,3 +322,7 @@ export const resetPasswordAction = async (_: unknown, formData: FormData) => {
   revalidatePath('/user')
   redirect('/user')
 }
+
+export const dangerouslyAddUser = async (user: User) => {
+  await db.add(user)
+}
