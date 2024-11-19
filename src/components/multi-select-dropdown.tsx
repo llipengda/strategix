@@ -48,7 +48,9 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
       {/* Dropdown Button */}
       <button
         className={`w-full px-4 py-2 border rounded-md text-left flex justify-between items-center ${
-          disabled ? 'bg-gray-200 cursor-not-allowed' : 'bg-gray-100 cursor-pointer'
+          disabled
+            ? 'bg-gray-200 cursor-not-allowed'
+            : 'bg-gray-100 cursor-pointer'
         }`}
         onClick={toggleDropdown}
         disabled={disabled}
