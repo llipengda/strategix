@@ -1,19 +1,13 @@
-import { mergeTasks } from '@/lib/merge-tasks'
+import { type MergedTask } from '@/lib/task-process'
 import { localFormat } from '@/lib/time'
-import type { Assignment } from '@/types/activity/assignment'
-import type { Task } from '@/types/activity/task'
 
 interface TasksAndAssignmentsProps {
-  tasks: Task[]
-  assignments: Assignment[]
+  mergedTasks: MergedTask[]
 }
 
 const TasksAndAssignments: React.FC<TasksAndAssignmentsProps> = ({
-  tasks,
-  assignments
+  mergedTasks
 }) => {
-  const mergedTasks = mergeTasks(tasks, assignments)
-
   return (
     <div>
       <h2 className='text-xl font-bold'>活动分工</h2>

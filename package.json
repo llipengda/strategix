@@ -20,6 +20,7 @@
     "@mdxeditor/editor": "^3.19.0",
     "@tailwindcss/typography": "^0.5.15",
     "@types/react-modal": "^3.16.3",
+    "ably": "^2.5.0",
     "bcryptjs": "^2.4.3",
     "date-fns-tz": "^3.2.0",
     "mac-scrollbar": "^0.13.6",

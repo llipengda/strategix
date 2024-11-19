@@ -53,10 +53,11 @@ const Page: React.FC<PageProps> = async ({ searchParams }) => {
           <Assignments
             team={team}
             totalUsers={activity?.totalUsers}
+            assignType={activity?.assignType}
             tasks={tasks}
             assignments={assignments}
           />
-          <Publish />
+          <Publish stage={activity?.stage || 'draft'} />
         </KeyContextProvider>
       </div>
     </div>

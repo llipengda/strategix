@@ -3,14 +3,14 @@
 import React, { useState } from 'react'
 
 type SingleToggleButtonGroupProps = {
-  options: string[]
+  options: string[] | { key: string; value: string }[]
   value?: string
   onChange: (value: string) => void
   multiple?: false
 }
 
 type MultipleToggleButtonGroupProps = {
-  options: string[]
+  options: string[] | { key: string; value: string }[]
   value?: string[]
   onChange: (value: string[]) => void
   multiple: true
@@ -51,20 +51,24 @@ const ToggleButtonGroup: React.FC<ToggleButtonGroupProps> = ({
 
   return (
     <div className='inline-flex rounded-md shadow-sm'>
-      {options.map(option => (
-        <button
-          key={option}
-          type='button'
-          className={`px-4 py-2 text-sm font-medium border border-gray-300 transition-colors ${
-            isSelected(option)
-              ? 'bg-blue-500 text-white border-blue-500'
-              : 'bg-white text-gray-700 hover:bg-gray-100'
-          } first:rounded-l-md last:rounded-r-md -ml-px focus:outline-none`}
-          onClick={() => handleToggle(option)}
-        >
-          {option}
-        </button>
-      ))}
+      {options.map(option => {
+        const key = typeof option === 'string' ? option : option.key
+        const value = typeof option === 'string' ? option : option.value
+        return (
+          <button
+            key={key}
+            type='button'
+            className={`px-4 py-2 text-sm font-medium border border-gray-300 transition-colors ${
+              isSelected(key)
+                ? 'bg-blue-500 text-white border-blue-500'
+                : 'bg-white text-gray-700 hover:bg-gray-100'
+            } first:rounded-l-md last:rounded-r-md -ml-px focus:outline-none`}
+            onClick={() => handleToggle(key)}
+          >
+            {value}
+          </button>
+        )
+      })}
     </div>
   )
 }

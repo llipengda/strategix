@@ -3,7 +3,7 @@ import { GoArrowSwitch } from 'react-icons/go'
 import { MdEdit, MdError } from 'react-icons/md'
 
 import MultiSelectDropdown from '@/components/multi-select-dropdown'
-import type { MergedTask } from '@/lib/merge-tasks'
+import type { MergedTask } from '@/lib/task-process'
 import { localFormat } from '@/lib/time'
 import type { Team } from '@/types/team'
 

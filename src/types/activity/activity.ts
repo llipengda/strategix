@@ -41,6 +41,9 @@ export const Activity = z
       .transform(v => [v[0].toISOString(), v[1].toISOString()] as const)
       .optional(),
     createdAt: z.string().datetime().default(localDate().toISOString()),
+    assignType: z.enum(['preference', 'time']).optional(),
+    stopPreferenceAssign: z.boolean().default(false),
+    startTimeAssign: z.boolean().default(false),
     stage: z
       .enum(['draft', 'preparing', 'inProgress', 'completed', 'archived'])
       .default('draft'),

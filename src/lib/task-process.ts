@@ -38,3 +38,36 @@ export const mergeTasks = (tasks: Task[], assignments: Assignment[]) => {
 
   return Object.values(taskMap)
 }
+
+export type TasksByUser = Record<
+  string,
+  { tasks: string[]; dueDates: string[]; isFake: boolean }
+>
+
+export const getTasksByUser = (mergedTasks: MergedTask[]) =>
+  mergedTasks.reduce((acc, task) => {
+    task.users?.forEach(u => {
+      if (!acc[u.userName]) {
+        acc[u.userName] = {
+          tasks: [],
+          dueDates: [],
+          isFake: false
+        }
+      }
+      acc[u.userName].tasks.push(task.name)
+      acc[u.userName].dueDates.push(task.dueDate)
+    })
+
+    task.fakeAssignedTo?.forEach(userName => {
+      if (!acc[userName]) {
+        acc[userName] = {
+          tasks: [],
+          dueDates: [],
+          isFake: true
+        }
+      }
+      acc[userName].tasks.push(task.name)
+      acc[userName].dueDates.push(task.dueDate)
+    })
+    return acc
+  }, {} as TasksByUser)

@@ -4,11 +4,13 @@ import { revalidatePath } from 'next/cache'
 
 import { generateUpdateExpression } from '@auth/dynamodb-adapter'
 
+import { auth } from '@/auth'
 import { getCurrentUser } from '@/lib/actions/user'
 import db from '@/lib/database'
 import { role } from '@/lib/role'
 import { Activity, type Section } from '@/types/activity/activity'
 import { Assignment } from '@/types/activity/assignment'
+import type { Preference } from '@/types/activity/preference'
 import { Task } from '@/types/activity/task'
 
 export const addActivity = async (activity: Activity) => {
@@ -260,4 +262,57 @@ export const deleteSectionAction = async (
   revalidatePath(`/activity/${key.id}`)
   revalidatePath('/activity/new')
   revalidatePath(`/activity/new?id=${key.id}&sk=${encodeURIComponent(key.sk)}`)
+}
+
+export const addPreferenceAction = async (preference: Preference) => {
+  await db.add(preference)
+
+  revalidatePath(`/activity/${preference.id}/assignment`)
+}
+
+export const getGroupedPreferences = async (activityId: string) => {
+  const data = await db.query<Preference>({
+    KeyConditionExpression: '#id = :id and begins_with(#sk, :sk)',
+    ExpressionAttributeNames: {
+      '#id': 'id',
+      '#sk': 'sk'
+    },
+    ExpressionAttributeValues: {
+      ':id': activityId,
+      ':sk': `preference#`
+    }
+  })
+
+  return data.reduce(
+    (acc, cur) => {
+      acc[cur.fakeAssignment] = (acc[cur.fakeAssignment] || 0) + 1
+      return acc
+    },
+    {} as Record<string, number>
+  )
+}
+
+export const getMyPreferences = async (activityId: string) => {
+  const session = await auth()
+
+  if (!session?.user?.id) {
+    throw new Error('请先登录')
+  }
+
+  return await db.query<Preference>({
+    KeyConditionExpression: '#id = :id and begins_with(#sk, :sk)',
+    ExpressionAttributeNames: {
+      '#id': 'id',
+      '#sk': 'sk'
+    },
+    ExpressionAttributeValues: {
+      ':id': activityId,
+      ':sk': `preference#${session.user.id}`
+    }
+  })
+}
+
+export const deleteMyPreferences = async (activityId: string) => {
+  const preferences = await getMyPreferences(activityId)
+  await Promise.all(preferences.map(p => db.del({ id: p.id, sk: p.sk })))
 }

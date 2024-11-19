@@ -7,6 +7,7 @@ import TasksAndAssignments from '@/app/(main)/activity/[id]/tasks-and-assignment
 import { auth } from '@/auth'
 import { getActivity } from '@/lib/actions/activity'
 import { role } from '@/lib/role'
+import { mergeTasks } from '@/lib/task-process'
 import { localFormat } from '@/lib/time'
 
 const Page: React.FC<PageProps> = async ({ params }) => {
@@ -28,6 +29,8 @@ const Page: React.FC<PageProps> = async ({ params }) => {
     return null
   }
 
+  const mergedTasks = mergeTasks(tasks, assignments)
+
   return (
     <>
       <h1 className='text-3xl text-center font-semibold mb-14 flex items-center justify-center gap-2'>
@@ -35,7 +38,7 @@ const Page: React.FC<PageProps> = async ({ params }) => {
         {activity.stage === 'draft' && '（草案）'}
         {role.admin(user) && (
           <Link
-            href={`/activity/new?id=${activity.id}&sk=${activity.sk}`}
+            href={`/activity/new?id=${encodeURIComponent(activity.id)}&sk=${encodeURIComponent(activity.sk)}`}
             className='text-blue-500'
           >
             <MdEdit />
@@ -60,7 +63,15 @@ const Page: React.FC<PageProps> = async ({ params }) => {
         {activity.sections.map((section, index) => (
           <Section key={index} section={section} />
         ))}
-        <TasksAndAssignments tasks={tasks} assignments={assignments} />
+        <TasksAndAssignments mergedTasks={mergedTasks} />
+        {activity.stage === 'preparing' && (
+          <Link
+            href={`/activity/${activity.id}/assignment`}
+            className='bg-blue-500 text-white px-4 py-2 rounded-md block text-center text-lg font-semibold'
+          >
+            任务分配
+          </Link>
+        )}
       </div>
     </>
   )

@@ -8,13 +8,14 @@ import { KeyContext } from '@/app/(main)/activity/new/key-context'
 import TaskRow from '@/app/(main)/activity/new/task-row'
 import TaskModal from '@/app/(main)/task/new/task-modal'
 import ErrorMessage from '@/components/error-message'
+import ToggleButtonGroup from '@/components/toggle-button-group'
 import {
   addAssignmentsAction,
   deleteAssignmentAction,
   updateActivityAction,
   updateTaskAction
 } from '@/lib/actions/activity'
-import { type MergedTask, mergeTasks } from '@/lib/merge-tasks'
+import { type MergedTask, mergeTasks } from '@/lib/task-process'
 import { localDate, localFormat } from '@/lib/time'
 import { Assignment } from '@/types/activity/assignment'
 import type { Task } from '@/types/activity/task'
@@ -26,6 +27,7 @@ Modal.setAppElement('#modal-root')
 
 interface AssignmentsProps {
   totalUsers?: number
+  assignType?: 'preference' | 'time'
   team: Team
   tasks: Task[]
   assignments: Assignment[]
@@ -33,6 +35,7 @@ interface AssignmentsProps {
 
 const Assignments: React.FC<AssignmentsProps> = ({
   totalUsers,
+  assignType: _assignType,
   team,
   tasks,
   assignments
@@ -90,6 +93,10 @@ const Assignments: React.FC<AssignmentsProps> = ({
     )
   )
 
+  const [assignType, setAssignType] = useState<
+    'preference' | 'time' | undefined
+  >(_assignType)
+
   const { key } = use(KeyContext)
 
   const handleOpen = (taskId?: string) => {
@@ -138,7 +145,8 @@ const Assignments: React.FC<AssignmentsProps> = ({
         sk: key.sk
       },
       {
-        totalUsers: Number(total)
+        totalUsers: Number(total),
+        assignType
       }
     )
 
@@ -211,7 +219,8 @@ const Assignments: React.FC<AssignmentsProps> = ({
     mergedTasks,
     fakeUsers,
     assignedManagers,
-    assignedUsers
+    assignedUsers,
+    assignType
   ])
 
   const handleSave = useCallback(async () => {
@@ -277,6 +286,8 @@ const Assignments: React.FC<AssignmentsProps> = ({
   ) => {
     setAssignedManagers(prev => ({ ...prev, [taskId]: manager }))
   }
+
+  const hasFakeUsers = Object.values(fakeUsers).some(users => users.length > 0)
 
   return (
     <div
@@ -378,6 +389,19 @@ const Assignments: React.FC<AssignmentsProps> = ({
           </tbody>
         </table>
       </div>
+      {hasFakeUsers && (
+        <div className='flex gap-2 flex-col'>
+          <h3 className='text-xl font-bold'>分配方式</h3>
+          <ToggleButtonGroup
+            options={[
+              { key: 'preference', value: '意愿值' },
+              { key: 'time', value: '时间' }
+            ]}
+            value={assignType}
+            onChange={value => setAssignType(value as 'preference' | 'time')}
+          />
+        </div>
+      )}
       <div className='space-y-2'>
         <hr className='border-gray-300 !mt-8' />
         <ErrorMessage defaultHeight={false} errorMessage={error} />

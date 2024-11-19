@@ -8,6 +8,7 @@ interface MultiSelectDropdownProps {
   onChange: (selected: string[]) => void
   placeholder?: string
   multiple?: boolean
+  disabled?: boolean
 }
 
 const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
@@ -15,13 +16,20 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
   value,
   onChange,
   placeholder = '请选择...',
-  multiple = true
+  multiple = true,
+  disabled = false
 }) => {
   const [isOpen, setIsOpen] = useState(false)
 
-  const toggleDropdown = () => setIsOpen(prev => !prev)
+  const toggleDropdown = () => {
+    if (!disabled) {
+      setIsOpen(prev => !prev)
+    }
+  }
 
   const handleOptionClick = (option: string) => {
+    if (disabled) return
+
     if (multiple) {
       const newValue = value.includes(option)
         ? value.filter(item => item !== option)
@@ -36,11 +44,14 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
   const isSelected = (option: string) => value.includes(option)
 
   return (
-    <div className='relative w-52'>
+    <div className='relative max-w-52'>
       {/* Dropdown Button */}
       <button
-        className='w-full px-4 py-2 border rounded-md bg-gray-100 text-left flex justify-between items-center'
+        className={`w-full px-4 py-2 border rounded-md text-left flex justify-between items-center ${
+          disabled ? 'bg-gray-200 cursor-not-allowed' : 'bg-gray-100 cursor-pointer'
+        }`}
         onClick={toggleDropdown}
+        disabled={disabled}
       >
         <span>{value.length > 0 ? value.join(', ') : placeholder}</span>
         <svg
@@ -60,7 +71,7 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
       </button>
 
       {/* Dropdown Menu */}
-      {isOpen && (
+      {isOpen && !disabled && (
         <div className='absolute z-10 mt-2 w-full bg-white border rounded-md shadow-lg max-h-48 overflow-y-auto'>
           <ul>
             {options.map(option => (
