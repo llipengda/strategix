@@ -16,21 +16,35 @@ import { type TasksByUser } from '@/lib/task-process'
 import { Preference } from '@/types/activity/preference'
 
 interface PreferenceChoiceProps {
+  isStopped: boolean
   activityId: string
   userId: string
+  userName: string
   tasksByUser: TasksByUser
 }
 
 const PreferenceChoice = ({
+  isStopped,
   activityId,
   userId,
+  userName,
   tasksByUser
 }: PreferenceChoiceProps) => {
   const { channel } = useChannel(`activity-${activityId}`, message => {
     if (message.name === 'submit-preference') {
       setForceUpdate(prev => prev + 1)
     }
+    if (message.name === 'stop-preference-assign') {
+      setStopped(true)
+      setHasResult(false)
+    }
+    if (message.name === 'assignment-completed') {
+      setHasResult(true)
+    }
   })
+
+  const [stopped, setStopped] = useState(isStopped)
+  const [hasResult, setHasResult] = useState(isStopped)
 
   const _fakeAssignments = Object.entries(tasksByUser).filter(
     ([_, data]) => data.isFake
@@ -71,7 +85,6 @@ const PreferenceChoice = ({
     })
     void getMyPreferences(activityId).then(res => {
       let totalPreference = 0
-      console.log(res)
       res.forEach((p, index) => {
         totalPreference += p.preference
         setSelected(prev => {
@@ -181,7 +194,8 @@ const PreferenceChoice = ({
           Preference.parse({
             ...p,
             id: activityId,
-            userId: userId
+            userId: userId,
+            userName: userName
           })
         )
       )
@@ -190,6 +204,25 @@ const PreferenceChoice = ({
       userId
     })
     setLoading(false)
+  }
+
+  if (stopped && !hasResult) {
+    return (
+      <div className='mt-8 flex items-center justify-center p-8 text-lg text-gray-600 bg-gray-50 rounded-lg border-2 border-gray-200'>
+        <div className='flex flex-col items-center gap-4'>
+          <div className='w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin' />
+          分配已停止，分配结果正在计算中...
+        </div>
+      </div>
+    )
+  }
+
+  if (hasResult) {
+    return (
+      <div className='flex items-center justify-center p-8 text-lg text-gray-600 bg-gray-50 rounded-lg border-2 border-gray-200'>
+        分配已完成，您可能需要刷新页面以查看结果
+      </div>
+    )
   }
 
   return (

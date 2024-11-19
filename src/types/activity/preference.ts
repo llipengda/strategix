@@ -5,6 +5,7 @@ export const Preference = z
     id: z.string().uuid(),
     sk: z.string().optional(),
     userId: z.string(),
+    userName: z.string(),
     fakeAssignment: z.string(),
     preference: z.number().min(0).max(100),
     type: z.literal('preference').default('preference')

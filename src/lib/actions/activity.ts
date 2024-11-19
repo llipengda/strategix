@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 
 import { generateUpdateExpression } from '@auth/dynamodb-adapter'
+import Ably from 'ably'
 
 import { auth } from '@/auth'
 import { getCurrentUser } from '@/lib/actions/user'
@@ -315,4 +316,158 @@ export const getMyPreferences = async (activityId: string) => {
 export const deleteMyPreferences = async (activityId: string) => {
   const preferences = await getMyPreferences(activityId)
   await Promise.all(preferences.map(p => db.del({ id: p.id, sk: p.sk })))
+}
+
+export const endAssignmentPreferenceChoiceAction = async (key: {
+  id: string
+  sk: string
+}) => {
+  const activity = await db.get<Activity>(key)
+
+  if (!activity) {
+    throw new Error('活动不存在')
+  }
+
+  if (activity.stopPreferenceAssign) {
+    return
+  }
+
+  const preferences = await db.query<Preference>({
+    KeyConditionExpression: '#id = :id and begins_with(#sk, :sk)',
+    ExpressionAttributeNames: {
+      '#id': 'id',
+      '#sk': 'sk'
+    },
+    ExpressionAttributeValues: {
+      ':id': key.id,
+      ':sk': `preference#`
+    }
+  })
+
+  const allUsers = new Set(preferences.map(p => p.userId))
+
+  if (allUsers.size !== activity.totalUsers) {
+    throw new Error('有用户未完成选择')
+  }
+
+  await db.update({
+    Key: key,
+    ...generateUpdateExpression({ stopPreferenceAssign: true })
+  })
+
+  await PreferenceAssign(key.id, preferences)
+
+  revalidatePath(`/activity/${key.id}`)
+}
+
+const PreferenceAssign = async (
+  activityId: string,
+  preferences: Preference[]
+) => {
+  const client = new Ably.Realtime(process.env.ABLY_API_KEY!)
+
+  const channel = client.channels.get(`activity-${activityId}`)
+
+  await channel.publish('stop-preference-assign', true)
+
+  const groupByName = preferences.reduce(
+    (acc, cur) => {
+      acc[cur.fakeAssignment] = [...(acc[cur.fakeAssignment] || []), cur]
+      return acc
+    },
+    {} as Record<string, Preference[]>
+  )
+
+  const tasks = await db.query<Task>({
+    KeyConditionExpression: '#id = :id and begins_with(#sk, :sk)',
+    ExpressionAttributeNames: {
+      '#id': 'id',
+      '#sk': 'sk'
+    },
+    ExpressionAttributeValues: {
+      ':id': activityId,
+      ':sk': `task#${activityId}`
+    }
+  })
+
+  const fakeAssignmentToTaskId = tasks.reduce(
+    (acc, cur) => {
+      cur.fakeAssignedTo?.forEach(name => {
+        acc[name] = cur.taskId
+      })
+      return acc
+    },
+    {} as Record<string, string>
+  )
+
+  const allUsers = new Set(preferences.map(p => p.userId))
+  const allFakeAssignments = new Set(Object.keys(fakeAssignmentToTaskId))
+
+  const assignments = []
+  const assignedUsers = new Set()
+
+  // Sort entries by number of preferences to handle most constrained first
+  const sortedEntries = Object.entries(groupByName).sort(
+    (a, b) => a[1].length - b[1].length
+  )
+
+  for (const [name, preferences] of sortedEntries) {
+    // Filter out already assigned users
+    const availablePreferences = preferences.filter(
+      p => !assignedUsers.has(p.userId)
+    )
+
+    if (availablePreferences.length === 0) continue
+
+    // Sort by preference score
+    availablePreferences.sort((a, b) => b.preference - a.preference)
+    const max = availablePreferences[0].preference
+
+    // Get all preferences with max score
+    const selected = availablePreferences.filter(p => p.preference === max)
+
+    // Randomly select one
+    const randomIndex = Math.floor(Math.random() * selected.length)
+    const assignment = selected[randomIndex]
+
+    // Track assigned user
+    assignedUsers.add(assignment.userId)
+    allUsers.delete(assignment.userId)
+    allFakeAssignments.delete(name)
+
+    assignments.push(
+      Assignment.parse({
+        id: activityId,
+        taskId: fakeAssignmentToTaskId[name],
+        isManager: false,
+        userId: assignment.userId,
+        userName: assignment.userName
+      })
+    )
+  }
+
+  const leftUsers = Array.from(allUsers)
+  const leftFakeAssignments = Array.from(allFakeAssignments)
+
+  console.assert(leftUsers.length === leftFakeAssignments.length)
+
+  for (let i = 0; i < leftFakeAssignments.length; i++) {
+    assignments.push(
+      Assignment.parse({
+        id: activityId,
+        taskId: leftFakeAssignments[i],
+        isManager: false,
+        userId: leftUsers[i],
+        userName: leftUsers[i]
+      })
+    )
+  }
+
+  await db.batchAdd(assignments)
+
+  revalidatePath(`/activity/${activityId}`)
+  revalidatePath('/activity')
+  revalidatePath(`/activity/${activityId}/assignment`)
+
+  await channel.publish('assignment-completed', true)
 }

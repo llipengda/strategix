@@ -30,7 +30,7 @@ export const Activity = z
     type: z.literal('activity').optional().default('activity'),
     name: z.string(),
     team: z.string(),
-    totalUsers: z.number(),
+    totalUsers: z.number().optional(),
     sections: z.array(Section),
     time: z
       .date()

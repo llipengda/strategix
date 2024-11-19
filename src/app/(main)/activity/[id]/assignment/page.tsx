@@ -36,13 +36,15 @@ const Page: React.FC<PageProps> = async ({ params }) => {
       <TasksSummary tasksByUser={tasksByUser} activityId={id} />
       {!role.admin(session.user) && (
         <Choice
+          isStopped={activity.stopPreferenceAssign}
           activityId={id}
           tasksByUser={tasksByUser}
           userId={session.user.id}
+          userName={session.user.name!}
         />
       )}
       {role.admin(session.user) && (
-        <button className='mt-8 bg-blue-500 w-full text-white px-4 py-2 rounded-md'>
+        <button className='mt-8 bg-blue-500 w-full text-center font-semibold text-white px-4 py-2 rounded-md'>
           结束分配选择
         </button>
       )}

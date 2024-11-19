@@ -10,16 +10,26 @@ const ChoiceWrapper = dynamic(() => import('./choice-wrapper'), {
 })
 
 interface ChoiceProps {
+  isStopped: boolean
   activityId: string
   userId: string
+  userName: string
   tasksByUser: TasksByUser
 }
 
-const Choice: React.FC<ChoiceProps> = ({ activityId, tasksByUser, userId }) => {
+const Choice: React.FC<ChoiceProps> = ({
+  isStopped,
+  activityId,
+  tasksByUser,
+  userId,
+  userName
+}) => {
   return (
     <ChoiceWrapper activityId={activityId}>
       <PreferenceChoice
+        isStopped={isStopped}
         userId={userId}
+        userName={userName}
         activityId={activityId}
         tasksByUser={tasksByUser}
       />

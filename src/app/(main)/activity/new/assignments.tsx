@@ -287,7 +287,7 @@ const Assignments: React.FC<AssignmentsProps> = ({
     setAssignedManagers(prev => ({ ...prev, [taskId]: manager }))
   }
 
-  const hasFakeUsers = Object.values(fakeUsers).some(users => users.length > 0)
+  const hasFakeUsers = Object.values(fakeUsers).some(users => users?.length > 0)
 
   return (
     <div
