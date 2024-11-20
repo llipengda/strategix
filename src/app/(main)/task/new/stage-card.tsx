@@ -9,7 +9,7 @@ import type { MDXEditorMethods } from '@mdxeditor/editor'
 
 import MdEditorFallback from '@/components/md-editor-fallback'
 import ToggleButtonGroup from '@/components/toggle-button-group'
-import type { Stage } from '@/types/activity/task'
+import type { Stage, TaskTemplateStage } from '@/types/activity/task'
 
 const MarkdownEditor = dynamic(() => import('@/components/markdown-editor'), {
   ssr: false,
@@ -33,23 +33,34 @@ const approvalMap = {
 const approvalMapReverse = Object.fromEntries(
   Object.entries(approvalMap).map(([key, value]) => [value, key])
 ) as Record<string, 'none' | 'manager' | 'admin' | 'super-admin'>
+type StageCardProps =
+  | {
+      isTaskTemplate: false
+      stage: Stage
+      requiredPeople: number
+      onUpdate: (stage: Stage) => void
+      onDelete: (id: string) => void
+    }
+  | {
+      isTaskTemplate: true
+      requiredPeople: number
+      stage: TaskTemplateStage
+      onUpdate: (stage: TaskTemplateStage) => void
+      onDelete: (id: string) => void
+    }
 
 export default function StageCard({
   stage,
   requiredPeople,
-  onUpdate,
+  onUpdate: onUpdate,
   onDelete
-}: {
-  stage: Stage
-  requiredPeople: number
-  onUpdate: (stage: Stage) => void
-  onDelete: (id: string) => void
-}) {
+}: StageCardProps) {
   const editorRef = useRef<MDXEditorMethods>(null)
 
   const handleContentChange = (markdown: string) => {
     editorRef.current?.setMarkdown(markdown)
     onUpdate({
+      completed: false,
       ...stage,
       content: markdown
     })
@@ -67,7 +78,9 @@ export default function StageCard({
       <div className='space-y-4'>
         <input
           value={stage.name}
-          onChange={e => onUpdate({ ...stage, name: e.target.value })}
+          onChange={e =>
+            onUpdate({ completed: false, ...stage, name: e.target.value })
+          }
           className='w-full border-0 border-b-2 border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-0 transition-colors duration-200 bg-transparent leading-8'
           placeholder='输入标题...'
         />
@@ -81,7 +94,11 @@ export default function StageCard({
           options={approvalOptions}
           value={approvalMap[stage.approval]}
           onChange={v =>
-            onUpdate({ ...stage, approval: approvalMapReverse[v] })
+            onUpdate({
+              completed: false,
+              ...stage,
+              approval: approvalMapReverse[v]
+            })
           }
         />
         <div className='flex items-center gap-2'>
@@ -94,6 +111,7 @@ export default function StageCard({
             value={stage.assignedTo.map(i => String.fromCharCode(65 + i))}
             onChange={v =>
               onUpdate({
+                completed: false,
                 ...stage,
                 assignedTo: v.map(c => c.charCodeAt(0) - 65)
               })

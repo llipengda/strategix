@@ -20,16 +20,13 @@ const MarkdownEditor = dynamic(() => import('@/components/markdown-editor'), {
   ssr: false,
   loading: () => <MdEditorFallback />
 })
-
-export default function TaskForm({
-  id,
-  task,
-  onCreated
-}: {
+interface TaskFormProps {
   id: string
   task: Task | null
   onCreated?: (task: Task) => void
-}) {
+}
+
+export default function TaskForm({ id, task, onCreated }: TaskFormProps) {
   const [taskName, setTaskName] = useState(task?.name || '')
   const [referenceFiles, setReferenceFiles] = useState<string[]>(
     task?.references || []
@@ -303,6 +300,7 @@ export default function TaskForm({
                 className={activeStageIndex === index ? 'block' : 'hidden'}
               >
                 <StageCard
+                  isTaskTemplate={false}
                   requiredPeople={requiredPeople}
                   stage={stage}
                   onUpdate={handleUpdateStage}
