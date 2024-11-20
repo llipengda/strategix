@@ -290,7 +290,7 @@ export default function TaskTemplateForm({ template }: TaskTemplateFormProps) {
           <label className='block text-lg font-medium text-gray-700 dark:text-white'>
             流程
           </label>
-          <div className='flex mt-2'>
+          <div className='flex mt-2 max-lg:flex-col max-lg:gap-4'>
             {/* 左侧阶段导航 */}
             <div className='flex flex-col items-center mr-8 relative'>
               {stages.map((stage, index) => (
