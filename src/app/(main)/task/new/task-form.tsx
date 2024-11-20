@@ -7,6 +7,7 @@ import dynamic from 'next/dynamic'
 import type { MDXEditorMethods } from '@mdxeditor/editor'
 import { v4 } from 'uuid'
 
+import ErrorMessage from '@/components/error-message'
 import FileUpload from '@/components/file-upload'
 import MdEditorFallback from '@/components/md-editor-fallback'
 import { addTask } from '@/lib/actions/activity'
@@ -15,7 +16,6 @@ import { local } from '@/lib/time'
 import { Stage, Task } from '@/types/activity/task'
 
 import StageCard from './stage-card'
-import ErrorMessage from '@/components/error-message'
 
 const MarkdownEditor = dynamic(() => import('@/components/markdown-editor'), {
   ssr: false,
