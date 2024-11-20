@@ -100,7 +100,9 @@ const Assignments: React.FC<AssignmentsProps> = ({
   const { key } = use(KeyContext)
 
   useEffect(() => {
-    setTotal(totalUsers || team.members.filter(m => m.role === 'user').length || 1)
+    setTotal(
+      totalUsers || team.members.filter(m => m.role === 'user').length || 1
+    )
   }, [totalUsers, team.members])
 
   useEffect(() => {
