@@ -93,9 +93,9 @@ const Assignments: React.FC<AssignmentsProps> = ({
     )
   )
 
-  const [assignType, setAssignType] = useState<
-    'preference' | 'time'
-  >(_assignType || 'preference')
+  const [assignType, setAssignType] = useState<'preference' | 'time'>(
+    _assignType || 'preference'
+  )
 
   const { key } = use(KeyContext)
 
