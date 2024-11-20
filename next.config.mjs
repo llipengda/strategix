@@ -1,6 +1,5 @@
 import nextPWA from 'next-pwa'
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
 const withPWA = nextPWA({
   dest: 'public'
 })
@@ -15,5 +14,4 @@ const nextConfig = {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 export default withPWA(nextConfig)
