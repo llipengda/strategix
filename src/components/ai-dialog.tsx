@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 
 interface AiDialogProps {
+  generating?: boolean
   onAiGenerate: (additionalInfo: string) => Promise<void>
   onConfirm: () => void
   onRevert: () => void
@@ -10,6 +11,7 @@ interface AiDialogProps {
 }
 
 export default function AiDialog({
+  generating,
   onAiGenerate,
   onConfirm,
   onRevert,
@@ -94,18 +96,29 @@ export default function AiDialog({
           />
           {aiError && <p className='text-red-500 mt-2'>{aiError}</p>}
           <div className='flex justify-end space-x-2'>
-            <button
-              onClick={() => setShowAiDialog(false)}
-              className='px-4 py-2 text-gray-600 hover:text-gray-800'
-            >
-              取消
-            </button>
-            <button
-              onClick={handleAiConfirm}
-              className='px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700'
-            >
-              确定
-            </button>
+            {isGenerating ? (
+              <>
+                <div className='flex items-center gap-3'>
+                  <div className='w-6 h-6 animate-spin rounded-full border-2 border-indigo-600 border-t-transparent'></div>
+                  <span className='text-indigo-600 font-medium'>生成中...</span>
+                </div>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => setShowAiDialog(false)}
+                  className='px-4 py-2 text-gray-600 hover:text-gray-800'
+                >
+                  取消
+                </button>
+                <button
+                  onClick={handleAiConfirm}
+                  className='px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700'
+                >
+                  确定
+                </button>
+              </>
+            )}
           </div>
         </div>
       )}
@@ -160,7 +173,7 @@ export default function AiDialog({
           </div>
         </div>
       )}
-      {isGenerating && (
+      {(generating !== undefined ? generating : isGenerating) && (
         <div className='fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50'>
           <div className='bg-white/90 dark:bg-gray-800/90 min-w-[20rem] p-8 rounded-2xl shadow-2xl flex flex-col items-center gap-6 border border-gray-200 dark:border-gray-700'>
             <div className='relative'>

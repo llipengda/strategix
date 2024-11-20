@@ -45,13 +45,23 @@ const Edit: React.FC<EditProps> = ({
 
   const [type, setType] = useState(_type)
   const [customName, setCustomName] = useState(name)
-
   const [value, setValue] = useState(preValue)
   const [saveTime, setSaveTime] = useState<Date | null>(null)
   const [isSaving, setIsSaving] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
-
   const [error, setError] = useState<string>('')
+
+  useEffect(() => {
+    setType(_type)
+  }, [_type])
+
+  useEffect(() => {
+    setCustomName(name)
+  }, [name])
+
+  useEffect(() => {
+    setValue(preValue)
+  }, [preValue])
 
   const isCustomTitle = type === 'custom'
 
@@ -131,6 +141,7 @@ const Edit: React.FC<EditProps> = ({
 
   return (
     <div
+      id={id}
       className={`relative space-y-2 rounded-lg p-4 bg-white border-2 border-gray-300
         ${!!saveTime ? '' : 'border-dashed'}
         ${isDeleting ? 'opacity-50' : ''}`}

@@ -15,6 +15,7 @@ export const predefinedSections = [
   { type: 'purpose', name: '活动目的' },
   { type: 'note', name: '注意事项' },
   { type: 'location', name: '活动地点' },
+  { type: 'participants', name: '活动对象及人数' },
   { type: 'custom', name: '自定义' }
 ]
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { v4 } from 'uuid'
 
@@ -30,6 +30,10 @@ const Edits: React.FC<EditsProps> = ({ sections }) => {
   const handleDelete = (id: string) => {
     setEdits(edits.filter(e => e.id !== id))
   }
+
+  useEffect(() => {
+    setEdits(sections)
+  }, [sections])
 
   return (
     <div className='space-y-8'>

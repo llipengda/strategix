@@ -99,6 +99,54 @@ const Assignments: React.FC<AssignmentsProps> = ({
 
   const { key } = use(KeyContext)
 
+  useEffect(() => {
+    setTotal(totalUsers || team.members.filter(m => m.role === 'user').length || 1)
+  }, [totalUsers, team.members])
+
+  useEffect(() => {
+    setAssignType(_assignType)
+  }, [_assignType])
+
+  useEffect(() => {
+    const newMergedTasks = mergeTasks(tasks, assignments)
+    setCol(newMergedTasks)
+
+    setFakeUsers(
+      newMergedTasks.reduce(
+        (acc, task) => ({ ...acc, [task.taskId]: task.fakeAssignedTo }),
+        {}
+      )
+    )
+
+    setAssignedUsers(
+      newMergedTasks.reduce(
+        (acc, task) => ({
+          ...acc,
+          [task.taskId]: task.users.map(user => ({
+            id: user.userId,
+            name: user.userName
+          }))
+        }),
+        {}
+      )
+    )
+
+    setAssignedManagers(
+      newMergedTasks.reduce(
+        (acc, task) => ({
+          ...acc,
+          [task.taskId]: task.managerId
+            ? {
+                id: task.managerId,
+                name: task.managerName || ''
+              }
+            : undefined
+        }),
+        {}
+      )
+    )
+  }, [tasks, assignments])
+
   const handleOpen = (taskId?: string) => {
     setTaskId(taskId)
     setIsOpen(true)

@@ -1,8 +1,5 @@
-import Assignments from '@/app/(main)/activity/new/assignments'
-import EditNameAndTime from '@/app/(main)/activity/new/edit-name-and-time'
-import Edits from '@/app/(main)/activity/new/edits'
+import Content from '@/app/(main)/activity/new/content'
 import { KeyContextProvider } from '@/app/(main)/activity/new/key-context'
-import Publish from '@/app/(main)/activity/new/publish'
 import { getActivity } from '@/lib/actions/activity'
 import { getTeam } from '@/lib/actions/team'
 import type { Activity } from '@/types/activity/activity'
@@ -42,22 +39,12 @@ const Page: React.FC<PageProps> = async ({ searchParams }) => {
       </h1>
       <div className='space-y-8'>
         <KeyContextProvider initialKey={id && sk ? { id, sk } : undefined}>
-          <EditNameAndTime
-            preValues={
-              activity
-                ? [activity.name, (activity.time || activity.timeRange)!]
-                : undefined
-            }
-          />
-          <Edits sections={activity?.sections || []} />
-          <Assignments
+          <Content
+            activity={activity}
             team={team}
-            totalUsers={activity?.totalUsers}
-            assignType={activity?.assignType}
             tasks={tasks}
             assignments={assignments}
           />
-          <Publish stage={activity?.stage || 'draft'} />
         </KeyContextProvider>
       </div>
     </div>

@@ -115,6 +115,21 @@ const EditNameAndTime: React.FC<EditNameAndTimeProps> = ({
     return () => clearInterval(timer)
   }, [])
 
+  useEffect(() => {
+    if (preValues[0]) {
+      setName(preValues[0])
+    }
+    if (preValues[1]) {
+      if (Array.isArray(preValues[1])) {
+        setIsTimeRange(true)
+        setStartTime(local(preValues[1][0]))
+        setEndTime(local(preValues[1][1]))
+      } else {
+        setTime(local(preValues[1] as string))
+      }
+    }
+  }, [preValues])
+
   return (
     <div
       className={`space-y-2 rounded-lg p-4 bg-white border-2 border-gray-300 ${
