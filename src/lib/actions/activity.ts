@@ -28,6 +28,10 @@ export const addTask = async (task: Task) => {
   await db.add(task)
 }
 
+export const deleteTask = async (task: Task) => {
+  await db.del({ id: task.id, sk: task.sk })
+}
+
 export const updateTaskAction = async (
   key: { id: string; sk: string },
   task: Omit<Partial<Task>, 'id' | 'sk'>

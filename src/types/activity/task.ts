@@ -1,6 +1,8 @@
 import { v4 } from 'uuid'
 import { z } from 'zod'
 
+import { local } from '@/lib/time'
+
 export const TaskTemplate = z
   .object({
     id: z.string().uuid().default(v4),
@@ -11,7 +13,7 @@ export const TaskTemplate = z
     stages: z
       .array(
         z.object({
-          id: z.string().uuid().default(v4),
+          id: z.string().default(v4),
           name: z.string(),
           approval: z
             .enum(['none', 'manager', 'admin', 'super-admin'])
@@ -33,7 +35,10 @@ export const Task = z
     id: z.string().uuid(),
     name: z.string(),
     taskId: z.string().uuid().default(v4),
-    dueDate: z.date().transform(v => v.toISOString()),
+    dueDate: z
+      .date()
+      .or(z.string())
+      .transform(v => local(v).toISOString()),
     type: z.literal('task').default('task'),
     description: z.string(),
     references: z.array(z.string()).default([]),
@@ -41,7 +46,7 @@ export const Task = z
     stages: z
       .array(
         z.object({
-          id: z.string().uuid(),
+          id: z.string(),
           name: z.string(),
           approval: z
             .enum(['none', 'manager', 'admin', 'super-admin'])

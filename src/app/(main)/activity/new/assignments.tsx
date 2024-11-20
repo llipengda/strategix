@@ -94,8 +94,8 @@ const Assignments: React.FC<AssignmentsProps> = ({
   )
 
   const [assignType, setAssignType] = useState<
-    'preference' | 'time' | undefined
-  >(_assignType)
+    'preference' | 'time'
+  >(_assignType || 'preference')
 
   const { key } = use(KeyContext)
 
@@ -106,7 +106,7 @@ const Assignments: React.FC<AssignmentsProps> = ({
   }, [totalUsers, team.members])
 
   useEffect(() => {
-    setAssignType(_assignType)
+    setAssignType(_assignType || 'preference')
   }, [_assignType])
 
   useEffect(() => {
@@ -341,6 +341,7 @@ const Assignments: React.FC<AssignmentsProps> = ({
 
   return (
     <div
+      id='assignments'
       className={`space-y-8 rounded-lg p-4 bg-white border-2 border-gray-300 ${
         !!saveTime ? '' : 'border-dashed'
       }`}

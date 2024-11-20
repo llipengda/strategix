@@ -10,13 +10,28 @@ import Edits from '@/app/(main)/activity/new/edits'
 import { KeyContext } from '@/app/(main)/activity/new/key-context'
 import Publish from '@/app/(main)/activity/new/publish'
 import AiDialog from '@/components/ai-dialog'
-import { updateActivityAction } from '@/lib/actions/activity'
-import { continueGenerateActivity, generateActivity } from '@/lib/actions/ai'
+import {
+  addTask,
+  deleteTask,
+  updateActivityAction
+} from '@/lib/actions/activity'
+import {
+  continueGenerateActivity,
+  continueGenerateAssignment,
+  continueGenerateTask,
+  generateActivity,
+  generateAssignment,
+  generateTask
+} from '@/lib/actions/ai'
 import sleep from '@/lib/sleep'
 import { Activity } from '@/types/activity/activity'
-import type { Assignment } from '@/types/activity/assignment'
-import type { Task } from '@/types/activity/task'
-import { type GeneratedActivityGroup, checkGroup } from '@/types/ai'
+import { Assignment } from '@/types/activity/assignment'
+import { Task } from '@/types/activity/task'
+import {
+  type GTaskAndAssignmentGroup,
+  type GeneratedActivityGroup,
+  checkGroup
+} from '@/types/ai'
 import type { Team } from '@/types/team'
 
 interface ContentProps {
@@ -29,18 +44,63 @@ interface ContentProps {
 const Content: React.FC<ContentProps> = ({
   activity: _activity,
   team,
-  tasks,
-  assignments
+  tasks: _tasks,
+  assignments: _assignments
 }) => {
   const [aiError, setAiError] = useState<string | undefined>()
 
   const [activity, setActivity] = useState<Partial<Activity> | null>(_activity)
+  const [tasks, setTasks] = useState<Task[]>(_tasks)
+  const [assignments, setAssignments] = useState<Assignment[]>(_assignments)
 
   const { key } = use(KeyContext)
 
   const [generating, setGenerating] = useState(false)
 
   const activityRef = useRef<Partial<Activity> | null>(null)
+
+  const addedTasks = useRef<Task[]>([])
+
+  const handleTaskAndAssignment = async (res2: GTaskAndAssignmentGroup) => {
+    if (res2.type === 'modify-task') {
+      const content = res2.content as Task
+      setTasks(tasks => {
+        const taskIndex = tasks.findIndex(t => t.taskId === content.taskId)
+        const newTasks = [...tasks]
+        newTasks[taskIndex] = content
+        return newTasks
+      })
+    } else if (res2.type === 'generate-task') {
+      const task = Task.parse({ ...res2.content, id: activity?.id })
+      await addTask(task)
+      setTasks(tasks => [...tasks, task])
+      addedTasks.current.push(task)
+
+      setTimeout(async () => {
+        if (document !== undefined) {
+          const added = document.getElementById(task.taskId)
+          if (added) {
+            added.scrollIntoView({
+              behavior: 'smooth'
+            })
+
+            for (let i = 0; i < 3; i++) {
+              await sleep(100)
+              added.style.backgroundColor = '#fefce8'
+              await sleep(300)
+              added.style.backgroundColor = ''
+              await sleep(200)
+            }
+          }
+        }
+      }, 200)
+    } else if (res2.type === 'generate-assignment') {
+      setAssignments(assignments => [
+        ...assignments,
+        Assignment.parse({ ...res2.content, id: activity?.id })
+      ])
+    }
+  }
 
   const handleAiGenerate = async (additionalInfo: string) => {
     setAiError(undefined)
@@ -78,12 +138,30 @@ const Content: React.FC<ContentProps> = ({
 
         if (checkGroup.isSection(content)) {
           const newSection = { id: v4(), ...content.section }
-          setActivity(activity => {
-            return {
-              ...activity,
-              sections: [...(activity?.sections || []), newSection]
-            }
-          })
+          const index =
+            activity?.sections?.findIndex(
+              s =>
+                s.type === content.section.type &&
+                s.name === content.section.name
+            ) ?? -1
+
+          if (index !== -1) {
+            const newSections = [...(activity?.sections || [])]
+            newSections[index] = newSection
+            setActivity(activity => {
+              return {
+                ...activity,
+                sections: newSections
+              }
+            })
+          } else {
+            setActivity(activity => {
+              return {
+                ...activity,
+                sections: [...(activity?.sections || []), newSection]
+              }
+            })
+          }
 
           setTimeout(async () => {
             if (document !== undefined) {
@@ -104,6 +182,44 @@ const Content: React.FC<ContentProps> = ({
             }
           }, 200)
         }
+      }
+
+      let res2: GTaskAndAssignmentGroup
+
+      _res = await generateTask(activity, tasks)
+
+      if (document !== undefined) {
+        document.getElementById('assignments')?.scrollIntoView({
+          behavior: 'smooth'
+        })
+      }
+
+      res2 = JSON.parse(_res) as GTaskAndAssignmentGroup
+
+      await handleTaskAndAssignment(res2)
+
+      while (!res2.end) {
+        _res = await continueGenerateTask()
+        res2 = JSON.parse(_res) as GTaskAndAssignmentGroup
+
+        await handleTaskAndAssignment(res2)
+      }
+
+      _res = await generateAssignment(
+        team,
+        [...tasks, ...addedTasks.current],
+        assignments
+      )
+      console.log(_res)
+      res2 = JSON.parse(_res) as GTaskAndAssignmentGroup
+      await handleTaskAndAssignment(res2)
+
+      while (!res2.end) {
+        _res = await continueGenerateAssignment()
+        console.log(_res)
+        res2 = JSON.parse(_res) as GTaskAndAssignmentGroup
+
+        await handleTaskAndAssignment(res2)
       }
     } catch (error) {
       console.error(error)
@@ -131,6 +247,12 @@ const Content: React.FC<ContentProps> = ({
     if (activityRef.current) {
       setActivity(activityRef.current)
     }
+
+    addedTasks.current.forEach(async task => {
+      await deleteTask(task)
+    })
+
+    addedTasks.current = []
   }
 
   return (

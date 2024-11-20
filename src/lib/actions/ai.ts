@@ -5,7 +5,9 @@ import type { ChatCompletionMessageParam } from 'openai/resources/index.mjs'
 
 import { localFormat, localISOFormat } from '@/lib/time'
 import { type Activity, predefinedSections } from '@/types/activity/activity'
-import type { TaskTemplate } from '@/types/activity/task'
+import type { Assignment } from '@/types/activity/assignment'
+import type { Task, TaskTemplate } from '@/types/activity/task'
+import type { Team } from '@/types/team'
 
 const openai = new OpenAI()
 const moonshot = new OpenAI({
@@ -205,5 +207,204 @@ export const generateActivity = async (
 
   _continueGenerateActivity = continueGenerate
 
+  return response.choices[0].message.content!
+}
+
+let _continueGenerateTask: (() => Promise<string>) | undefined = undefined
+let _continueGenerateAssignment: (() => Promise<string>) | undefined = undefined
+
+export const continueGenerateTask = async () => {
+  if (!_continueGenerateTask) {
+    throw new Error('continueGenerateTask is not initialized')
+  }
+  return await _continueGenerateTask()
+}
+
+export const continueGenerateAssignment = async () => {
+  if (!_continueGenerateAssignment) {
+    throw new Error('continueGenerateAssignment is not initialized')
+  }
+  return await _continueGenerateAssignment()
+}
+export const generateTask = async (
+  activity: Partial<Activity>,
+  tasks: Task[],
+  additionalInfo?: string
+) => {
+  const messages = [
+    {
+      role: 'system',
+      content: `
+         你是一个活动策划专家，你正在为软件工程学院学生会策划活动。你所在的学校是华东师范大学，所在校区为普陀校区。所在的学院约有本科生800人，你所举办的活动一般参与人数在20-100人之间。你正在为活动${activity.name}生成任务。
+
+        一个任务(Task)的结构如下所示：
+        \`\`\`
+        type Task = {
+          id: string;
+          sk: string;
+          name: string;
+          description: string;
+          requiredPeople: number;
+          references: string[];
+          stages: {
+            id: string;
+            name: string;
+            approval: "none" | "manager" | "admin" | "super-admin";
+            assignedTo: number[];
+            content: string;
+            completed: boolean;
+          }[];
+          dueDate: string;
+          fakeAssignedTo?: string[] | undefined;
+        }
+        \`\`\`
+
+        Task 的 fakeAssignedTo 属性代表虚拟分配。
+        fakeAssignedTo 的值是一个字符串数组，数组中的元素是 'A', 'B', 'C', 'D' 这样的字母。
+        为一个任务分配的虚拟成员数，必须等于该任务的 requiredPeople。
+        不同任务的虚拟成员之间可以重复，代表这些虚拟成员被分配给了多个任务。
+        所有任务的虚拟成员去重后的数量，应当等于活动 totalUsers。
+
+        你要进行的任务：
+        1. 仔细分析活动内容和目标，生成真正必要的任务。每个任务都应该对活动的成功举办有直接贡献。
+        2. 对于已存在的任务，评估其必要性和合理性，如有必要可以修改或删除。
+        3. 如果有任务没有虚拟分配，必须通过 'modify-task' 来修改
+        4. 任务名称不能重复。
+        5. 新任务必须有虚拟分配和截止日期。
+        6. 每个任务都应该有明确的目标和可衡量的完成标准。
+
+        输入格式：
+        (\${JSON.stringify(activity)}, \${JSON.stringify(tasks)}(现有任务), \${additionalInfo})
+        或
+        '请继续生成'
+
+        输出格式：
+        {
+          index: number;
+          type: 'modify-task' | 'generate-task';
+          content: Task | Omit<Task, 'id' | 'sk' | 'taskId'>;
+          end: boolean;
+        }
+        1. modify-task: content为修改后的Task，未修改的属性保持原样
+        2. generate-task: content不能包含id/sk/taskId
+        content中不能有undefined属性。
+        不要使用代码块。
+        一次只输出一个组。end为true时代表最后一个组。
+      `
+    },
+    {
+      role: 'user',
+      content: `(${JSON.stringify(activity)}, ${JSON.stringify(tasks)}, ${additionalInfo})`
+    }
+  ] as ChatCompletionMessageParam[]
+
+  const response = await moonshot.chat.completions.create({
+    model: 'moonshot-v1-auto',
+    messages,
+    temperature: 0.3
+  })
+
+  messages.push(response.choices[0].message)
+
+  const continueGenerate = async () => {
+    const response = await moonshot.chat.completions.create({
+      model: 'moonshot-v1-auto',
+      messages: [...messages, { role: 'user', content: '请继续生成' }],
+      temperature: 0.3
+    })
+
+    messages.push(response.choices[0].message)
+    _continueGenerateTask = continueGenerate
+    return response.choices[0].message.content!
+  }
+
+  _continueGenerateTask = continueGenerate
+  return response.choices[0].message.content!
+}
+
+export const generateAssignment = async (
+  team: Team,
+  tasks: Task[],
+  assignments: Assignment[],
+  additionalInfo?: string
+) => {
+  const messages = [
+    {
+      role: 'system',
+      content: `
+        你是一个活动策划专家，正在为活动生成分工。
+
+        团队(Team)的结构如下所示：
+        \`\`\`
+        type Team = {
+          teamName: string;
+          members: {
+            id: string;
+            name: string;
+            role: 'user' | 'manager' | 'admin' | 'super-admin';
+          }[];
+        }
+        \`\`\`
+
+        一个分工(Assignment)的结构如下所示：
+        \`\`\`
+        type Assignment = {
+            taskId: string;
+            isManager: false;
+            userName: string;
+            userId: string;
+        } | {
+            taskId: string;
+            isManager: true;
+            managerName: string;
+            managerId: string;
+        }
+        \`\`\`
+
+        你要进行的任务：
+        1. 为每个任务分配负责人(isManager为true)
+        2. 负责人必须是团队中role为manager/admin/super-admin的成员
+        3. 不能修改已存在的分工
+        4. 新生成的任务也需要分配负责人
+
+        输出格式：
+        {
+          index: number;
+          type: 'generate-assignment';
+          content: Assignment;
+          end: boolean;
+        }
+        content中不能有undefined属性。
+        不要使用代码块。
+        一次只输出一个组。end为true时代表最后一个组。
+      `
+    },
+    {
+      role: 'user',
+      content: `(团队：${JSON.stringify(team)}, ${JSON.stringify(tasks)}(现有任务), ${JSON.stringify(assignments)}(现有分工), ${additionalInfo})`
+    }
+  ] as ChatCompletionMessageParam[]
+
+  const response = await moonshot.chat.completions.create({
+    model: 'moonshot-v1-auto',
+    messages,
+    temperature: 0.3
+  })
+
+  messages.push(response.choices[0].message)
+
+  const continueGenerate = async () => {
+    const response = await moonshot.chat.completions.create({
+      model: 'moonshot-v1-auto',
+      messages: [...messages, { role: 'user', content: '请继续生成' }],
+      temperature: 0.3
+    })
+
+    messages.push(response.choices[0].message)
+    _continueGenerateAssignment = continueGenerate
+    return response.choices[0].message.content!
+  }
+
+  _continueGenerateAssignment = continueGenerate
   return response.choices[0].message.content!
 }
