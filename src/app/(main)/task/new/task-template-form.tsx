@@ -357,16 +357,20 @@ export default function TaskTemplateForm({ template }: TaskTemplateFormProps) {
           type='submit'
           disabled={isLoading}
           className={`w-full mt-4 py-2 px-4 text-white font-semibold rounded-md shadow ${
-            isLoading ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'
+            isLoading
+              ? 'bg-gray-400 cursor-not-allowed'
+              : 'bg-green-600 hover:bg-green-700'
           }`}
         >
           {isLoading ? (
-            <div className="flex items-center justify-center">
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+            <div className='flex items-center justify-center'>
+              <div className='w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2'></div>
               <span>处理中...</span>
             </div>
+          ) : template ? (
+            '更新任务模板'
           ) : (
-            template ? '更新任务模板' : '创建任务模板'
+            '创建任务模板'
           )}
         </button>
       </form>
