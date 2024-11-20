@@ -67,7 +67,7 @@ export default function StageCard({
   }
 
   return (
-    <div className='border relative rounded-lg p-4 shadow-sm bg-gray-100'>
+    <div className='border relative rounded-lg p-4 shadow-sm bg-gray-100 dark:bg-slate-800'>
       <button
         type='button'
         onClick={() => onDelete(stage.id)}
@@ -102,7 +102,7 @@ export default function StageCard({
           }
         />
         <div className='flex items-center gap-2'>
-          <span className='text-sm text-gray-500'>分配给</span>
+          <span className='text-sm text-gray-500 dark:text-white'>分配给</span>
           <ToggleButtonGroup
             multiple
             options={Array.from({ length: requiredPeople }, (_, i) =>

@@ -191,7 +191,7 @@ export default function TaskTemplateForm({ template }: TaskTemplateFormProps) {
     <>
       <form onSubmit={handleSubmit} className='space-y-6'>
         <div>
-          <label className='block text-lg font-medium text-gray-700'>
+          <label className='block text-lg font-medium text-gray-700 dark:text-white'>
             模板名称 <span className='text-red-500'>*</span>
           </label>
           <input
@@ -204,7 +204,7 @@ export default function TaskTemplateForm({ template }: TaskTemplateFormProps) {
         </div>
 
         <div>
-          <label className='block text-lg font-medium text-gray-700'>
+          <label className='block text-lg font-medium text-gray-700 dark:text-white'>
             模板描述
           </label>
           <MarkdownEditor
@@ -212,12 +212,12 @@ export default function TaskTemplateForm({ template }: TaskTemplateFormProps) {
             markdown={templateDescription}
             onChange={handleTemplateDescriptionChange}
             className='mt-2'
-            additionalContentEditableClassName='bg-white dark:bg-gray-900'
+            additionalContentEditableClassName='*:text-white'
           />
         </div>
 
         <div>
-          <label className='block text-lg font-medium text-gray-700'>
+          <label className='block text-lg font-medium text-gray-700 dark:text-white'>
             工作人员数量
           </label>
           <div className='flex items-center space-x-2 mt-4'>
@@ -276,7 +276,7 @@ export default function TaskTemplateForm({ template }: TaskTemplateFormProps) {
         </div>
 
         <div>
-          <label className='block text-lg font-medium text-gray-700 mb-2'>
+          <label className='block text-lg font-medium text-gray-700 mb-2 dark:text-white'>
             参考文件
           </label>
           <FileUpload
@@ -287,7 +287,7 @@ export default function TaskTemplateForm({ template }: TaskTemplateFormProps) {
         </div>
 
         <div>
-          <label className='block text-lg font-medium text-gray-700'>
+          <label className='block text-lg font-medium text-gray-700 dark:text-white'>
             流程
           </label>
           <div className='flex mt-2'>
@@ -299,7 +299,7 @@ export default function TaskTemplateForm({ template }: TaskTemplateFormProps) {
                     type='button'
                     onClick={() => setActiveStageIndex(index)}
                     className={`w-10 h-10 rounded-full border-2 flex items-center justify-center z-10
-                    ${activeStageIndex === index ? 'border-indigo-600 bg-indigo-100' : 'border-gray-300'}
+                    ${activeStageIndex === index ? 'border-indigo-600 bg-indigo-100 text-black' : 'border-gray-300'}
                   `}
                   >
                     {index + 1}
