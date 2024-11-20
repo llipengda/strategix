@@ -1,6 +1,6 @@
 'use client'
 
-import { use, useEffect, useRef, useState } from 'react'
+import { use, useRef, useState } from 'react'
 
 import { v4 } from 'uuid'
 
@@ -59,7 +59,7 @@ const Content: React.FC<ContentProps> = ({
       let res: GeneratedActivityGroup
       _res = await generateActivity(activity, additionalInfo)
 
-      res = JSON.parse(_res)
+      res = JSON.parse(_res) as GeneratedActivityGroup
 
       if (checkGroup.isBrief(res.content)) {
         setActivity(activity => ({
@@ -70,7 +70,7 @@ const Content: React.FC<ContentProps> = ({
 
       while (!res.end) {
         _res = await continueGenerateActivity()
-        res = JSON.parse(_res)
+        res = JSON.parse(_res) as GeneratedActivityGroup
 
         setGenerating(false)
 
