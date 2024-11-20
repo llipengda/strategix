@@ -100,7 +100,9 @@ const Assignments: React.FC<AssignmentsProps> = ({
   const { key } = use(KeyContext)
 
   useEffect(() => {
-    setTotal(totalUsers || team.members.filter(m => m.role === 'user').length || 1)
+    setTotal(
+      totalUsers || team.members.filter(m => m.role === 'user').length || 1
+    )
   }, [totalUsers, team.members])
 
   useEffect(() => {
@@ -422,13 +424,13 @@ const Assignments: React.FC<AssignmentsProps> = ({
                 }
               />
             ))}
-            <tr className='border-b border-gray-200 bg-blue-50 hover:bg-blue-100 transition-colors w-full'>
+            <tr
+              className='border-b border-gray-200 bg-blue-50 hover:bg-blue-100 transition-colors w-full cursor-pointer'
+              onClick={() => handleOpen()}
+            >
               <td colSpan={5} className='py-3 px-4'>
                 <div className='flex items-center gap-2 w-full justify-center'>
-                  <button
-                    className='text-blue-500 text-lg flex items-center gap-2'
-                    onClick={() => handleOpen()}
-                  >
+                  <button className='text-blue-500 text-lg flex items-center gap-2'>
                     <MdAdd /> 添加任务
                   </button>
                 </div>

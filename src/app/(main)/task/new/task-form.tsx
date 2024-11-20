@@ -15,6 +15,7 @@ import { local } from '@/lib/time'
 import { Stage, Task } from '@/types/activity/task'
 
 import StageCard from './stage-card'
+import ErrorMessage from '@/components/error-message'
 
 const MarkdownEditor = dynamic(() => import('@/components/markdown-editor'), {
   ssr: false,
@@ -22,7 +23,7 @@ const MarkdownEditor = dynamic(() => import('@/components/markdown-editor'), {
 })
 interface TaskFormProps {
   id: string
-  task: Task | null
+  task: Partial<Task> | null
   onCreated?: (task: Task) => void
 }
 
@@ -56,14 +57,14 @@ export default function TaskForm({ id, task, onCreated }: TaskFormProps) {
 
   useEffect(() => {
     if (task) {
-      setTaskName(task.name)
-      setReferenceFiles(task.references)
-      setRequiredPeople(task.requiredPeople)
-      setTaskDescription(task.description)
-      setDueDate(task.dueDate)
-      setStages(task.stages)
+      setTaskName(task?.name || '')
+      setReferenceFiles(task?.references || [])
+      setRequiredPeople(task?.requiredPeople || 1)
+      setTaskDescription(task?.description || '')
+      setDueDate(task?.dueDate || '')
+      setStages(task?.stages || [])
 
-      editorRef.current?.setMarkdown(task.description)
+      editorRef.current?.setMarkdown(task.description || '')
     }
   }, [task])
 
@@ -115,8 +116,27 @@ export default function TaskForm({ id, task, onCreated }: TaskFormProps) {
     setReferenceFiles(referenceFiles.filter(f => f !== key))
   }
 
+  const [error, setError] = useState('')
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
+    setError('')
+
+    if (!taskName) {
+      setError('请输入任务名称')
+      return
+    }
+
+    if (stages.length === 0) {
+      setError('添加至少一个流程')
+      return
+    }
+
+    if (!dueDate) {
+      setError('请输入截止时间')
+      return
+    }
 
     const _task = Task.parse({
       ...task,
@@ -239,7 +259,7 @@ export default function TaskForm({ id, task, onCreated }: TaskFormProps) {
           参考文件
         </label>
         <FileUpload
-          initialFiles={task?.references.map(key => ({ key })) || []}
+          initialFiles={task?.references?.map(key => ({ key })) || []}
           onUpload={handleFileUpload}
           onRemove={handleFileRemove}
         />
@@ -312,11 +332,13 @@ export default function TaskForm({ id, task, onCreated }: TaskFormProps) {
         </div>
       </div>
 
+      <ErrorMessage errorMessage={error} />
+
       <button
         type='submit'
         className='w-full mt-4 py-2 px-4 bg-green-600 text-white font-semibold rounded-md shadow hover:bg-green-700'
       >
-        {task ? '更新任务' : '创建任务'}
+        {task?.id ? '更新任务' : '创建任务'}
       </button>
     </form>
   )
