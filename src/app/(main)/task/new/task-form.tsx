@@ -248,7 +248,7 @@ export default function TaskForm({ id, task, onCreated }: TaskFormProps) {
         </label>
         <input
           type='datetime-local'
-          value={dueDate}
+          value={dueDate.endsWith('Z') ? dueDate.slice(0, -1) : dueDate}
           className='w-fit border-0 border-b-2 border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-0 transition-colors duration-200 bg-transparent leading-8'
           onChange={e => setDueDate(e.target.value)}
         />

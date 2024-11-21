@@ -46,7 +46,10 @@ const TaskRow: React.FC<TaskRowProps> = ({
   }
 
   return (
-    <tr className='border-b border-gray-200 hover:bg-gray-50 transition-colors w-full'>
+    <tr
+      id={task.taskId}
+      className='border-b border-gray-200 hover:bg-gray-50 transition-colors w-full'
+    >
       <td className='py-3 px-4 text-gray-800 w-1/6 break-all'>
         <div className='flex items-center gap-2'>
           {task.name}{' '}

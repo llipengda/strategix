@@ -1,3 +1,6 @@
+import type { Assignment } from '@/types/activity/assignment'
+import type { Task } from '@/types/activity/task'
+
 export type GeneratedGroup<T> = {
   index: number
   content: T
@@ -30,3 +33,23 @@ export const checkGroup = {
     content: BriefGroupContent | SectionGroupContent
   ): content is SectionGroupContent => 'section' in content
 }
+
+export type GTaskAndAssignmentGroup =
+  | {
+      type: 'modify-task'
+      index: number
+      content: Task
+      end: boolean
+    }
+  | {
+      type: 'generate-task'
+      index: number
+      content: Omit<Task, 'id' | 'sk' | 'taskId'>
+      end: boolean
+    }
+  | {
+      type: 'generate-assignment'
+      index: number
+      content: Omit<Assignment, 'id' | 'sk'>
+      end: boolean
+    }
