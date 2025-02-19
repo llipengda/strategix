@@ -45,7 +45,7 @@ function streamResponse(generator: AsyncIterable<ChatCompletionChunk>) {
     new NextResponse(stream1, {
       headers: {
         'Cache-Control': 'no-cache',
-        'Connection': 'keep-alive',
+        Connection: 'keep-alive',
         'Transfer-Encoding': 'chunked'
       }
     }),
@@ -54,7 +54,7 @@ function streamResponse(generator: AsyncIterable<ChatCompletionChunk>) {
 }
 
 function readStream(stream: ReadableStream<string>): Promise<string> {
-  return new Promise(async (resolve) => {
+  return new Promise(async resolve => {
     const reader = stream.getReader()
     let content = ''
 
@@ -118,7 +118,6 @@ type RequestBody =
 const conversationStore = new Map<string, ChatCompletionMessageParam[]>()
 
 export async function POST(req: NextRequest) {
-
   const session = await auth()
 
   const user = session?.user
