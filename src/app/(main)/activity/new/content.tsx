@@ -186,7 +186,7 @@ const Content: React.FC<ContentProps> = ({
 
       let res2: GTaskAndAssignmentGroup
 
-      _res = await generateTask(activity, tasks)
+      _res = await generateTask(activity, tasks, additionalInfo)
 
       if (document !== undefined) {
         document.getElementById('assignments')?.scrollIntoView({
@@ -208,7 +208,8 @@ const Content: React.FC<ContentProps> = ({
       _res = await generateAssignment(
         team,
         [...tasks, ...addedTasks.current],
-        assignments
+        assignments,
+        additionalInfo
       )
       console.log(_res)
       res2 = JSON.parse(_res) as GTaskAndAssignmentGroup
