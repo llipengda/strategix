@@ -10,7 +10,7 @@ export default async function Page(props: PageProps) {
 
   return (
     <div>
-      <h1 className='text-3xl font-semibold text-gray-800 mb-6'>
+      <h1 className='text-3xl font-semibold text-gray-800 mb-6 dark:text-white'>
         创建任务模板
       </h1>
       <TaskTemplateForm template={template} />
