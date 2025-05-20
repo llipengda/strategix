@@ -123,7 +123,9 @@ export const removeUserFromTeam = async (userId: string) => {
   checkRole.ensure.admin(user)
 
   if (userId === user?.id) {
-    throw new Error('Cannot remove yourself')
+    if (!checkRole.superAdmin(user)) {
+      throw new Error('Cannot remove yourself')
+    }
   }
 
   await db.update({
