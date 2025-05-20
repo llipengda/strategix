@@ -23,7 +23,7 @@ declare module 'next-auth' {
   }
 
   interface User {
-    role: TUser['role']
+    role?: TUser['role']
     team?: string
   }
 }
