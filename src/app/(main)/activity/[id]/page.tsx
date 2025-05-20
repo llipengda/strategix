@@ -2,6 +2,7 @@ import { MdEdit } from 'react-icons/md'
 
 import Link from 'next/link'
 
+import Gantt from '@/app/(main)/activity/[id]/gantt'
 import Section from '@/app/(main)/activity/[id]/section'
 import TasksAndAssignments from '@/app/(main)/activity/[id]/tasks-and-assignments'
 import { auth } from '@/auth'
@@ -72,6 +73,9 @@ const Page: React.FC<PageProps> = async ({ params }) => {
             任务分配
           </Link>
         )}
+        <div className='overflow-x-auto'>
+          <Gantt tasks={mergedTasks} />
+        </div>
       </div>
     </>
   )

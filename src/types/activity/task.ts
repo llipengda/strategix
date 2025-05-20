@@ -1,7 +1,7 @@
 import { v4 } from 'uuid'
 import { z } from 'zod'
 
-import { local } from '@/lib/time'
+import { local, localDate } from '@/lib/time'
 
 export const TaskTemplate = z
   .object({
@@ -35,6 +35,7 @@ export const Task = z
     id: z.string().uuid(),
     name: z.string(),
     taskId: z.string().uuid().default(v4),
+    startDate: z.date().or(z.string()).transform(v => local(v).toISOString()).optional().default(localDate().toISOString()),
     dueDate: z
       .date()
       .or(z.string())
