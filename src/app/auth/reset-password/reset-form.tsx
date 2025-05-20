@@ -22,7 +22,7 @@ export default function ResetForm({ email }: { email: string }) {
           type='email'
           autoComplete='email'
           required
-          disabled
+          readOnly
           value={email}
         />
       </div>
