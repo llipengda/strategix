@@ -62,8 +62,8 @@ export default function TaskForm({ id, task, onCreated }: TaskFormProps) {
       setReferenceFiles(task?.references || [])
       setRequiredPeople(task?.requiredPeople || 1)
       setTaskDescription(task?.description || '')
-      setStartDate(localFormat(task?.startDate!) || '')
-      setDueDate(localFormat(task?.dueDate!) || '')
+      setStartDate(localFormat(task?.startDate) || '')
+      setDueDate(localFormat(task?.dueDate) || '')
       setStages(task?.stages || [])
 
       editorRef.current?.setMarkdown(task.description || '')

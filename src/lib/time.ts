@@ -8,7 +8,7 @@ export const localISOFormat = () =>
   formatInTimeZone(new Date(), 'Asia/Shanghai', "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 
 export const localFormat = (
-  date: Date | string | number,
+  date: Date | string | number | undefined,
   formatStr: string = 'yyyy-MM-dd HH:mm:ss'
 ) => date ? formatInTimeZone(date, 'Asia/Shanghai', formatStr) : ''
 
