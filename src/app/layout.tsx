@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next'
 import NextTopLoader from 'nextjs-toploader'
 
+import { Analytics } from '@vercel/analytics/next'
+
 import '@/app/globals.css'
 import BreakpointDisplay from '@/components/breakpoint-display'
 
@@ -60,6 +62,7 @@ export default function RootLayout({
       <head />
       <body className='antialiased bg-page-bg relative'>
         {!isProduction && <BreakpointDisplay />}
+        <Analytics />
         <NextTopLoader />
         <div id='modal-root' />
         {children}
