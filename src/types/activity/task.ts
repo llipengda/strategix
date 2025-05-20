@@ -35,7 +35,12 @@ export const Task = z
     id: z.string().uuid(),
     name: z.string(),
     taskId: z.string().uuid().default(v4),
-    startDate: z.date().or(z.string()).transform(v => local(v).toISOString()).optional().default(localDate().toISOString()),
+    startDate: z
+      .date()
+      .or(z.string())
+      .transform(v => local(v).toISOString())
+      .optional()
+      .default(localDate().toISOString()),
     dueDate: z
       .date()
       .or(z.string())
