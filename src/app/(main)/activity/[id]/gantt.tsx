@@ -115,7 +115,6 @@ export default function Gantt({ tasks }: Props) {
       return { display: 'none' }
     }
 
-
     // 默认持续时间为7天，如果有dueDate则使用dueDate作为结束日期
     let endDate
     if (task.dueDate && local(task.dueDate) > startDate) {
