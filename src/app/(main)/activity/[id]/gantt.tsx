@@ -153,16 +153,14 @@ export default function Gantt({ tasks }: Props) {
   }
 
   const moveLeft = () => {
-    const range = timeRange.end.getTime() - timeRange.start.getTime()
-    const newStart = local(timeRange.start.getTime() - range * 0.25)
-    const newEnd = local(timeRange.end.getTime() - range * 0.25)
+    const newStart = local(timeRange.start.getTime() - dayMS)
+    const newEnd = local(timeRange.end.getTime() - dayMS)
     setTimeRange({ start: newStart, end: newEnd })
   }
 
   const moveRight = () => {
-    const range = timeRange.end.getTime() - timeRange.start.getTime()
-    const newStart = local(timeRange.start.getTime() + range * 0.25)
-    const newEnd = local(timeRange.end.getTime() + range * 0.25)
+    const newStart = local(timeRange.start.getTime() + dayMS)
+    const newEnd = local(timeRange.end.getTime() + dayMS)
     setTimeRange({ start: newStart, end: newEnd })
   }
 

@@ -294,7 +294,7 @@ const Assignments: React.FC<AssignmentsProps> = ({
   useEffect(() => {
     const interval = setInterval(() => {
       void handleSaveRef.current()
-    }, 60000)
+    }, 180 * 1000)
 
     return () => clearInterval(interval)
   }, [total, fakeUsers, assignedUsers, assignedManagers])
@@ -466,7 +466,7 @@ const Assignments: React.FC<AssignmentsProps> = ({
               {isSaving ? '保存中...' : '保存'}
             </button>
             <span className='text-gray-400 text-sm italic ml-2'>
-              每60秒将进行一次自动保存
+              每180秒将进行一次自动保存
             </span>
           </div>
           {saveTime && (

@@ -12,7 +12,7 @@ import FileUpload from '@/components/file-upload'
 import MdEditorFallback from '@/components/md-editor-fallback'
 import { addTask } from '@/lib/actions/activity'
 import { uploadFiles } from '@/lib/b2'
-import { local } from '@/lib/time'
+import { local, localFormat } from '@/lib/time'
 import { Stage, Task } from '@/types/activity/task'
 
 import StageCard from './stage-card'
@@ -51,6 +51,7 @@ export default function TaskForm({ id, task, onCreated }: TaskFormProps) {
   const [taskDescription, setTaskDescription] = useState(
     task?.description || ''
   )
+  const [startDate, setStartDate] = useState(task?.startDate || '')
   const [dueDate, setDueDate] = useState(task?.dueDate || '')
 
   const editorRef = useRef<MDXEditorMethods>(null)
@@ -61,7 +62,8 @@ export default function TaskForm({ id, task, onCreated }: TaskFormProps) {
       setReferenceFiles(task?.references || [])
       setRequiredPeople(task?.requiredPeople || 1)
       setTaskDescription(task?.description || '')
-      setDueDate(task?.dueDate || '')
+      setStartDate(localFormat(task?.startDate!) || '')
+      setDueDate(localFormat(task?.dueDate!) || '')
       setStages(task?.stages || [])
 
       editorRef.current?.setMarkdown(task.description || '')
@@ -145,6 +147,7 @@ export default function TaskForm({ id, task, onCreated }: TaskFormProps) {
       name: taskName,
       description: taskDescription,
       references: referenceFiles,
+      startDate: local(startDate),
       dueDate: local(dueDate),
       requiredPeople,
       stages
@@ -240,6 +243,18 @@ export default function TaskForm({ id, task, onCreated }: TaskFormProps) {
             </span>
           ))}
         </div>
+      </div>
+
+      <div>
+        <label className='block text-lg font-medium text-gray-700 mb-2'>
+          开始时间
+        </label>
+        <input
+          type='datetime-local'
+          value={startDate.endsWith('Z') ? startDate.slice(0, -1) : startDate}
+          className='w-fit border-0 border-b-2 border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-0 transition-colors duration-200 bg-transparent leading-8'
+          onChange={e => setStartDate(e.target.value)}
+        />
       </div>
 
       <div>
