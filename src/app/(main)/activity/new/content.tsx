@@ -16,11 +16,9 @@ import {
   updateActivityAction
 } from '@/lib/actions/activity'
 import {
-  continueGenerateActivity,
-  // continueGenerateAssignment,
+  continueGenerateActivity, // continueGenerateAssignment,
   continueGenerateTask,
-  generateActivity,
-  // generateAssignment,
+  generateActivity, // generateAssignment,
   generateTask
 } from '@/lib/actions/ai'
 import sleep from '@/lib/sleep'
@@ -139,9 +137,7 @@ const Content: React.FC<ContentProps> = ({
           const newSection = { id: v4(), ...content }
           const index =
             activity?.sections?.findIndex(
-              s =>
-                s.type === content.type &&
-                s.name === content.name
+              s => s.type === content.type && s.name === content.name
             ) ?? -1
 
           if (index !== -1) {
