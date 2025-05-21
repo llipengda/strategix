@@ -159,9 +159,7 @@ export default function TaskTemplateForm({ template }: TaskTemplateFormProps) {
     }
 
     const res = await generateTaskTemplate(_template, additionalInfo)
-    const improvedTemplate = TaskTemplate.parse(
-      res
-    )
+    const improvedTemplate = TaskTemplate.parse(res)
 
     setStages(improvedTemplate.stages)
     setTemplateDescription(improvedTemplate.description)
