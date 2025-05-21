@@ -8,39 +8,39 @@ export async function generateTaskTemplate(
   taskTemplate: TaskTemplate,
   additionalInfo: string
 ) {
-  const response = await fetch('/ai', {
+  const response = await fetch('/api/ai', {
     method: 'POST',
     body: JSON.stringify({
       action: 'generateTaskTemplate',
       params: { taskTemplate, additionalInfo }
     })
   })
-  return response.json() as Promise<string>
+  return response.json() as Promise<unknown>
 }
 
 export async function generateActivity(
   activity: Partial<Activity>,
   additionalInfo: string
 ) {
-  const response = await fetch('/ai', {
+  const response = await fetch('/api/ai', {
     method: 'POST',
     body: JSON.stringify({
       action: 'generateActivity',
       params: { activity, additionalInfo }
     })
   })
-  return response.json() as Promise<string>
+  return response.json() as Promise<unknown>
 }
 
 export async function continueGenerateActivity() {
-  const response = await fetch('/ai', {
+  const response = await fetch('/api/ai', {
     method: 'POST',
     body: JSON.stringify({
       action: 'continueGenerateActivity',
       params: undefined
     })
   })
-  return response.json() as Promise<string>
+  return response.json() as Promise<unknown>
 }
 
 export async function generateTask(
@@ -48,25 +48,25 @@ export async function generateTask(
   tasks: Task[],
   additionalInfo: string
 ) {
-  const response = await fetch('/ai', {
+  const response = await fetch('/api/ai', {
     method: 'POST',
     body: JSON.stringify({
       action: 'generateTask',
       params: { activity, tasks, additionalInfo }
     })
   })
-  return response.json() as Promise<string>
+  return response.json() as Promise<unknown>
 }
 
 export async function continueGenerateTask() {
-  const response = await fetch('/ai', {
+  const response = await fetch('/api/ai', {
     method: 'POST',
     body: JSON.stringify({
       action: 'continueGenerateTask',
       params: undefined
     })
   })
-  return response.json() as Promise<string>
+  return response.json() as Promise<unknown>
 }
 
 export async function generateAssignment(
@@ -75,23 +75,23 @@ export async function generateAssignment(
   assignments: Assignment[],
   additionalInfo: string
 ) {
-  const response = await fetch('/ai', {
+  const response = await fetch('/api/ai', {
     method: 'POST',
     body: JSON.stringify({
       action: 'generateAssignment',
       params: { team, tasks, assignments, additionalInfo }
     })
   })
-  return response.json() as Promise<string>
+  return response.json() as Promise<unknown>
 }
 
 export async function continueGenerateAssignment() {
-  const response = await fetch('/ai', {
+  const response = await fetch('/api/ai', {
     method: 'POST',
     body: JSON.stringify({
       action: 'continueGenerateAssignment',
       params: undefined
     })
   })
-  return response.json() as Promise<string>
+  return response.json() as Promise<unknown>
 }

@@ -158,8 +158,9 @@ export default function TaskTemplateForm({ template }: TaskTemplateFormProps) {
       return
     }
 
+    const res = await generateTaskTemplate(_template, additionalInfo)
     const improvedTemplate = TaskTemplate.parse(
-      JSON.parse((await generateTaskTemplate(_template, additionalInfo))!)
+      res
     )
 
     setStages(improvedTemplate.stages)
