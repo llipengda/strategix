@@ -115,7 +115,10 @@ const Content: React.FC<ContentProps> = ({
     try {
       setGenerating(true)
 
-      let res = await generateActivity(activity, additionalInfo) as GeneratedActivityGroup
+      let res = (await generateActivity(
+        activity,
+        additionalInfo
+      )) as GeneratedActivityGroup
 
       if (checkGroup.isBrief(res.content)) {
         setActivity(activity => ({
@@ -125,7 +128,7 @@ const Content: React.FC<ContentProps> = ({
       }
 
       while (!res.end) {
-        res = await continueGenerateActivity() as GeneratedActivityGroup
+        res = (await continueGenerateActivity()) as GeneratedActivityGroup
 
         setGenerating(false)
 
@@ -179,7 +182,11 @@ const Content: React.FC<ContentProps> = ({
         }
       }
 
-      let res2 = await generateTask(activity, tasks, additionalInfo) as GTaskAndAssignmentGroup
+      let res2 = (await generateTask(
+        activity,
+        tasks,
+        additionalInfo
+      )) as GTaskAndAssignmentGroup
 
       if (document !== undefined) {
         document.getElementById('assignments')?.scrollIntoView({
@@ -190,21 +197,21 @@ const Content: React.FC<ContentProps> = ({
       await handleTaskAndAssignment(res2)
 
       while (!res2.end) {
-        res2 = await continueGenerateTask() as GTaskAndAssignmentGroup
+        res2 = (await continueGenerateTask()) as GTaskAndAssignmentGroup
 
         await handleTaskAndAssignment(res2)
       }
 
-      res2 = await generateAssignment(
+      res2 = (await generateAssignment(
         team,
         [...tasks, ...addedTasks.current],
         assignments,
         additionalInfo
-      ) as GTaskAndAssignmentGroup
+      )) as GTaskAndAssignmentGroup
       await handleTaskAndAssignment(res2)
 
       while (!res2.end) {
-        res2 = await continueGenerateAssignment() as GTaskAndAssignmentGroup
+        res2 = (await continueGenerateAssignment()) as GTaskAndAssignmentGroup
 
         await handleTaskAndAssignment(res2)
       }
