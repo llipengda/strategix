@@ -87,7 +87,7 @@ export default function MarkdownEditor({
     <MDXEditor
       plugins={plugins}
       className={`${theme === 'dark' ? 'dark-theme' : ''}`}
-      contentEditableClassName={`prose max-w-none dark:prose-invert ${props.readOnly ? '' : 'bg-gray-50 dark:bg-gray-900'} rounded-lg ${additionalContentEditableClassName}`}
+      contentEditableClassName={`prose max-w-none dark:prose-invert ${props.readOnly ? '' : 'bg-gray-50 dark:bg-gray-700'} rounded-lg ${additionalContentEditableClassName}`}
       {...props}
       ref={editorRef}
     />

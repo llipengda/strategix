@@ -81,7 +81,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
       <div
         className={`border-2 ${
           dragging ? 'border-blue-500' : 'border-gray-300'
-        } border-dashed rounded-lg p-6 text-center transition-colors duration-300 cursor-pointer hover:bg-gray-50 hover:border-blue-500`}
+        } border-dashed rounded-lg p-6 text-center transition-colors duration-300 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-800 hover:border-blue-500`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
