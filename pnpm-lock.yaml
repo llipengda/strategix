@@ -60,6 +60,9 @@ importers:
       date-fns-tz:
         specifier: ^3.2.0
         version: 3.2.0(date-fns@4.1.0)
+      keyv:
+        specifier: ^4.5.4
+        version: 4.5.4
       mac-scrollbar:
         specifier: ^0.13.6
         version: 0.13.6
@@ -10656,6 +10659,7 @@ snapshots:
       ably: 2.5.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       bcryptjs: 2.4.3
       date-fns-tz: 3.2.0(date-fns@4.1.0)
+      keyv: 4.5.4
       mac-scrollbar: 0.13.6
       next: 15.3.2(@babel/core@7.25.9)(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@19.0.0-beta-8a03594-20241020)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       next-auth: 5.0.0-beta.28(next@15.3.2(@babel/core@7.25.9)(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@19.0.0-beta-8a03594-20241020)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)

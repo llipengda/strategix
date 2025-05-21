@@ -14,11 +14,9 @@ type BriefGroupContent = {
 }
 
 type SectionGroupContent = {
-  section: {
-    type: string
-    name: string
-    value: string
-  }
+  type: string
+  name: string
+  value: string
 }
 
 export type GeneratedActivityGroup = GeneratedGroup<
@@ -28,10 +26,10 @@ export type GeneratedActivityGroup = GeneratedGroup<
 export const checkGroup = {
   isBrief: (
     content: BriefGroupContent | SectionGroupContent
-  ): content is BriefGroupContent => 'name' in content,
+  ): content is BriefGroupContent => !('type' in content),
   isSection: (
     content: BriefGroupContent | SectionGroupContent
-  ): content is SectionGroupContent => 'section' in content
+  ): content is SectionGroupContent => 'type' in content
 }
 
 export type GTaskAndAssignmentGroup =

@@ -121,7 +121,7 @@ function getActivityPrompt(activity: Activity, additionalInfo: string) {
 【活动结构】
 - name: 活动名称
 - sections: 活动内容板块
-  - type: 板块类型[${Object.keys(predefinedSections).join('|')}|custom]
+  - type: 板块类型[${predefinedSections.map(section => section.type).join('|')}|custom]
   - name: 板块名称
   - value: 板块内容(支持markdown)
 - time/timeRange: 活动时间(ISO格式，二选一)
@@ -129,7 +129,7 @@ function getActivityPrompt(activity: Activity, additionalInfo: string) {
 【关键规则】
 - 时间安排: 必须晚于${localISOFormat()}，优先考虑周三下午>周末>周五晚上
 - 场地选择: <30人(教书院小教室), 30-60人(教书院中教室/理科大楼A228), 60-100人(教书院大教室), >100人(户外)
-- 输出分组: 基本信息为一组，每个section为一组
+- 输出分组: 基本信息为一组，每个section为一组，第一次生成基本信息，后面每次只生成一个section
 
 【输出格式】
 {
@@ -155,11 +155,12 @@ function getTaskPrompt(
 - name: 任务名称
 - description: 任务描述
 - requiredPeople: 所需人数
-- references: 参考资料
+- references: 空数组
 - stages: 任务阶段
+  - id: 从0开始，字符串
   - name: 阶段名称
-  - approval: 审核级别
-  - assignedTo: 分配对象[数字]
+  - approval: 审核级别("none"|"manager"|"admin"|"super-admin")
+  - assignedTo: 分配对象[数字数组]
   - content: 阶段内容
   - completed: 完成状态
 - dueDate: 截止日期(ISO格式)
@@ -169,8 +170,10 @@ function getTaskPrompt(
 - 任务必要性: 每个任务必须对活动成功有直接贡献
 - 唯一性: 任务名称不可重复
 - 虚拟分配: 必须完成所有任务的虚拟分配
+- 每次只输出一个任务
 
 【输出格式】
+output in JSON format, without code block
 {
   index: 序号,
   type: 'modify-task'|'generate-task',
@@ -193,15 +196,17 @@ function getAssignmentPrompt(
 作为活动策划专家，请为团队分配任务负责人:
 
 【团队结构】
-${JSON.stringify(team, null, 2)}
+${JSON.stringify(team)}
 
 【分工规则】
 - 每个任务必须分配一名负责人(isManager: true)
 - 负责人必须是role为manager/admin/super-admin的成员
 - 不可修改已存在的分工
 - 新任务必须分配负责人
+- 每次只输出一个分配
 
 【输出格式】
+output in JSON format, without code block
 {
   index: 序号,
   type: 'generate-assignment',

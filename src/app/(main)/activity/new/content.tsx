@@ -17,10 +17,10 @@ import {
 } from '@/lib/actions/activity'
 import {
   continueGenerateActivity,
-  continueGenerateAssignment,
+  // continueGenerateAssignment,
   continueGenerateTask,
   generateActivity,
-  generateAssignment,
+  // generateAssignment,
   generateTask
 } from '@/lib/actions/ai'
 import sleep from '@/lib/sleep'
@@ -120,10 +120,11 @@ const Content: React.FC<ContentProps> = ({
         additionalInfo
       )) as GeneratedActivityGroup
 
-      if (checkGroup.isBrief(res.content)) {
+      const content = res.content
+      if (checkGroup.isBrief(content)) {
         setActivity(activity => ({
           ...activity,
-          ...res.content
+          ...content
         }))
       }
 
@@ -135,12 +136,12 @@ const Content: React.FC<ContentProps> = ({
         const content = res.content
 
         if (checkGroup.isSection(content)) {
-          const newSection = { id: v4(), ...content.section }
+          const newSection = { id: v4(), ...content }
           const index =
             activity?.sections?.findIndex(
               s =>
-                s.type === content.section.type &&
-                s.name === content.section.name
+                s.type === content.type &&
+                s.name === content.name
             ) ?? -1
 
           if (index !== -1) {
@@ -202,19 +203,19 @@ const Content: React.FC<ContentProps> = ({
         await handleTaskAndAssignment(res2)
       }
 
-      res2 = (await generateAssignment(
-        team,
-        [...tasks, ...addedTasks.current],
-        assignments,
-        additionalInfo
-      )) as GTaskAndAssignmentGroup
-      await handleTaskAndAssignment(res2)
+      // res2 = (await generateAssignment(
+      //   team,
+      //   [...tasks, ...addedTasks.current],
+      //   assignments,
+      //   additionalInfo
+      // )) as GTaskAndAssignmentGroup
+      // await handleTaskAndAssignment(res2)
 
-      while (!res2.end) {
-        res2 = (await continueGenerateAssignment()) as GTaskAndAssignmentGroup
+      // while (!res2.end) {
+      //   res2 = (await continueGenerateAssignment()) as GTaskAndAssignmentGroup
 
-        await handleTaskAndAssignment(res2)
-      }
+      //   await handleTaskAndAssignment(res2)
+      // }
     } catch (error) {
       console.error(error)
       setAiError('AI生成失败')
