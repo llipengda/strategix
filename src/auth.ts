@@ -79,7 +79,7 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
     GitHub({
       allowDangerousEmailAccountLinking: true,
       clientId: process.env.AUTH_GITHUB_ID,
-      clientSecret: process.env.AUTH_GITHUB_SECRET,
+      clientSecret: process.env.AUTH_GITHUB_SECRET
     })
   ],
   adapter: DynamoDBAdapter(dbDocument),
